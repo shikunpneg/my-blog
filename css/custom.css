@@ -82,3 +82,91 @@ body {
   color: #5c3a1e;
   font-family: monospace;
 }
+
+/* ===== 多级下拉菜单样式 ===== */
+.menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.menu > li {
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.menu > li > a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  padding: 0.2em 0.4em;
+  cursor: pointer;
+}
+
+/* 子菜单容器 */
+.submenu {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background-color: #fdfaf3;
+  border: 1px solid #b08968;
+  padding: 0.5em 0;
+  margin: 0;
+  list-style: none;
+  min-width: 140px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.submenu li {
+  margin: 0;
+  padding: 0;
+}
+
+.submenu li a {
+  display: block;
+  padding: 0.3em 1em;
+  white-space: nowrap;
+  color: #3e2a1f;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  font-family: inherit;
+}
+
+.submenu li a:hover {
+  background-color: #e6dcc8;
+  color: #8b4513;
+}
+
+/* 悬停打开 + 点击打开（JS 控制 .open 类） */
+.dropdown:hover .submenu,
+.dropdown.open .submenu {
+  display: block;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .menu {
+    display: block;
+  }
+  .menu > li {
+    display: block;
+    margin: 0.3em 0;
+  }
+  .submenu {
+    position: static;
+    box-shadow: none;
+    border: none;
+    padding-left: 1em;
+  }
+  .submenu li a {
+    padding-left: 2em;
+  }
+}

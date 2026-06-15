@@ -15,7 +15,7 @@
     <meta name="description" content="" />
     <meta name="hexo-theme-A4" content="v2.0.1" />
     <link rel="alternate icon" type="image/webp" href="/my-blog/img/favicon.webp">
-    <title>Hexo</title>
+    <title>shikunpunk的小站</title>
 
     
         
@@ -369,7 +369,7 @@
 
     <div style="text-align: left;">
 
-        <a class="index-logo" href="/my-blog/">Hexo</a>
+        <a class="index-logo" href="/my-blog/">shikunpunk的小站</a>
         <div style="margin-bottom: 12px;"> 
             <ul class="menu">
                 
@@ -439,13 +439,37 @@
                     
                 
             </ul>
+            <script>
+            (function() {
+                document.querySelectorAll('.dropdown > a').forEach(function(link) {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        var li = this.parentElement;
+                        var isOpen = li.classList.contains('open');
+                        // 关闭所有同级下拉
+                        li.parentElement.querySelectorAll('.dropdown.open').forEach(function(d) {
+                            d.classList.remove('open');
+                        });
+                        // 切换当前
+                        if (!isOpen) li.classList.add('open');
+                    });
+                });
+                // 点击页面其他区域关闭所有下拉
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.dropdown')) {
+                        document.querySelectorAll('.dropdown.open').forEach(function(d) {
+                            d.classList.remove('open');
+                        });
+                    }
+                });
+            })();
+            </script>
         </div>
     </div>
 
                     <div class="post-main">
     
     
-       
        
        
             <div class="post-md">
