@@ -105,5 +105,5 @@ deploy:
   repo: https://github.com/shikunpneg/my-blog.git
   branch: main
 
-# 网站 URL
+# 网站 URL (GitHub Pages 项目站点)
 url: https://shikunpneg.github.io/my-blog
