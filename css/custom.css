@@ -1,172 +1,441 @@
-/* 复古打字机 / 打印机风格 */
-/* 适用于 Hexo Theme A4 */
+/* =============================================
+   首页黑底极简风格（仅作用于 #home-layout）
+   ============================================= */
 
-/* 全局等宽字体 – 模拟打字机/电传打印机 */
-body, 
-.post-content, 
-.index-content,
-.menu,
-.post-title,
-.post-meta,
-.comment,
-#article-container,
-.page-content,
-blockquote,
-p,
-li,
-h1, h2, h3, h4, h5, h6,
-span, div {
-  font-family: 'Courier New', 'Courier', 'SF Mono', 'Fira Code', monospace !important;
+/* ---- 全局底色覆盖 ---- */
+html, body {
+  background: #000 !important;
+  color: #ccc;
 }
 
-/* 让代码块更像老式打印机打印的代码 */
-pre, code, kbd, tt, var {
-  font-family: 'Courier New', 'Courier', monospace !important;
-  font-size: 0.9em;
-  background-color: #f4efdf;
-  color: #4a2c18;
+/* ---- 解除 A4 主题的宽度限制 ---- */
+.paper {
+  background: #000 !important;
+  padding: 0 !important;
+}
+.index-main,
+.shadow-drop-2-bottom.index-main {
+  max-width: none !important;
+  width: 100% !important;
+  background: #000 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
 }
 
-/* 文章正文略微增加字间距和行高，模拟打字机质感 */
-.post-content p, 
-.post-content li {
-  letter-spacing: 0.02em;
-  line-height: 1.6;
+/* ---- 文章页黑底 ---- */
+.paper-main {
+  background: #000 !important;
+  color: #ccc !important;
+  max-width: 880px;
+  box-shadow: none !important;
 }
 
-/* 链接下划线模拟手动打字机加粗效果（不花哨） */
-a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
+/* ---- 文章页标题/链接白色 ---- */
+.paper-main .logo {
+  color: #fff !important;
+}
+.paper-main .header a:link,
+.paper-main .header a:visited {
+  color: #ccc !important;
+}
+.paper-main .header a:hover {
+  color: #fff !important;
+}
+.paper-main .description {
+  color: #666 !important;
+}
+.paper-main .nav a {
+  color: #999 !important;
+}
+.paper-main .nav a:hover {
+  color: #fff !important;
+}
+.paper-main .post-main-title {
+  color: #eee !important;
+}
+.paper-main .post-content {
+  color: #ccc !important;
 }
 
-/* 鼠标悬浮时像打字机敲击加重 */
-a:hover {
-  text-decoration-thickness: 2px;
-  background-color: rgba(139, 69, 19, 0.05);
+/* ---- 动态/归档列表页 黑底白字 ---- */
+.paper-main .archive-list {
+  background: transparent !important;
+  color: #ccc !important;
+}
+.paper-main .archive-list .archive-date,
+.paper-main .archive-list .archive-main,
+.paper-main .archive-list .archive-title {
+  color: #ccc !important;
+}
+.paper-main .archive-list .archive-title:hover {
+  color: #fff !important;
+}
+.paper-main .archive-list .year-font-color {
+  color: #999 !important;
+}
+.paper-main .archive-list .archive li {
+  border-color: #222 !important;
+}
+.paper-main .archive-list .archive li:nth-child(even) {
+  background: transparent !important;
 }
 
-/* 模拟纸张边缘泛黄效果 */
-body {
-  background: #d9c8a9;
-  box-shadow: inset 0 0 30px rgba(0,0,0,0.05);
+/* ---- 标签云 & 分页器黑底 ---- */
+.tag-cloud-tags {
+  background: transparent !important;
+}
+.paginator .page-number,
+.paginator .space {
+  background: transparent !important;
+  color: #999 !important;
+  border-color: #333 !important;
+}
+.paginator .page-number.current {
+  background: #222 !important;
+  color: #fff !important;
 }
 
-/* 文章卡片轻微阴影 + 纸张质感 */
-.post-block,
-.index-block {
-  background: #fdfaf3;
-  border-radius: 2px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 0 0 1px rgba(224, 198, 150, 0.3);
+/* ---- 评论区黑底 ---- */
+.paper-comment-main {
+  background: transparent !important;
 }
 
-/* 打字机光标闪烁效果（可选项，鼠标悬停时在标题后出现） */
-.post-title:hover::after {
-  content: "▌";
-  animation: blink 1s step-end infinite;
-  margin-left: 6px;
-  color: #8b5a2b;
+/* ---- 暴力清除所有残余白色背景 ---- */
+.paper-main .post-md,
+.paper-main .post-content,
+.paper-main .archive-list .archive li,
+.paper-main .tag-cloud-tags,
+.paper-main .header,
+.paper-main .header-container,
+.paper-main .header-content {
+  background: transparent !important;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+/* ---- shikunpunk的小站 白色 ---- */
+#site-brand a {
+  color: #fff !important;
 }
 
-/* 回顶/回退按钮复古风格 */
-#return-to-top,
-#return-to-last {
-  background: #e6dcc8;
-  border: 1px solid #b08968;
-  color: #5c3a1e;
-  font-family: monospace;
-}
-
-/* ===== 多级下拉菜单样式 ===== */
-.menu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.5em;
-}
-
-.menu > li {
-  display: inline-block;
+/* ---- 首页布局容器 ---- */
+#home-layout {
+  background: #000;
+  color: #ccc;
+  min-height: 100vh;
   position: relative;
-  margin: 0;
-  padding: 0;
+  padding: 0 4em 3em;
+  font-family: 'LXGW WenKai', 'Noto Serif SC', 'Courier New', monospace;
 }
 
-.menu > li > a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
-  padding: 0.2em 0.4em;
+/* ---- 右上角站名 ---- */
+#site-brand {
+  position: fixed;
+  top: 1.2em;
+  right: 2em;
+  z-index: 100;
+  font-size: 0.85em;
+  letter-spacing: 1px;
+}
+#site-brand a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+#site-brand a:hover {
+  color: #fff;
+}
+
+/* ---- 侧边栏切换按钮 ---- */
+#sidebar-toggle {
+  position: fixed;
+  top: 1.2em;
+  left: 1.2em;
+  z-index: 100;
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  font-size: 1.2em;
+  padding: 0.3em 0.5em;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s, border-color 0.2s;
+}
+#sidebar-toggle:hover {
+  color: #fff;
+  border-color: #666;
+}
+
+/* ---- 主体 Flex 布局 ---- */
+#home-body {
+  display: flex;
+  gap: 3em;
+  margin-top: 4em;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  transition: all 0.3s;
+}
+
+/* ---- 侧边栏 ---- */
+#home-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  padding: 1.5em 0;
+  border-right: 1px solid #222;
+  transition: all 0.3s;
+}
+#home-sidebar.hidden {
+  display: none;
+}
+#home-body.sidebar-hidden #home-main {
+  margin-left: 0;
+}
+#home-sidebar h3 {
+  color: #666;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0 0 0.8em 0;
+  font-weight: normal;
+}
+#home-sidebar ul {
+  list-style: none;
+  margin: 0 0 1.5em 0;
+  padding: 0;
+}
+#home-sidebar ul li {
+  margin: 0.3em 0;
+}
+#home-sidebar ul li a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: color 0.2s;
+}
+#home-sidebar ul li a:hover {
+  color: #fff;
+}
+
+/* 侧边栏内垂直下拉菜单 */
+.menu-vertical {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.menu-vertical li {
+  margin: 0.2em 0;
+}
+.menu-vertical li a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.9em;
+  display: block;
+  padding: 0.2em 0;
+}
+.menu-vertical li a:hover {
+  color: #fff;
+}
+.dropdown-vertical .submenu-vertical {
+  display: none;
+  list-style: none;
+  padding-left: 1em;
+  margin: 0.2em 0;
+}
+.dropdown-vertical.open .submenu-vertical {
+  display: block;
+}
+.dropdown-vertical > a {
   cursor: pointer;
 }
 
-/* 子菜单容器 */
-.submenu {
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 100%;
-  background-color: #fdfaf3;
-  border: 1px solid #b08968;
-  padding: 0.5em 0;
+/* ---- 右侧主内容 ---- */
+#home-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---- 1. 自我介绍 ---- */
+#intro-section {
+  margin-bottom: 3em;
+  padding-bottom: 2em;
+  border-bottom: 1px solid #1a1a1a;
+}
+.intro-cn {
+  font-size: 1.1em;
+  color: #aaa;
+  line-height: 1.6;
+  margin: 0 0 0.5em 0;
+}
+.intro-en {
+  font-size: 0.9em;
+  color: #666;
+  line-height: 1.5;
   margin: 0;
-  list-style: none;
-  min-width: 140px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  z-index: 1000;
+  font-style: italic;
 }
 
-.submenu li {
+/* ---- 2. 电影展框 ---- */
+#movie-section {
+  margin-bottom: 3em;
+  padding-bottom: 2em;
+  border-bottom: 1px solid #1a1a1a;
+}
+.movie-poster {
+  margin-bottom: 1.5em;
+  display: flex;
+  justify-content: center;
+}
+.movie-poster img {
+  max-width: 100%;
+  max-height: 70vh;
+  height: auto;
+  display: block;
+  border: 1px solid #222;
+  object-fit: contain;
+}
+
+/* 台词双栏：居中、冷峻 */
+.movie-quote {
+  display: flex;
+  gap: 3em;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: 'Noto Sans SC', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+.quote-column {
+  flex: 1;
+  max-width: 460px;
+  text-align: justify;
+  text-justify: inter-ideograph;
+}
+.quote-speaker {
+  display: block;
+  text-align: center;
+  font-size: 0.75em;
+  color: #666;
+  letter-spacing: 3px;
+  margin-bottom: 1em;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+.quote-text {
+  font-size: 0.82em;
+  color: #888;
+  line-height: 1.9;
   margin: 0;
-  padding: 0;
+  text-align: justify;
+  text-justify: inter-ideograph;
+  font-weight: 300;
+  letter-spacing: 0.5px;
 }
 
-.submenu li a {
-  display: block;
-  padding: 0.3em 1em;
-  white-space: nowrap;
-  color: #3e2a1f;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
-  font-family: inherit;
-}
-
-.submenu li a:hover {
-  background-color: #e6dcc8;
-  color: #8b4513;
-}
-
-/* 悬停打开 + 点击打开（JS 控制 .open 类） */
-.dropdown:hover .submenu,
-.dropdown.open .submenu {
-  display: block;
-}
-
-/* 移动端适配 */
 @media (max-width: 768px) {
-  .menu {
-    display: block;
+  .movie-quote {
+    flex-direction: column;
+    gap: 2em;
   }
-  .menu > li {
-    display: block;
-    margin: 0.3em 0;
+  .quote-column {
+    max-width: 100%;
   }
-  .submenu {
-    position: static;
-    box-shadow: none;
-    border: none;
-    padding-left: 1em;
+}
+
+/* ---- 3. 近期动态 ---- */
+#recent-posts-section {
+  margin-bottom: 3em;
+}
+#recent-posts-section h2 {
+  font-size: 0.8em;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: normal;
+  margin: 0 0 1em 0;
+}
+#recent-posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+.recent-post-item {
+  display: flex;
+  align-items: baseline;
+  gap: 1em;
+  padding: 0.3em 0;
+  border-bottom: 1px solid #111;
+}
+.recent-post-date {
+  font-size: 0.75em;
+  color: #555;
+  flex-shrink: 0;
+  font-family: 'Courier New', monospace;
+}
+.recent-post-item a {
+  color: #999;
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: color 0.2s;
+}
+.recent-post-item a:hover {
+  color: #fff;
+}
+
+/* ---- 4. 友情链接 ---- */
+#friends-section {
+  margin-top: 2em;
+}
+#friends-section h2 {
+  font-size: 0.8em;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: normal;
+  margin: 0 0 0.8em 0;
+}
+.friend-links {
+  display: flex;
+  gap: 1.5em;
+  flex-wrap: wrap;
+}
+.friend-links a {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.85em;
+  transition: color 0.2s;
+}
+.friend-links a:hover {
+  color: #ccc;
+}
+
+/* ---- 空分类 & 404 页面 ---- */
+.archive-empty span,
+.post-md h2 {
+  color: #888 !important;
+}
+.post-md a {
+  color: #999 !important;
+}
+.post-md a:hover {
+  color: #fff !important;
+}
+
+/* ---- 响应式 ---- */
+@media (max-width: 768px) {
+  #home-layout {
+    padding: 0 1em 2em;
   }
-  .submenu li a {
-    padding-left: 2em;
+  #home-body {
+    flex-direction: column;
+    margin-top: 3em;
+  }
+  #home-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #222;
+    padding: 1em 0;
+  }
+  #site-brand {
+    right: 1em;
+    top: 1em;
   }
 }

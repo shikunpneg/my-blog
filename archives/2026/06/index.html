@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     
-    <style>
-        body
-        {
-            font-family: "Times New Roman", Helvetica, Tahoma, Arial,   "notoserifsc-medium", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif !important;
-
-        }
-    </style>
-
     <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
@@ -105,238 +97,10 @@
     </style>
 
     
-    <style>
-        :root {
-            --waline-theme-color: #3e2a1f; 
-            --waline-color: #3e2a1f; 
-            --waline-border-color: #3e2a1f; 
-            --waline-white: #3e2a1f; 
-            --waline-bgcolor-light: #fdfaf3;  
-        }
-        body {
-            color: #3e2a1f;
-            background: #d9c8a9;
-        }
-        .post-md code {
-            background: #e6dcc8;
-            color: #8b5a2b; 
-        }
-        .post-md pre, .post-md .highlight {
-            background: #e6dcc8;
-            color: #8b5a2b; 
-        }
-        pre .string, pre .value, pre .inheritance, pre .header, pre .ruby .symbol, pre .xml .cdata {
-            color: #3e2a1f;
-        }
-        pre .number, pre .preprocessor, pre .built_in, pre .literal, pre .params, pre .constant {
-            color: #3e2a1f;
-        }
-        .year-font-color {
-            color: #3e2a1f !important;
-        }
-        .wl-card span.wl-nick {
-            color: #3e2a1f; 
-        }
-        .wl-card .wl-badge {
-            border: 1px solid #3e2a1f;
-            color: #3e2a1f; 
-        }
-        .wl-btn {
-            border: 1px solid #3e2a1f; 
-            color:  #3e2a1f;  
-        }
-        .wl-btn.primary {
-            color: #fdfaf3; 
-        }
-        .wl-header label {
-            color: #3e2a1f;
-        }
-        a {
-            color: #8b4513;
-        }
-
-        .post-md a {
-            color: #8b4513;
-        }
-
-        .nav li a {
-            color: #8b4513;
-        }
-
-        .archive-main a:link {
-            color: #8b4513;
-        }
-        .archive-main a:visited {
-            color: #a0522d; 
-        }
-
-        .archive li span {
-            color: #3e2a1f;
-        }
-
-        .post-main-title {
-            color: #3e2a1f;
-        }
-
-        .post-md h1,
-        .post-md h2,
-        .post-md h3,
-        .post-md h4,
-        .post-md h5,
-        .post-md h6 {
-            color: #3e2a1f;
-        }
-
-        [data-waline] p {
-            color: #3e2a1f;
-        }
-        [data-waline] a {
-            color: #3e2a1f;
-        } 
-        .wl-sort li.active {
-            color: #3e2a1f;
-        }
-
-        .wl-card .wl-meta>span {
-            background: #fdfaf3;
-        }
-
-        .paper {
-            background: #d9c8a9;
-        }
-
-        .index-main {
-            background: #f0e5cf;
-        }
-
-        .paper-main {
-            background: #fdfaf3;
-        }
-
-        .wl-panel {
-            background: #fdfaf3;
-        }
-
-        .archive li:nth-child(odd) {
-            background: #fdfaf3;
-            ;
-        }
-
-        .archive li:nth-child(even) {
-            background: #fdfaf3;
-        }
-
-        .post-md table tr:nth-child(odd) td {
-            background: #fdfaf3;
-        }
-
-        .post-md table tr:nth-child(even) td {
-            background: #fdfaf3;
-        }
-
-    
-        .progress-wrap::after {
-            color: #3e2a1f; /* 箭头的颜色 */
-        }
-        .progress-wrap svg.progress-circle path {
-	        stroke: #3e2a1f; /* 边框的颜色 */
-        }
-        .progress-wrap::before {
-	        background-image: linear-gradient(298deg, #8b4513, #8b4513); /* 鼠标滑过的箭头颜色 */
-         }
-
-        .return-to-last-progress-wrap::after {
-            color: #3e2a1f; /* 箭头的颜色 */
-        }
-        .return-to-last-progress-wrap svg.progress-circle path {
-	        stroke: #3e2a1f; /* 边框的颜色 */
-        }
-        .return-to-last-progress-wrap::before {
-	        background-image: linear-gradient(298deg, #8b4513, #8b4513); /* 鼠标滑过的箭头颜色 */
-         }
-
-         .left-toc-container::-webkit-scrollbar-thumb {
-            background-color: #3e2a1f; /* 设置滚动条拖动块的颜色 */
-        }
-
-        .bs-docs-sidebar .nav>.active>a,
-        .bs-docs-sidebar .nav>li>a:hover,
-        .bs-docs-sidebar .nav>li>a:focus {
-            color: #8b4513;
-            border-left-color: #8b4513;
-        }
-        .bs-docs-sidebar .nav>li>a {
-            color:  #3e2a1f;
-        }
-    </style>
-
     
 
 
     <body>
-        
-        <script src="https://cdn.jsdelivr.net/npm/darkreader@4.9.80/darkreader.min.js"></script>
-        <script>
-            const drOptions = {
-                brightness: 100,
-                contrast: 95,
-                sepia: 10,
-                darkSchemeTextColor: '#e0e0e0',  // 粉笔白文字
-                darkSchemeBackgroundColor: '#1e1e1e', // 黑板灰背景
-                scrollbarStyle: 'native'
-            };
-
-            const savedTheme = localStorage.getItem('theme');
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
-                DarkReader.enable(drOptions);
-            }
-
-            window.addEventListener('DOMContentLoaded', () => {
-                const btn = document.createElement('button');
-                btn.innerText = '🌓';
-                // 按钮样式：仿照你之前的布局，放在右下角
-                btn.style.cssText = `
-                    position: fixed; 
-                    bottom: 40px; 
-                    left: 42px; 
-                    z-index: 9999;
-                    width: 44px; 
-                    height: 44px; 
-                    border-radius: 50%; 
-                    border: 1px solid #ccc;
-                    background: #f7f5ed; 
-                    color: #000;
-                    font-size: 22px; 
-                    cursor: pointer;
-                    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-                    transition: transform 0.2s, background-color 0.3s;
-                `;
-                // 根据当前状态初始化按钮颜色
-                if (DarkReader.isEnabled()) {
-                    btn.style.backgroundColor = '#1e1e1e';
-                    btn.style.color = '#fff';
-                }
-                btn.onmouseover = () => btn.style.transform = 'scale(1.1)';
-                btn.onmouseout = () => btn.style.transform = 'scale(1)';
-                document.body.appendChild(btn);
-                // 点击切换逻辑
-                btn.addEventListener('click', () => {
-                    if (DarkReader.isEnabled()) {
-                        DarkReader.disable();
-                        localStorage.setItem('theme', 'light');
-                        btn.style.backgroundColor = '#f7f5ed';
-                        btn.style.color = '#000';
-                    } else {
-                        DarkReader.enable(drOptions);
-                        localStorage.setItem('theme', 'dark');
-                        btn.style.backgroundColor = '#1e1e1e';
-                        btn.style.color = '#fff';
-                    }
-                });
-            });
-        </script>
-        
         
             
         
@@ -361,12 +125,6 @@
             }
             
         </style>
-        <img 
-            alt="^-^" 
-            cache-control="max-age=86400" 
-            class="header-img" 
-            src="/my-blog/img/favicon.webp" 
-        />
         <div class="header-content">
             <a class="logo" href="/my-blog/">shikunpunk的小站</a> 
             <span class="description"></span> 
@@ -384,73 +142,79 @@
         
             
                 
-                    <li><a href="/my-blog/list/">文章</a></li>
+                    <li><a href="/my-blog/list/">动态</a></li>
                 
             
         
             
                 
                     
-                        <li><a href="/my-blog/categories/%E8%AF%97%E6%AD%8C/">诗歌</a></li>
+                        <li><a href="/my-blog/tags/%E8%AF%97%E6%AD%8C/">诗歌</a></li>
                     
                 
                     
-                        <li><a href="/my-blog/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+                        <li><a href="/my-blog/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
                     
                 
                     
-                        <li><a href="/my-blog/categories/%E7%81%B5%E6%84%9F/">灵感</a></li>
+                        <li><a href="/my-blog/tags/%E7%81%B5%E6%84%9F/">灵感</a></li>
                     
                 
                     
-                        <li><a href="/my-blog/categories/%E5%B0%8F%E8%AF%B4/">小说</a></li>
-                    
-                
-            
-        
-            
-                
-                    
-                        <li><a href="/my-blog/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
-                    
-                
-                    
-                        <li><a href="/my-blog/categories/%E9%87%8F%E5%AD%90%E8%AE%A1%E7%AE%97/">量子计算</a></li>
-                    
-                
-                    
-                        <li><a href="/my-blog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li>
-                    
-                
-                    
-                        <li><a href="/my-blog/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></li>
-                    
-                
-                    
-                        <li><a href="/my-blog/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能</a></li>
-                    
-                
-                    
-                        <li><a href="/my-blog/categories/%E5%BC%80%E5%8F%91/">开发</a></li>
+                        <li><a href="/my-blog/tags/%E5%B0%8F%E8%AF%B4/">小说</a></li>
                     
                 
             
         
             
                 
-                    <li><a href="/my-blog/categories/%E8%AE%BA%E6%96%87/">论文</a></li>
+                    
+                        <li><a href="/my-blog/tags/%E7%AE%97%E6%B3%95/">算法</a></li>
+                    
+                
+                    
+                        <li><a href="/my-blog/tags/%E9%87%8F%E5%AD%90%E8%AE%A1%E7%AE%97/">量子计算</a></li>
+                    
+                
+                    
+                        <li><a href="/my-blog/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li>
+                    
+                
+                    
+                        <li><a href="/my-blog/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></li>
+                    
+                
+                    
+                        <li><a href="/my-blog/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能</a></li>
+                    
+                
+                    
+                        <li><a href="/my-blog/tags/%E5%BC%80%E5%8F%91/">开发</a></li>
+                    
                 
             
         
             
                 
-                    <li><a href="/my-blog/categories/cv/">CV</a></li>
+                    <li><a href="/my-blog/tags/%E8%AE%BA%E6%96%87/">论文</a></li>
                 
             
         
             
                 
-                    <li><a href="/my-blog/categories/%E5%85%B6%E4%BB%96/">其他</a></li>
+                    <li><a href="/my-blog/tags/cv/">CV</a></li>
+                
+            
+        
+            
+                
+                    <li><a href="/my-blog/tags/%E6%88%91%E6%89%80%E7%88%B1%E7%9A%84%E4%B8%80%E5%88%87/">我所爱的一切</a></li>
+                
+            
+        
+            
+                
+                    <li><a href="/my-blog/tags/%E5%85%B6%E4%BB%96/">其他</a></li>
                 
             
         
@@ -478,30 +242,8 @@
         
         
     </div>
-
-    <div class="post-meta">
-        <i>
-        
-        </i>
-    </div>
     <br>
     
-    
-        
-            
-    
-            <div class="post-footer-pre-next">
-                
-                    <span>〈 上一篇：<a href='/my-blog/'></a></span>
-                
-
-                
-                    <span class="post-footer-pre-next-last-span-right">下一篇 〉：<a href="/my-blog/"></a>
-                    </span>
-                
-            </div>
-    
-        
     
 
     
@@ -529,37 +271,10 @@
 
                     
 
-                    <div class="footer">
-    
-        <span> 
-            © 2025 Powered by Hexo &amp; A4 
-
-            
-                
-
-            
-        </span>
-       
-    
-</div>
-
-
-
-<!--这是指一条线往下的内容-->
-<div class="footer-last">
-    
-            <span>⚙️ 打字机的声音，纸墨的香气</span>
-            
-                <span class="footer-last-span-right"><i>本站由<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/index.html">Hexo</a>驱动｜使用<a target="_blank" rel="noopener" href="https://github.com/HiNinoJay/hexo-theme-A4">Hexo-theme-A4</a>主题</i></span>
-            
-    
-</div>
-
-
+                    
     
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
-    <!--目录-->
     
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type="text/javascript" ></script>
@@ -568,17 +283,14 @@
 <script src="/my-blog/js/toc.js"></script>
 
     
-
     
 <script src="/my-blog/js/randomHeaderContent.js"></script>
 
-    <!--回到顶部按钮-->
     
         
 <script src="/my-blog/js/returnToTop.js"></script>
 
     
-
     
         
 <script src="/my-blog/js/returnToLastPage.js"></script>
@@ -587,14 +299,10 @@
 
 
 
-
-
 <script src="/my-blog/js/lightgallery/lightgallery.umd.min.js"></script>
 
 
-
 <script src="/my-blog/js/lightgallery/plugins/lg-thumbnail.umd.min.js"></script>
-
 
 
 <script src="/my-blog/js/lightgallery/plugins/lg-fullscreen.umd.min.js"></script>
@@ -612,31 +320,25 @@
 <script src="/my-blog/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
 
 
-
-
 <script type="text/javascript">
-     
     if (typeof lightGallery !== "undefined") {
         var options1 = {
             selector: '.gallery-item',
-            plugins: [lgThumbnail, lgFullscreen, lgAutoplay, lgZoom, lgRotate, lgPager], // 启用插件
-            thumbnail: true,          // 显示缩略图
-            zoom: true,               // 启用缩放功
-            rotate: true,             // 启用旋转功能能
-            autoplay: true,        // 启用自动播放功能
-            fullScreen: true,      // 启用全屏功能
-            pager: false, //页码,
-            zoomFromOrigin: true,   // 从原始位置缩放
-            actualSize: true,       // 启用查看实际大小的功能
-            enableZoomAfter: 300,    // 延迟缩放，确保图片加载完成后可缩放
+            plugins: [lgThumbnail, lgFullscreen, lgAutoplay, lgZoom, lgRotate, lgPager],
+            thumbnail: true,
+            zoom: true,
+            rotate: true,
+            autoplay: true,
+            fullScreen: true,
+            pager: false,
+            zoomFromOrigin: true,
+            actualSize: true,
+            enableZoomAfter: 300,
         };
-        lightGallery(document.getElementsByClassName('.article-gallery')[0], options1); // 修复选择器
+        lightGallery(document.getElementsByClassName('.article-gallery')[0], options1);
     }
-    
 </script>
 
-
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script> 
 
                 </div>
             

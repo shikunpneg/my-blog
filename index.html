@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     
-    <style>
-        body
-        {
-            font-family: "Times New Roman", Helvetica, Tahoma, Arial,   "notoserifsc-medium", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif !important;
-
-        }
-    </style>
-
     <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
@@ -105,238 +97,10 @@
     </style>
 
     
-    <style>
-        :root {
-            --waline-theme-color: #3e2a1f; 
-            --waline-color: #3e2a1f; 
-            --waline-border-color: #3e2a1f; 
-            --waline-white: #3e2a1f; 
-            --waline-bgcolor-light: #fdfaf3;  
-        }
-        body {
-            color: #3e2a1f;
-            background: #d9c8a9;
-        }
-        .post-md code {
-            background: #e6dcc8;
-            color: #8b5a2b; 
-        }
-        .post-md pre, .post-md .highlight {
-            background: #e6dcc8;
-            color: #8b5a2b; 
-        }
-        pre .string, pre .value, pre .inheritance, pre .header, pre .ruby .symbol, pre .xml .cdata {
-            color: #3e2a1f;
-        }
-        pre .number, pre .preprocessor, pre .built_in, pre .literal, pre .params, pre .constant {
-            color: #3e2a1f;
-        }
-        .year-font-color {
-            color: #3e2a1f !important;
-        }
-        .wl-card span.wl-nick {
-            color: #3e2a1f; 
-        }
-        .wl-card .wl-badge {
-            border: 1px solid #3e2a1f;
-            color: #3e2a1f; 
-        }
-        .wl-btn {
-            border: 1px solid #3e2a1f; 
-            color:  #3e2a1f;  
-        }
-        .wl-btn.primary {
-            color: #fdfaf3; 
-        }
-        .wl-header label {
-            color: #3e2a1f;
-        }
-        a {
-            color: #8b4513;
-        }
-
-        .post-md a {
-            color: #8b4513;
-        }
-
-        .nav li a {
-            color: #8b4513;
-        }
-
-        .archive-main a:link {
-            color: #8b4513;
-        }
-        .archive-main a:visited {
-            color: #a0522d; 
-        }
-
-        .archive li span {
-            color: #3e2a1f;
-        }
-
-        .post-main-title {
-            color: #3e2a1f;
-        }
-
-        .post-md h1,
-        .post-md h2,
-        .post-md h3,
-        .post-md h4,
-        .post-md h5,
-        .post-md h6 {
-            color: #3e2a1f;
-        }
-
-        [data-waline] p {
-            color: #3e2a1f;
-        }
-        [data-waline] a {
-            color: #3e2a1f;
-        } 
-        .wl-sort li.active {
-            color: #3e2a1f;
-        }
-
-        .wl-card .wl-meta>span {
-            background: #fdfaf3;
-        }
-
-        .paper {
-            background: #d9c8a9;
-        }
-
-        .index-main {
-            background: #f0e5cf;
-        }
-
-        .paper-main {
-            background: #fdfaf3;
-        }
-
-        .wl-panel {
-            background: #fdfaf3;
-        }
-
-        .archive li:nth-child(odd) {
-            background: #fdfaf3;
-            ;
-        }
-
-        .archive li:nth-child(even) {
-            background: #fdfaf3;
-        }
-
-        .post-md table tr:nth-child(odd) td {
-            background: #fdfaf3;
-        }
-
-        .post-md table tr:nth-child(even) td {
-            background: #fdfaf3;
-        }
-
-    
-        .progress-wrap::after {
-            color: #3e2a1f; /* 箭头的颜色 */
-        }
-        .progress-wrap svg.progress-circle path {
-	        stroke: #3e2a1f; /* 边框的颜色 */
-        }
-        .progress-wrap::before {
-	        background-image: linear-gradient(298deg, #8b4513, #8b4513); /* 鼠标滑过的箭头颜色 */
-         }
-
-        .return-to-last-progress-wrap::after {
-            color: #3e2a1f; /* 箭头的颜色 */
-        }
-        .return-to-last-progress-wrap svg.progress-circle path {
-	        stroke: #3e2a1f; /* 边框的颜色 */
-        }
-        .return-to-last-progress-wrap::before {
-	        background-image: linear-gradient(298deg, #8b4513, #8b4513); /* 鼠标滑过的箭头颜色 */
-         }
-
-         .left-toc-container::-webkit-scrollbar-thumb {
-            background-color: #3e2a1f; /* 设置滚动条拖动块的颜色 */
-        }
-
-        .bs-docs-sidebar .nav>.active>a,
-        .bs-docs-sidebar .nav>li>a:hover,
-        .bs-docs-sidebar .nav>li>a:focus {
-            color: #8b4513;
-            border-left-color: #8b4513;
-        }
-        .bs-docs-sidebar .nav>li>a {
-            color:  #3e2a1f;
-        }
-    </style>
-
     
 
 
     <body>
-        
-        <script src="https://cdn.jsdelivr.net/npm/darkreader@4.9.80/darkreader.min.js"></script>
-        <script>
-            const drOptions = {
-                brightness: 100,
-                contrast: 95,
-                sepia: 10,
-                darkSchemeTextColor: '#e0e0e0',  // 粉笔白文字
-                darkSchemeBackgroundColor: '#1e1e1e', // 黑板灰背景
-                scrollbarStyle: 'native'
-            };
-
-            const savedTheme = localStorage.getItem('theme');
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
-                DarkReader.enable(drOptions);
-            }
-
-            window.addEventListener('DOMContentLoaded', () => {
-                const btn = document.createElement('button');
-                btn.innerText = '🌓';
-                // 按钮样式：仿照你之前的布局，放在右下角
-                btn.style.cssText = `
-                    position: fixed; 
-                    bottom: 40px; 
-                    left: 42px; 
-                    z-index: 9999;
-                    width: 44px; 
-                    height: 44px; 
-                    border-radius: 50%; 
-                    border: 1px solid #ccc;
-                    background: #f7f5ed; 
-                    color: #000;
-                    font-size: 22px; 
-                    cursor: pointer;
-                    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-                    transition: transform 0.2s, background-color 0.3s;
-                `;
-                // 根据当前状态初始化按钮颜色
-                if (DarkReader.isEnabled()) {
-                    btn.style.backgroundColor = '#1e1e1e';
-                    btn.style.color = '#fff';
-                }
-                btn.onmouseover = () => btn.style.transform = 'scale(1.1)';
-                btn.onmouseout = () => btn.style.transform = 'scale(1)';
-                document.body.appendChild(btn);
-                // 点击切换逻辑
-                btn.addEventListener('click', () => {
-                    if (DarkReader.isEnabled()) {
-                        DarkReader.disable();
-                        localStorage.setItem('theme', 'light');
-                        btn.style.backgroundColor = '#f7f5ed';
-                        btn.style.color = '#000';
-                    } else {
-                        DarkReader.enable(drOptions);
-                        localStorage.setItem('theme', 'dark');
-                        btn.style.backgroundColor = '#1e1e1e';
-                        btn.style.color = '#fff';
-                    }
-                });
-            });
-        </script>
-        
         
             
         
@@ -346,176 +110,196 @@
 
             
                 <div class="shadow-drop-2-bottom index-main">
-                    <!-- 这个header就是特指index的头部 -->
+                    <!-- ===== 首页自定义布局 ===== -->
+<div id="home-layout">
 
+  <!-- 右上角：站名 -->
+  <div id="site-brand">
+    <a href="/my-blog/">shikunpunk的小站</a>
+  </div>
 
-    <div class="index-header-line" >
+  <!-- 侧边栏切换按钮 -->
+  <button id="sidebar-toggle" title="切换侧边栏">☰</button>
+
+  <!-- 主体区域 -->
+  <div id="home-body">
+
+    <!-- 左侧：分类导航侧边栏 -->
+    <aside id="home-sidebar">
+      <h3>分类</h3>
+      <ul>
         
-            <div id="hiddenHeaderContentArray" style="display: none;">
-                
-                
-                
-                    <span>The quick brown fox jumps over the lazy dog</span>
-                
-                    <span>Hello, world!</span>
-                
-                    <span>Keep it simple, stupid.</span>
-                
-            </div>
-            <span id="targetSpan"></span>
+      </ul>
+      <!-- 在侧边栏底部显示所有页面链接（菜单） -->
+      <h3 style="margin-top:2em;">导航</h3>
+      <ul class="menu-vertical">
         
-    </div>
+          
+            <li><a href="/my-blog/">首页</a></li>
+          
+        
+          
+            <li><a href="/my-blog/list/">动态</a></li>
+          
+        
+          
+            <li class="dropdown-vertical">
+              <a href="javascript:void(0)">写作 ▾</a>
+              <ul class="submenu-vertical">
+                
+                  <li><a href="/my-blog/tags/%E8%AF%97%E6%AD%8C/">诗歌</a></li>
+                
+                  <li><a href="/my-blog/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+                
+                  <li><a href="/my-blog/tags/%E7%81%B5%E6%84%9F/">灵感</a></li>
+                
+                  <li><a href="/my-blog/tags/%E5%B0%8F%E8%AF%B4/">小说</a></li>
+                
+              </ul>
+            </li>
+          
+        
+          
+            <li class="dropdown-vertical">
+              <a href="javascript:void(0)">技术文章 ▾</a>
+              <ul class="submenu-vertical">
+                
+                  <li><a href="/my-blog/tags/%E7%AE%97%E6%B3%95/">算法</a></li>
+                
+                  <li><a href="/my-blog/tags/%E9%87%8F%E5%AD%90%E8%AE%A1%E7%AE%97/">量子计算</a></li>
+                
+                  <li><a href="/my-blog/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li>
+                
+                  <li><a href="/my-blog/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></li>
+                
+                  <li><a href="/my-blog/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能</a></li>
+                
+                  <li><a href="/my-blog/tags/%E5%BC%80%E5%8F%91/">开发</a></li>
+                
+              </ul>
+            </li>
+          
+        
+          
+            <li><a href="/my-blog/tags/%E8%AE%BA%E6%96%87/">论文</a></li>
+          
+        
+          
+            <li><a href="/my-blog/tags/cv/">CV</a></li>
+          
+        
+          
+            <li><a href="/my-blog/tags/%E6%88%91%E6%89%80%E7%88%B1%E7%9A%84%E4%B8%80%E5%88%87/">我所爱的一切</a></li>
+          
+        
+          
+            <li><a href="/my-blog/tags/%E5%85%B6%E4%BB%96/">其他</a></li>
+          
+        
+      </ul>
+    </aside>
 
+    <!-- 右侧：主要内容 -->
+    <main id="home-main">
 
-    <div style="text-align: left;">
+      <!-- 1. 自我介绍 -->
+      <section id="intro-section">
+        <p class="intro-cn">一个尚未成功的梦想家，一个厌恶一切的坏分子，是一个人。</p>
+        <p class="intro-en">A dreamer who has not yet succeeded, a miscreant who hates everything, just a human being.</p>
+      </section>
 
-        <a class="index-logo" href="/my-blog/">shikunpunk的小站</a>
-        <div style="margin-bottom: 12px;"> 
-            <ul class="menu">
-                
-                    
-                        <!-- 普通菜单项 -->
-                        <li><a href="/my-blog/">首页</a></li>
-                    
-                
-                    
-                        <!-- 普通菜单项 -->
-                        <li><a href="/my-blog/list/">文章</a></li>
-                    
-                
-                    
-                        <!-- 有子菜单 -->
-                        <li class="dropdown">
-                            <a href="javascript:void(0)">写作 ▾</a>
-                            <ul class="submenu">
-                                
-                                    <li><a href="/my-blog/categories/%E8%AF%97%E6%AD%8C/">诗歌</a></li>
-                                
-                                    <li><a href="/my-blog/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li>
-                                
-                                    <li><a href="/my-blog/categories/%E7%81%B5%E6%84%9F/">灵感</a></li>
-                                
-                                    <li><a href="/my-blog/categories/%E5%B0%8F%E8%AF%B4/">小说</a></li>
-                                
-                            </ul>
-                        </li>
-                    
-                
-                    
-                        <!-- 有子菜单 -->
-                        <li class="dropdown">
-                            <a href="javascript:void(0)">技术文章 ▾</a>
-                            <ul class="submenu">
-                                
-                                    <li><a href="/my-blog/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
-                                
-                                    <li><a href="/my-blog/categories/%E9%87%8F%E5%AD%90%E8%AE%A1%E7%AE%97/">量子计算</a></li>
-                                
-                                    <li><a href="/my-blog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li>
-                                
-                                    <li><a href="/my-blog/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></li>
-                                
-                                    <li><a href="/my-blog/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能</a></li>
-                                
-                                    <li><a href="/my-blog/categories/%E5%BC%80%E5%8F%91/">开发</a></li>
-                                
-                            </ul>
-                        </li>
-                    
-                
-                    
-                        <!-- 普通菜单项 -->
-                        <li><a href="/my-blog/categories/%E8%AE%BA%E6%96%87/">论文</a></li>
-                    
-                
-                    
-                        <!-- 普通菜单项 -->
-                        <li><a href="/my-blog/categories/cv/">CV</a></li>
-                    
-                
-                    
-                        <!-- 普通菜单项 -->
-                        <li><a href="/my-blog/categories/%E5%85%B6%E4%BB%96/">其他</a></li>
-                    
-                
-            </ul>
-            <script>
-            (function() {
-                document.querySelectorAll('.dropdown > a').forEach(function(link) {
-                    link.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        var li = this.parentElement;
-                        var isOpen = li.classList.contains('open');
-                        // 关闭所有同级下拉
-                        li.parentElement.querySelectorAll('.dropdown.open').forEach(function(d) {
-                            d.classList.remove('open');
-                        });
-                        // 切换当前
-                        if (!isOpen) li.classList.add('open');
-                    });
-                });
-                // 点击页面其他区域关闭所有下拉
-                document.addEventListener('click', function(e) {
-                    if (!e.target.closest('.dropdown')) {
-                        document.querySelectorAll('.dropdown.open').forEach(function(d) {
-                            d.classList.remove('open');
-                        });
-                    }
-                });
-            })();
-            </script>
+      <!-- 2. 电影图片 + 台词 -->
+      <section id="movie-section">
+        <div class="movie-poster">
+          <img src="/my-blog/images/%E7%89%AF%E5%B2%AD%E8%A1%97.jpg" alt="牯岭街少年杀人事件" />
         </div>
-    </div>
+        <div class="movie-quote">
+          <div class="quote-column">
+            <span class="quote-speaker">小四</span>
+            <p class="quote-text">"……因为只有我知道，只有我能够帮你，我是你现在唯一的希望了……"</p>
+          </div>
+          <div class="quote-column">
+            <span class="quote-speaker">小明</span>
+            <p class="quote-text">"你的意思是，你要帮助我来改变我，是不是？你怎么跟别人一样，我看错你了。你跟以前对我好的人一样，对我好就是要跟我交换我对你的感情。这样你就安全了，你太自私了。要改变我？我就跟这个世界一样，这个世界是不会变的，你以为你是谁啊？"</p>
+          </div>
+        </div>
+      </section>
 
-                    <div class="post-main">
-    
-    
-       
-       
-            <div class="post-md">
-                <div class=".article-gallery"></div>
-            </div>
-    
+      <!-- 3. 近期动态 -->
+      <section id="recent-posts-section">
+        <h2>近期动态</h2>
+        <div id="recent-posts-list">
+          
+            
+            
+              <div class="recent-post-item">
+                <span class="recent-post-date">06-15</span>
+                <a href="/my-blog/2026/06/15/%E6%88%91%E8%BF%94%E5%9B%9E%E6%95%85%E4%B9%A1/">我返回故乡</a>
+              </div>
+            
+              <div class="recent-post-item">
+                <span class="recent-post-date">06-15</span>
+                <a href="/my-blog/2026/06/15/%E7%A9%BF%E8%BF%87%E4%BB%96%E8%80%85%E7%9A%84%E5%87%9D%E8%A7%86/">穿过他者的凝视</a>
+              </div>
+            
+              <div class="recent-post-item">
+                <span class="recent-post-date">06-15</span>
+                <a href="/my-blog/2026/06/15/secret%20notes2/">secret notes2</a>
+              </div>
+            
+              <div class="recent-post-item">
+                <span class="recent-post-date">06-15</span>
+                <a href="/my-blog/2026/06/15/secret%20notes1/">secret notes1</a>
+              </div>
+            
+              <div class="recent-post-item">
+                <span class="recent-post-date">06-15</span>
+                <a href="/my-blog/2026/06/15/%E5%BA%B8%E5%8C%BB/">庸医</a>
+              </div>
+            
+          
+        </div>
+      </section>
+
+      <!-- 4. 友情链接 -->
+      <section id="friends-section">
+        <h2>友情链接</h2>
+        <div class="friend-links">
+          <a href="https://www.sickbaby.org/" target="_blank" rel="noopener">病孩子 sickbaby</a>
+        </div>
+      </section>
+
+    </main>
+  </div>
 </div>
+
+<script>
+(function() {
+  // 侧边栏切换
+  var toggle = document.getElementById('sidebar-toggle');
+  var sidebar = document.getElementById('home-sidebar');
+  var body = document.getElementById('home-body');
+  if(toggle && sidebar) {
+    toggle.addEventListener('click', function() {
+      sidebar.classList.toggle('hidden');
+      body.classList.toggle('sidebar-hidden');
+    });
+  }
+  // 侧边栏内下拉菜单点击切换
+  document.querySelectorAll('.dropdown-vertical > a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var li = this.parentElement;
+      li.classList.toggle('open');
+    });
+  });
+})();
+</script>
                     
-                    <div class="footer">
-    
-</div>
-
-
-    <div class="footer-last-without-line">
-        
-        <span>本站总字数：75</span>
-        
-        
-            <div class="footer-last-span-right">
-        
-        
-                <span id="busuanzi_container_site_pv" class="">
-                    本站总访问：<span id="busuanzi_value_site_pv"></span>次
-                </span>
-            </div>
-        
-    </div>
-
-
-<!--这是指一条线往下的内容-->
-<div class="footer-last">
-    
-         
-            
-                
-                <span class="index-footer-last-span">Email:<a href="mailto:your@email.com" title="your@email.com">your@email.com</a></span>
-            
-        
-    
-</div>
-
-
+                    
     
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
-    <!--目录-->
     
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type="text/javascript" ></script>
@@ -524,17 +308,14 @@
 <script src="/my-blog/js/toc.js"></script>
 
     
-
     
 <script src="/my-blog/js/randomHeaderContent.js"></script>
 
-    <!--回到顶部按钮-->
     
         
 <script src="/my-blog/js/returnToTop.js"></script>
 
     
-
     
         
 <script src="/my-blog/js/returnToLastPage.js"></script>
@@ -543,14 +324,10 @@
 
 
 
-
-
 <script src="/my-blog/js/lightgallery/lightgallery.umd.min.js"></script>
 
 
-
 <script src="/my-blog/js/lightgallery/plugins/lg-thumbnail.umd.min.js"></script>
-
 
 
 <script src="/my-blog/js/lightgallery/plugins/lg-fullscreen.umd.min.js"></script>
@@ -568,31 +345,25 @@
 <script src="/my-blog/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
 
 
-
-
 <script type="text/javascript">
-     
     if (typeof lightGallery !== "undefined") {
         var options1 = {
             selector: '.gallery-item',
-            plugins: [lgThumbnail, lgFullscreen, lgAutoplay, lgZoom, lgRotate, lgPager], // 启用插件
-            thumbnail: true,          // 显示缩略图
-            zoom: true,               // 启用缩放功
-            rotate: true,             // 启用旋转功能能
-            autoplay: true,        // 启用自动播放功能
-            fullScreen: true,      // 启用全屏功能
-            pager: false, //页码,
-            zoomFromOrigin: true,   // 从原始位置缩放
-            actualSize: true,       // 启用查看实际大小的功能
-            enableZoomAfter: 300,    // 延迟缩放，确保图片加载完成后可缩放
+            plugins: [lgThumbnail, lgFullscreen, lgAutoplay, lgZoom, lgRotate, lgPager],
+            thumbnail: true,
+            zoom: true,
+            rotate: true,
+            autoplay: true,
+            fullScreen: true,
+            pager: false,
+            zoomFromOrigin: true,
+            actualSize: true,
+            enableZoomAfter: 300,
         };
-        lightGallery(document.getElementsByClassName('.article-gallery')[0], options1); // 修复选择器
+        lightGallery(document.getElementsByClassName('.article-gallery')[0], options1);
     }
-    
 </script>
 
-
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script> 
 
                 </div>
             
