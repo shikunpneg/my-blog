@@ -189,11 +189,44 @@
           
         
           
-            <li><a href="/my-blog/tags/%E6%88%91%E6%89%80%E7%88%B1%E7%9A%84%E4%B8%80%E5%88%87/">我所爱的一切</a></li>
+            <li class="dropdown-vertical">
+              <a href="javascript:void(0)">我所爱的一切 ▾</a>
+              <ul class="submenu-vertical">
+                
+                  <li><a href="/my-blog/tags/%E6%9D%A8%E5%BE%B7%E6%98%8C/">杨德昌</a></li>
+                
+                  <li><a href="/my-blog/tags/%E9%87%91%E5%9F%BA%E5%BE%B7/">金基德</a></li>
+                
+                  <li><a href="/my-blog/tags/%E5%A8%84%E7%83%A8/">娄烨</a></li>
+                
+                  <li><a href="/my-blog/tags/%E5%9B%AD%E5%AD%90%E6%B8%A9/">园子温</a></li>
+                
+                  <li><a href="/my-blog/tags/%E5%AE%89%E5%BE%B7%E7%83%88.%E7%A5%96%E6%8B%89%E6%96%AF%E5%9F%BA/">安德烈.祖拉斯基</a></li>
+                
+                  <li><a href="/my-blog/tags/%E9%A1%BE%E5%9F%8E/">顾城</a></li>
+                
+                  <li><a href="/my-blog/tags/%E9%AA%86%E4%B8%80%E7%A6%BE/">骆一禾</a></li>
+                
+                  <li><a href="/my-blog/tags/%E8%84%8F%E6%89%8B%E6%8C%87/">脏手指</a></li>
+                
+                  <li><a href="/my-blog/tags/%E6%98%8E%E5%A4%A9%E7%9A%84%E7%9B%90/">明天的盐</a></li>
+                
+                  <li><a href="/my-blog/tags/%E8%90%A7%E7%BA%A2/">萧红</a></li>
+                
+                  <li><a href="/my-blog/tags/%E6%9E%97%E6%A3%B9/">林棹</a></li>
+                
+                  <li><a href="/my-blog/tags/%E9%82%B1%E5%A6%99%E6%B4%A5/">邱妙津</a></li>
+                
+              </ul>
+            </li>
           
         
           
             <li><a href="/my-blog/tags/%E5%85%B6%E4%BB%96/">其他</a></li>
+          
+        
+          
+            <li><a href="/my-blog/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></li>
           
         
       </ul>
@@ -225,47 +258,6 @@
         </div>
       </section>
 
-      <!-- 3.5 音频按钮 -->
-      <section id="audio-section">
-        <button id="audio-toggle">▶ 播放 牯岭街少年杀人事件 原声</button>
-        <div id="audio-player" style="display:none;">
-          <audio id="bgm" preload="none">
-            <source src="/my-blog/MP3/Aliosha%20-%20%E7%89%AF%E5%B2%AD%E8%A1%97%E5%B0%91%E5%B9%B4%E6%9D%80%E4%BA%BA%E4%BA%8B%E4%BB%B6.mp3" type="audio/mpeg">
-            您的浏览器不支持音频播放
-          </audio>
-        </div>
-        <p class="audio-source">来自网易云 Ailosha</p>
-      </section>
-
-      <script>
-      (function() {
-        var btn = document.getElementById('audio-toggle');
-        var audio = document.getElementById('bgm');
-        var playing = false;
-
-        btn.addEventListener('click', function() {
-          if (playing) {
-            audio.pause();
-            btn.textContent = '▶ 播放 牯岭街少年杀人事件 原声';
-            playing = false;
-          } else {
-            audio.play().then(function() {
-              btn.textContent = '⏸ 暂停 牯岭街少年杀人事件 原声';
-              playing = true;
-            }).catch(function(e) {
-              // 自动播放被浏览器阻止，提示用户
-              alert('请手动点击播放');
-            });
-          }
-        });
-
-        audio.addEventListener('ended', function() {
-          btn.textContent = '▶ 播放 牯岭街少年杀人事件 原声';
-          playing = false;
-        });
-      })();
-      </script>
-
       <!-- 3. 近期动态 -->
       <section id="recent-posts-section">
         <h2>近期动态</h2>
@@ -280,12 +272,12 @@
             
               <div class="recent-post-item">
                 <span class="recent-post-date">06-15</span>
-                <a href="/my-blog/2026/06/15/secret%20note4/">secret note4</a>
+                <a href="/my-blog/2026/06/15/secret%20notes4/">secret note4</a>
               </div>
             
               <div class="recent-post-item">
                 <span class="recent-post-date">06-15</span>
-                <a href="/my-blog/2026/06/15/secret%20note3/">secret note3</a>
+                <a href="/my-blog/2026/06/15/secret%20notes3/">secret note3</a>
               </div>
             
               <div class="recent-post-item">
