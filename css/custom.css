@@ -340,6 +340,40 @@ html, body {
   }
 }
 
+/* ---- 音频按钮 ---- */
+#audio-section {
+  text-align: center;
+  margin: -1.5em 0 3em;
+  padding-bottom: 2em;
+  border-bottom: 1px solid #1a1a1a;
+}
+#audio-toggle {
+  background: transparent;
+  color: #888;
+  border: 1px solid #333;
+  padding: 0.4em 1.2em;
+  cursor: pointer;
+  font-size: 0.8em;
+  font-family: inherit;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+}
+#audio-toggle:hover {
+  color: #fff;
+  border-color: #666;
+}
+#audio-player audio {
+  width: 100%;
+  max-width: 400px;
+  filter: invert(0.85);
+}
+.audio-source {
+  color: #555;
+  font-size: 0.7em;
+  margin: 0.5em 0 0;
+  letter-spacing: 1px;
+}
+
 /* ---- 3. 近期动态 ---- */
 #recent-posts-section {
   margin-bottom: 3em;
