@@ -134,15 +134,15 @@
       <h3 style="margin-top:2em;">导航</h3>
       <ul class="menu-vertical">
         
-          
             <li><a href="/my-blog/">首页</a></li>
           
         
-          
             <li><a href="/my-blog/list/">动态</a></li>
           
         
+            <li><a href="/my-blog/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></li>
           
+        
             <li class="dropdown-vertical">
               <a href="javascript:void(0)">写作 ▾</a>
               <ul class="submenu-vertical">
@@ -159,7 +159,6 @@
             </li>
           
         
-          
             <li class="dropdown-vertical">
               <a href="javascript:void(0)">技术文章 ▾</a>
               <ul class="submenu-vertical">
@@ -180,15 +179,12 @@
             </li>
           
         
-          
             <li><a href="/my-blog/tags/%E8%AE%BA%E6%96%87/">论文</a></li>
           
         
-          
             <li><a href="/my-blog/tags/cv/">CV</a></li>
           
         
-          
             <li class="dropdown-vertical">
               <a href="javascript:void(0)">我所爱的一切 ▾</a>
               <ul class="submenu-vertical">
@@ -221,12 +217,7 @@
             </li>
           
         
-          
             <li><a href="/my-blog/tags/%E5%85%B6%E4%BB%96/">其他</a></li>
-          
-        
-          
-            <li><a href="/my-blog/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></li>
           
         
       </ul>
@@ -257,6 +248,44 @@
           </div>
         </div>
       </section>
+
+      <!-- 2.5 音频按钮 -->
+      <section id="audio-section">
+        <button id="audio-toggle">▶ 播放</button>
+        <div id="audio-player" style="display:none;">
+          <audio id="bgm" preload="none">
+            <source src="/my-blog/MP3/Aliosha%20-%20%E7%89%AF%E5%B2%AD%E8%A1%97%E5%B0%91%E5%B9%B4%E6%9D%80%E4%BA%BA%E4%BA%8B%E4%BB%B6.mp3" type="audio/mpeg">
+          </audio>
+        </div>
+        <p class="audio-source">来自网易云 Ailosha</p>
+      </section>
+
+      <script>
+      (function() {
+        var btn = document.getElementById('audio-toggle');
+        if (!btn) return;
+        var audio = document.getElementById('bgm');
+        var playing = false;
+        btn.addEventListener('click', function() {
+          if (playing) {
+            audio.pause();
+            btn.textContent = '▶ 播放';
+            playing = false;
+          } else {
+            audio.play().then(function() {
+              btn.textContent = '⏸ 暂停';
+              playing = true;
+            }).catch(function(e) {});
+          }
+        });
+        if (audio) {
+          audio.addEventListener('ended', function() {
+            btn.textContent = '▶ 播放';
+            playing = false;
+          });
+        }
+      })();
+      </script>
 
       <!-- 3. 近期动态 -->
       <section id="recent-posts-section">
