@@ -1,0 +1,84 @@
+/* 复古打字机 / 打印机风格 */
+/* 适用于 Hexo Theme A4 */
+
+/* 全局等宽字体 – 模拟打字机/电传打印机 */
+body, 
+.post-content, 
+.index-content,
+.menu,
+.post-title,
+.post-meta,
+.comment,
+#article-container,
+.page-content,
+blockquote,
+p,
+li,
+h1, h2, h3, h4, h5, h6,
+span, div {
+  font-family: 'Courier New', 'Courier', 'SF Mono', 'Fira Code', monospace !important;
+}
+
+/* 让代码块更像老式打印机打印的代码 */
+pre, code, kbd, tt, var {
+  font-family: 'Courier New', 'Courier', monospace !important;
+  font-size: 0.9em;
+  background-color: #f4efdf;
+  color: #4a2c18;
+}
+
+/* 文章正文略微增加字间距和行高，模拟打字机质感 */
+.post-content p, 
+.post-content li {
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+
+/* 链接下划线模拟手动打字机加粗效果（不花哨） */
+a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+/* 鼠标悬浮时像打字机敲击加重 */
+a:hover {
+  text-decoration-thickness: 2px;
+  background-color: rgba(139, 69, 19, 0.05);
+}
+
+/* 模拟纸张边缘泛黄效果 */
+body {
+  background: #d9c8a9;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.05);
+}
+
+/* 文章卡片轻微阴影 + 纸张质感 */
+.post-block,
+.index-block {
+  background: #fdfaf3;
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 0 0 1px rgba(224, 198, 150, 0.3);
+}
+
+/* 打字机光标闪烁效果（可选项，鼠标悬停时在标题后出现） */
+.post-title:hover::after {
+  content: "▌";
+  animation: blink 1s step-end infinite;
+  margin-left: 6px;
+  color: #8b5a2b;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* 回顶/回退按钮复古风格 */
+#return-to-top,
+#return-to-last {
+  background: #e6dcc8;
+  border: 1px solid #b08968;
+  color: #5c3a1e;
+  font-family: monospace;
+}
