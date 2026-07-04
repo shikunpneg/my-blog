@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <meta name="description" content="两种基于Tableaux算法的reasoner的源码分析（1）" />
+    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <link rel="alternate icon" type="image/webp" href="/img/favicon.webp">
+    <title>两种基于Tableaux算法的reasoner的源码分析（1） | shikunpunk的小站</title>
+
+    
+        
+<link rel="stylesheet" href="/css/highlight/style1.css">
+
+        
+<link rel="stylesheet" href="/css/reset.css">
+
+        
+<link rel="stylesheet" href="/css/markdown.css">
+
+        
+<link rel="stylesheet" href="/css/fonts.css">
+
+         <!--注意：首页既不是post也不是page-->
+        
+            
+<link rel="stylesheet" href="/css/waline.css">
+
+        
+
+        
+<link rel="stylesheet" href="/css/ui.css">
+
+        
+<link rel="stylesheet" href="/css/style.css">
+
+        
+<link rel="stylesheet" href="/css/custom.css">
+
+
+        
+            <!--返回顶部css-->
+            
+<link rel="stylesheet" href="/css/returnToTop.css">
+
+            
+<link rel="stylesheet" href="/css/unicons.css">
+
+        
+        
+            <!--目录-->
+            
+<link rel="stylesheet" href="/css/toc.css">
+
+        
+    
+
+    
+        
+<link rel="stylesheet" href="/css/returnToLastPage.css">
+
+    
+
+    
+<link rel="stylesheet" href="/css/lightgallery-bundle.min.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/custom.css">
+
+    
+
+    
+
+    <!-- <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/lxgwwenkai/dist/LXGWWenKai-Regular/result.css" /> -->
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@chinese-fonts/lxgwwenkai@3.0.0/dist/LXGWWenKai-Regular/result.css' /> 
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+    
+    
+
+    
+    
+
+
+
+    
+
+    
+    
+
+
+
+
+    <style>
+        .archive-main a:hover {
+            text-decoration: none; 
+        }
+    </style>
+
+    
+    
+
+
+    <body>
+        
+            
+                <div class="left-toc-container">
+                    <nav id="toc" class="bs-docs-sidebar"></nav>
+                </div>
+            
+        
+        <div class="paper">
+
+            
+
+            
+                <div class="shadow-drop-2-bottom paper-main">
+                    
+
+
+<div class="header">
+    <div class="header-container">
+        <style>
+            .header-img {
+                width: 56px;
+                height: auto;
+                object-fit: cover; /* 保持图片比例 */
+                transition: transform 0.3s ease-in-out; 
+                border-radius: 0; 
+            }
+            
+        </style>
+        <div class="header-content">
+            <a class="logo" href="/">shikunpunk的小站</a> 
+            <span class="description"></span> 
+        </div>
+    </div>
+    
+   
+    <ul class="nav">
+        
+            
+                
+                    <li><a href="/list/">动态</a></li>
+                
+            
+        
+            
+                
+                    <li><a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></li>
+                
+            
+        
+            
+                
+                    
+                        <li><a href="/tags/%E8%AF%97%E6%AD%8C/">诗歌</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E7%81%B5%E6%84%9F/">灵感</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E5%B0%8F%E8%AF%B4/">小说</a></li>
+                    
+                
+            
+        
+            
+                
+                    
+                        <li><a href="/tags/%E7%AE%97%E6%B3%95/">算法</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%87%8F%E5%AD%90%E8%AE%A1%E7%AE%97/">量子计算</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E5%BC%80%E5%8F%91/">开发</a></li>
+                    
+                
+            
+        
+            
+                
+                    <li><a href="/tags/%E8%AE%BA%E6%96%87/">论文</a></li>
+                
+            
+        
+            
+                
+                    <li><a href="/tags/cv/">CV</a></li>
+                
+            
+        
+            
+                
+                    
+                        <li><a href="/tags/%E6%9D%A8%E5%BE%B7%E6%98%8C/">杨德昌</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%87%91%E5%9F%BA%E5%BE%B7/">金基德</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E5%A8%84%E7%83%A8/">娄烨</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E5%9B%AD%E5%AD%90%E6%B8%A9/">园子温</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E5%AE%89%E5%BE%B7%E7%83%88.%E7%A5%96%E6%8B%89%E6%96%AF%E5%9F%BA/">安德烈.祖拉斯基</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%A1%BE%E5%9F%8E/">顾城</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%AA%86%E4%B8%80%E7%A6%BE/">骆一禾</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E8%84%8F%E6%89%8B%E6%8C%87/">脏手指</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E6%98%8E%E5%A4%A9%E7%9A%84%E7%9B%90/">明天的盐</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E8%90%A7%E7%BA%A2/">萧红</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E6%9E%97%E6%A3%B9/">林棹</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%82%B1%E5%A6%99%E6%B4%A5/">邱妙津</a></li>
+                    
+                
+            
+        
+            
+                
+                    <li><a href="/tags/%E5%85%B6%E4%BB%96/">其他</a></li>
+                
+            
+        
+    </ul>
+</div>
+
+                    
+                    
+
+                    
+                    
+
+                    <!--说明是文章post页面-->
+                    
+                        <div class="post-main">
+    
+
+    
+        
+            
+                <div class="post-main-title" style="text-align: center;">
+                    两种基于Tableaux算法的reasoner的源码分析（1）
+                </div>
+            
+        
+      
+    
+
+    
+
+        
+            <div class="post-head-meta-center">
+        
+                
+                
+                
+                
+            </div>
+    
+
+    <div class="post-md">
+        
+            
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E4%B8%A4%E7%A7%8D%E5%9F%BA%E4%BA%8ETableaux%E7%AE%97%E6%B3%95%E7%9A%84reasoner%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%881%EF%BC%89"><span class="post-toc-text">两种基于Tableaux算法的reasoner的源码分析（1）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%B8%A4%E7%A7%8Dreasoner%E7%9A%84%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D"><span class="post-toc-text">两种reasoner的简单介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#FaCT"><span class="post-toc-text">FaCT++</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#define-USE-REASONING-STATISTICS"><span class="post-toc-text">define USE_REASONING_STATISTICS</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%A4%96%E9%83%A8%E5%85%A5%E5%8F%A3"><span class="post-toc-text">外部入口</span></a></li></ol></li></ol>
+            
+        
+        <div class=".article-gallery"><h1 id="两种基于Tableaux算法的reasoner的源码分析（1）"><a href="#两种基于Tableaux算法的reasoner的源码分析（1）" class="headerlink" title="两种基于Tableaux算法的reasoner的源码分析（1）"></a>两种基于Tableaux算法的reasoner的源码分析（1）</h1><h2 id="两种reasoner的简单介绍"><a href="#两种reasoner的简单介绍" class="headerlink" title="两种reasoner的简单介绍"></a>两种reasoner的简单介绍</h2><h3 id="FaCT"><a href="#FaCT" class="headerlink" title="FaCT++"></a>FaCT++</h3><p>FaCT++ reasoner<br>FaCT++ is a tableaux-based reasoner for expressive Description Logics (DL). It covers OWL and OWL 2 (lacks support for key constraints and some datatypes) DL-based ontology languages. It can be used as a standalone DIG reasoner, or as a back-end reasoner for the OWL API-based application. Now it is used as one of the default reasoners in the Protege 4 OWL editor.</p>
+<p>FaCT++ was initially developed together with Ian Horrocks within the WonderWeb project.<br>(这是官网的介绍)</p>
+<p>中文翻译如下：<br>FaCT++ 推理机<br>FaCT++ 是一个基于Tableaux的推理器，用于表达描述逻辑 (DL)。它涵盖了 OWL 和 OWL 2（缺乏对关键约束和某些数据类型的支持）基于 DL 的本体语言。它可以用作独立的 DIG 推理器，或用作基于 OWL API 的应用程序的后端推理器。现在它被用作 Protege 4 OWL 编辑器中的默认推理器之一。</p>
+<p>FaCT++ 最初是与 Ian Horrocks 在 WonderWeb 项目中一起开发的。</p>
+<p>我们通过<br><a target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/0B688Ilel_jz_OVktYU5SdGpsek0?resourcekey=0-eyXKhUPahgv6JW74aLy5bw">https://drive.google.com/drive/folders/0B688Ilel_jz_OVktYU5SdGpsek0?resourcekey=0-eyXKhUPahgv6JW74aLy5bw</a><br>找到下载资源。</p>
+<p>先不急着使用，我们先看下它的结构。（<a target="_blank" rel="noopener" href="https://bitbucket.org/dtsarkov/factplusplus/src/master/%EF%BC%89">https://bitbucket.org/dtsarkov/factplusplus/src/master/）</a></p>
+<p><a href="/image-2.png" title="alt text" class="gallery-item" style="box-shadow: none;"> <img src="/image-2.png" alt="alt text"></a></p>
+<p>首先找到reasoner.cpp和reasoner.h</p>
+<p>#ifndef REASONER_H<br>#define REASONER_H</p>
+<p>#include “globaldef.h”<br>#include “tBranchingContext.h”<br>#include “dlCompletionGraph.h”<br>#include “dlTBox.h”<br>#include “dlDag.h”<br>#include “modelCacheIan.h”<br>#include “tSaveStack.h”<br>#include “procTimer.h”<br>#include “DataReasoning.h”<br>#include “ToDoList.h”<br>#include “tFastSet.h”</p>
+<p>#if USE_LOGGING	&#x2F;&#x2F; don’t gather statistics w&#x2F;o logging</p>
+<h1 id="define-USE-REASONING-STATISTICS"><a href="#define-USE-REASONING-STATISTICS" class="headerlink" title="define USE_REASONING_STATISTICS"></a>define USE_REASONING_STATISTICS</h1><p>#endif</p>
+<p>#ifdef USE_REASONING_STATISTICS</p>
+<p>通过引用我们可以看出Fact的架构，</p>
+<p>三、规则处理函数（Tactics）<br>这些是 Tableau 扩展规则的直接实现。命名都很直观：</p>
+<p>函数	对应规则	说明<br>commonTacticBodyId	原子概念	通常直接返回，不做扩展<br>commonTacticBodyAnd	⊓-规则	拆开合取，将两个子概念加入 TODO<br>commonTacticBodyOr	⊔-规则	非确定性分支，创建分支上下文<br>commonTacticBodySome	∃-规则	创建新个体，添加边和概念<br>commonTacticBodyAll	∀-规则	对每个现有邻居传播全称限制<br>commonTacticBodyGE	≥-规则	至少限制：生成 n 个不同邻居<br>commonTacticBodyLE	≤-规则	至多限制：合并多余的邻居<br>commonTacticBodyFunc	功能限制	处理 ≤1 R（特殊优化）<br>commonTacticBodyNN	NN-规则	处理名义（Nominal）节点<br>commonTacticBodyChoose	Choose-规则	处理 ⊔ 在数量限制中的特殊优化</p>
+<p>我们首先从reasoner.cpp开始，看下它的实现。</p>
+<p>这个 Reasoner.h 文件是 FaCT++ 推理机的核心——它定义了 DlSatTester 类，这个类是 Tableau 算法的实际执行引擎。下面我带你拆解这个文件，让你知道从哪里开始读、怎么读。</p>
+<p>一、这个文件在 FaCT++ 中的角色<br>它是推理的“大脑”：所有关于“如何判断一个概念是否可满足”的逻辑都在这里。</p>
+<p>它与 TBox 紧密协作：通过 TBox&amp; tBox 获取公理、角色、DAG（共享概念表达式）。</p>
+<p>它管理推理过程：维护 Completion Graph（CGraph）、ToDo List（TODO）、分支栈（Stack）、缓存等。</p>
+<p>你可以把它看作一个 “状态机 + 规则引擎”。</p>
+<p>二、核心数据结构<br>成员	类型	作用<br>CGraph	DlCompletionGraph	当前正在构造的模型（节点&#x3D;个体，边&#x3D;角色关系）<br>TODO	ToDoList	优先级队列，存储待处理的概念表达式（Tableau 的“任务列表”）<br>Stack	BCStack	分支上下文栈，用于回溯（处理 ⊔ 等非确定性规则）<br>curNode	DlCompletionTree*	当前正在处理的节点<br>curConcept	ConceptWDep	当前正在处理的概念（含依赖集）<br>clashSet	DepSet	冲突的依赖集（用于回溯）</p>
+<p>三、规则处理函数（Tactics）<br>这些是 Tableau 扩展规则的直接实现。命名都很直观：</p>
+<p>函数	对应规则	说明<br>commonTacticBodyId	原子概念	通常直接返回，不做扩展<br>commonTacticBodyAnd	⊓-规则	拆开合取，将两个子概念加入 TODO<br>commonTacticBodyOr	⊔-规则	非确定性分支，创建分支上下文<br>commonTacticBodySome	∃-规则	创建新个体，添加边和概念<br>commonTacticBodyAll	∀-规则	对每个现有邻居传播全称限制<br>commonTacticBodyGE	≥-规则	至少限制：生成 n 个不同邻居<br>commonTacticBodyLE	≤-规则	至多限制：合并多余的邻居<br>commonTacticBodyFunc	功能限制	处理 ≤1 R（特殊优化）<br>commonTacticBodyNN	NN-规则	处理名义（Nominal）节点<br>commonTacticBodyChoose	Choose-规则	处理 ⊔ 在数量限制中的特殊优化</p>
+<h2 id="外部入口"><a href="#外部入口" class="headerlink" title="外部入口"></a>外部入口</h2><p>bool runSat ( BipolarPointer p, BipolarPointer q &#x3D; bpTOP )<br>{<br>    prepareReasoner();<br>    if ( initNewNode ( CGraph.getRoot(), DepSet(), p ) ||<br>         addToDoEntry ( CGraph.getRoot(), ConceptWDep(q) ) )<br>        return false;        &#x2F;&#x2F; 初始就冲突<br>    TsProcTimer&amp; timer &#x3D; q &#x3D;&#x3D; bpTOP ? satTimer : subTimer;<br>    timer.Start();<br>    bool result &#x3D; runSat();  &#x2F;&#x2F; 私有方法，执行实际推理<br>    timer.Stop();<br>    return result;<br>}</p>
+<ol start="2">
+<li>私有 runSat() → checkSatisfiability()<br>cpp<br>bool checkSatisfiability ( void )<br>{<br> while ( !TODO.empty() )<br> {<br> &#x2F;&#x2F; 取出最高优先级的待处理条目<br> TODO.getNext ( curNode, curConcept );<br> if ( isIBlocked() ) continue;  &#x2F;&#x2F; 如果节点被阻塞，跳过<br> if ( commonTactic() )          &#x2F;&#x2F; 执行对应的规则<br> {<br>     &#x2F;&#x2F; 如果返回 true，表示产生冲突，需要回溯<br>     if ( tunedRestore() )<br>         return false;          &#x2F;&#x2F; 无法恢复 -&gt; 不可满足<br>     &#x2F;&#x2F; 否则继续循环<br> }<br> }<br> return performAfterReasoning();    &#x2F;&#x2F; 所有规则处理完，检查最终状态<br>}<br>TODO.getNext 使用优先级队列选择下一个要处理的概念（这是 FaCT++ 的关键优化）。</li>
+</ol>
+<p>commonTactic() 根据概念类型分发到具体的 Tactic 函数。</p>
+<p>若 Tactic 返回 true（冲突），则调用 tunedRestore() 尝试回溯到最近的分支点</p>
+<ol start="3">
+<li>commonTactic() → 分发到具体 Tactic<br>cpp<br>bool commonTactic ( void )<br>{<br> incStat(nTacticCalls);<br> logStartEntry();<br> const DLVertex&amp; cur &#x3D; DLHeap[curConcept.bp()];<br> bool res &#x3D; commonTacticBody(cur);<br> logFinishEntry(res);<br> return res;<br>}</li>
+</ol>
+<p>bool commonTacticBody ( const DLVertex&amp; cur )<br>{<br>    switch ( cur.Type() )<br>    {<br>        case dtTop:          return false;<br>        case dtBottom:       return addToDoEntry ( curNode, bpBOTTOM, … );<br>        case dtAnd:          return commonTacticBodyAnd(cur);<br>        case dtOr:           return commonTacticBodyOr(cur);<br>        case dtForall:       return commonTacticBodyAll(cur);<br>        case dtExists:       return commonTacticBodySome(cur);<br>        case dtLE:           return commonTacticBodyLE(cur);<br>        case dtGE:           return commonTacticBodyGE(cur);<br>        case dtFunc:         return commonTacticBodyFunc(cur);<br>        &#x2F;&#x2F; … 其他类型<br>    }<br>}</p>
+</div>
+    </div>
+    <br>
+    
+    
+
+    
+        
+    <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        
+    </div>
+    
+    
+    
+        
+
+    
+    
+    </div>
+
+
+     
+</div>
+
+
+
+
+                    
+
+                    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type="text/javascript" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tocify/1.9.0/javascripts/jquery.tocify.min.js" type="text/javascript" ></script>
+        
+<script src="/js/toc.js"></script>
+
+    
+    
+<script src="/js/randomHeaderContent.js"></script>
+
+    
+        
+<script src="/js/returnToTop.js"></script>
+
+    
+    
+        
+<script src="/js/returnToLastPage.js"></script>
+
+    
+
+
+
+<script src="/js/lightgallery/lightgallery.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-thumbnail.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-fullscreen.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-autoplay.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-zoom.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-rotate.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
+
+
+<script type="text/javascript">
+    if (typeof lightGallery !== "undefined") {
+        var options1 = {
+            selector: '.gallery-item',
+            plugins: [lgThumbnail, lgFullscreen, lgAutoplay, lgZoom, lgRotate, lgPager],
+            thumbnail: true,
+            zoom: true,
+            rotate: true,
+            autoplay: true,
+            fullScreen: true,
+            pager: false,
+            zoomFromOrigin: true,
+            actualSize: true,
+            enableZoomAfter: 300,
+        };
+        lightGallery(document.getElementsByClassName('.article-gallery')[0], options1);
+    }
+</script>
+
+
+                </div>
+            
+            
+                <!-- 回到顶部的按钮-->
+                <div class="progress-wrap shadow-drop-2-bottom">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </div>
+            
+            
+                <!-- 返回的按钮-->
+                <div class="return-to-last-progress-wrap shadow-drop-2-bottom">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </div>
+            
+    </body>
+</html>
+<script src="/js/emojiHandler.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        wrapEmojis('.paper');
+    });
+</script>
