@@ -4,10 +4,10 @@
     <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <meta name="description" content="两种基于Tableaux算法的reasoner的源码分析（2）" />
+    <meta name="description" content="" />
     <meta name="hexo-theme-A4" content="v2.0.1" />
     <link rel="alternate icon" type="image/webp" href="/img/favicon.webp">
-    <title>两种基于Tableaux算法的reasoner的源码分析（2） | shikunpunk的小站</title>
+    <title>shikunpunk的小站</title>
 
     
         
@@ -286,7 +286,7 @@
         
             
                 <div class="post-main-title" style="text-align: center;">
-                    两种基于Tableaux算法的reasoner的源码分析（2）
+                    
                 </div>
             
         
@@ -308,46 +308,158 @@
     <div class="post-md">
         
             
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E4%B8%A4%E7%A7%8D%E5%9F%BA%E4%BA%8ETableaux%E7%AE%97%E6%B3%95%E7%9A%84reasoner%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%882%EF%BC%89"><span class="post-toc-text">两种基于Tableaux算法的reasoner的源码分析（2）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Fact-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="post-toc-text">Fact++源码分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%99%EF%BC%9A%E5%9B%BE%E7%BA%B8%E4%B8%8E%E7%A7%AF%E6%9C%A8-%E2%80%94%E2%80%94-dlCompletionTree-h-%E5%92%8C-dlCompletionGraph-h"><span class="post-toc-text">第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#dlCompletionTreeArc-h%EF%BC%88%E8%BE%B9%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%89"><span class="post-toc-text">dlCompletionTreeArc.h（边的定义）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#checkSatisfiability%EF%BC%9ATableau-%E4%B8%BB%E5%BE%AA%E7%8E%AF"><span class="post-toc-text">checkSatisfiability：Tableau 主循环</span></a></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#title-%E4%B8%A4%E7%A7%8D%E5%9F%BA%E4%BA%8ETableaux%E7%AE%97%E6%B3%95%E7%9A%84reasoner%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%882%EF%BC%89date-2026-07-4-14-49tags-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD"><span class="post-toc-text">title: 两种基于Tableaux算法的reasoner的源码分析（2）date: 2026-07-4 14:49tags: 人工智能</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E4%B8%A4%E7%A7%8D%E5%9F%BA%E4%BA%8ETableaux%E7%AE%97%E6%B3%95%E7%9A%84reasoner%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%882%EF%BC%89"><span class="post-toc-text">两种基于Tableaux算法的reasoner的源码分析（2）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#FaCT-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="post-toc-text">FaCT++源码分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%99%EF%BC%9A%E5%9B%BE%E7%BA%B8%E4%B8%8E%E7%A7%AF%E6%9C%A8-%E2%80%94%E2%80%94-dlCompletionTree-h-%E5%92%8C-dlCompletionGraph-h"><span class="post-toc-text">第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-dlCompletionTree-h-%E2%80%94%E2%80%94-%E8%8A%82%E7%82%B9%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="post-toc-text">1. dlCompletionTree.h —— 节点的定义</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-dlCompletionTreeArc-h-%E2%80%94%E2%80%94-%E8%BE%B9%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="post-toc-text">2. dlCompletionTreeArc.h —— 边的定义</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#1-%E5%8F%8C%E5%90%91%E6%80%A7%EF%BC%88Reverse%EF%BC%89"><span class="post-toc-text">(1) 双向性（Reverse）</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-%E8%BE%B9%E8%A2%AB%E2%80%9D%E5%90%88%E5%B9%B6%E2%80%9D%EF%BC%88isIBlocked-%E6%A3%80%E6%9F%A5%EF%BC%89"><span class="post-toc-text">(2) 边被”合并”（isIBlocked 检查）</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#3-%E4%BE%9D%E8%B5%96%E9%9B%86%EF%BC%88DepSet%EF%BC%89"><span class="post-toc-text">(3) 依赖集（DepSet）</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%99%EF%BC%9AcheckSatisfiability-%E2%80%94%E2%80%94-Tableau-%E4%B8%BB%E5%BE%AA%E7%8E%AF"><span class="post-toc-text">第二站：checkSatisfiability —— Tableau 主循环</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Tableau-%E6%A6%82%E5%BF%B5%E4%B8%8E%E4%BB%A3%E7%A0%81%E7%9A%84%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB"><span class="post-toc-text">Tableau 概念与代码的对应关系</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E4%BA%AE%E7%82%B9%E6%80%BB%E7%BB%93"><span class="post-toc-text">关键设计亮点总结</span></a></li></ol></li></ol></li></ol>
             
         
-        <div class=".article-gallery"><h1 id="两种基于Tableaux算法的reasoner的源码分析（2）"><a href="#两种基于Tableaux算法的reasoner的源码分析（2）" class="headerlink" title="两种基于Tableaux算法的reasoner的源码分析（2）"></a>两种基于Tableaux算法的reasoner的源码分析（2）</h1><h2 id="Fact-源码分析"><a href="#Fact-源码分析" class="headerlink" title="Fact++源码分析"></a>Fact++源码分析</h2><h3 id="第一站：图纸与积木-——-dlCompletionTree-h-和-dlCompletionGraph-h"><a href="#第一站：图纸与积木-——-dlCompletionTree-h-和-dlCompletionGraph-h" class="headerlink" title="第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h"></a>第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h</h3><p>为什么先读这个？<br>Reasoner 类里有三个最重要的成员：CGraph（完工图）、curNode（当前节点）和 TODO（待办清单）。如果不先搞清楚“节点”长什么样、“图”怎么存，后面所有的 createOneNeighbour 和 addToDoEntry 都是空中楼阁。</p>
-<p>先阅读dlCompletionTree.h，</p>
-<p>在 Tableau 算法里，节点最核心的职责就是装着它所属的概念集合（比如，这个个体属于 A，也属于 ∃R.B）。在 FaCT++ 里，这个东西通常叫 Label 或 CGLabel。</p>
-<p>CGLabel Label;                     &#x2F;&#x2F; 概念标签集合（所有断言的集合）<br>#ifdef RKG_IR_IN_NODE_LABEL<br>IRInfo IR;                         &#x2F;&#x2F; 不等式关系信息（用于处理“不同个体”）<br>#endif<br>ArcCollection Neighbour;           &#x2F;&#x2F; 角色边列表（指向其他节点）<br>TSaveList<SaveState> saves;        &#x2F;&#x2F; 历史状态栈（用于回溯）<br>unsigned int id;                   &#x2F;&#x2F; 节点唯一 ID<br>BipolarPointer Init;               &#x2F;&#x2F; 创建该节点时的初始概念</p>
-<p>const DlCompletionTree* Blocker;   &#x2F;&#x2F; 当前阻塞该节点的节点（若有）<br>DepSet pDep;                       &#x2F;&#x2F; 用于 purge 操作的依赖集</p>
-<p>unsigned int curLevel;             &#x2F;&#x2F; 当前级别（用于回溯）<br>CTNominalLevel nominalLevel;       &#x2F;&#x2F; 名义级别（0&#x3D;名义，-1&#x3D;块状）</p>
-<p>&#x2F;&#x2F; 布尔标志（位域）<br>bool flagDataNode : 1;             &#x2F;&#x2F; 是否数据节点（字面量）<br>bool cached : 1;                   &#x2F;&#x2F; 是否已缓存（用于优化）<br>bool pBlocked : 1;                 &#x2F;&#x2F; 是否被永久阻塞（purge）<br>bool dBlocked : 1;                 &#x2F;&#x2F; 是否被直接阻塞（directly）<br>bool affected : 1;                 &#x2F;&#x2F; 是否因阻塞变化而受影响</p>
-<p>对应 Tableau 概念：</p>
-<p>Label：就是节点上的概念集合（如 {A, ∃R.B, ¬C}）。Tableau 算法的所有规则都围绕它展开。</p>
-<p>Neighbour：存储该节点的所有角色边（R(x, y)），是处理 ∀ 和 ∃ 规则的依据。</p>
-<p>Blocked &#x2F; pBlocked &#x2F; dBlocked：实现阻塞机制，保证算法终止。Blocker 指向阻塞者节点，pBlocked 表示被“净化”（purge）即间接阻塞，dBlocked 表示直接阻塞。</p>
-<p>cached：缓存该节点代表的模型片段，加速包含关系测试。</p>
-<p>nominalLevel：区分名义节点（OWL 中指名道姓的个体）与普通块节点，名义节点有更强的约束，不能随意合并</p>
-<h2 id="dlCompletionTreeArc-h（边的定义）"><a href="#dlCompletionTreeArc-h（边的定义）" class="headerlink" title="dlCompletionTreeArc.h（边的定义）"></a>dlCompletionTreeArc.h（边的定义）</h2><p>这个文件定义了 DlCompletionTreeArc 类。在 Tableau 算法的 ABox（断言盒）里，它代表的就是 R(x, y)（个体间的角色关系）。</p>
-<p>我们来看看它是怎么用几个简单的成员变量来画出这条“带箭头的线”的：</p>
-<p>cpp<br>protected:<br>    DlCompletionTree* Node &#x3D; nullptr;  &#x2F;&#x2F; 1. 箭头指向谁？（指向的目标节点）<br>    const TRole* Role &#x3D; nullptr;       &#x2F;&#x2F; 2. 这条线上标着什么标签？（比如 角色 R）<br>    DepSet depSet;                     &#x2F;&#x2F; 3. 这条边是依赖哪些“决策”产生的？（用于回溯）<br>    DlCompletionTreeArc* Reverse &#x3D; nullptr; &#x2F;&#x2F; 4. 反向的边在哪里？（用于双向查找）<br>    bool SuccEdge &#x3D; true;              &#x2F;&#x2F; 5. 这条边是“向下”（Succ）还是“向上”（Pred）？<br>对应 Tableau 概念的关键点：<br>双向性（Reverse）：在 Tableau 推理中，经常需要知道“谁指向了我”。如果我只存单向的 x -&gt; y，当算法在处理 y 时，就不知道是谁带来了它。FaCT++ 采用双向边设计（存了 Reverse 反向指针），这使得无论从哪一头都能快速找到另一头，避免在庞大的图中进行低效的全局搜索。</p>
-<p>边被“合并”（isIBlocked 检查）：看这一行关键代码：</p>
-<p>cpp<br>bool isIBlocked ( void ) const { return (Role &#x3D;&#x3D; nullptr); }<br>在 Tableau 算法的 ≤-规则（至多限制） 中，为了满足“最多 n 个邻居”的约束，如果多了一个，需要把两个节点合并（Merge）。合并时，其中一条边会被“删除”。<br>在 FaCT++ 里，删除边不是真的删掉指针（那样太耗时且容易内存泄漏），而是把这条边上的 Role 直接置为 nullptr！这就好比这条铁路虽然还在，但我把铁轨抽掉了，逻辑上它就不通了。isIBlocked() 返回 true 就代表“这是一条废弃的边”。这种操作非常快，是性能优化的高招。</p>
-<p>依赖集（DepSet）：depSet 记录了这条边是由哪些“非确定性分支”（例如 ⊔-规则的选择）产生的。如果这条边导致了冲突，推理机就能通过这个依赖集判断应该回溯到哪个分支点，而不是从头开始。</p>
-<h2 id="checkSatisfiability：Tableau-主循环"><a href="#checkSatisfiability：Tableau-主循环" class="headerlink" title="checkSatisfiability：Tableau 主循环"></a>checkSatisfiability：Tableau 主循环</h2><p>bool DlSatTester :: checkSatisfiability ( void )<br>{<br>    unsigned int loop &#x3D; 0;<br>    for (;;)<br>    {<br>        if ( curNode &#x3D;&#x3D; nullptr )<br>        {<br>            if ( TODO.empty() )<br>            {<br>                if ( performAfterReasoning() )     &#x2F;&#x2F; 处理公平性等<br>                    if ( tunedRestore() )<br>                        return false;<br>                if ( TODO.empty() )<br>                    return true;<br>            }</p>
-<pre><code>        const ToDoEntry* curTDE = TODO.getNextEntry ();  // 取出最高优先级任务
-        curNode = curTDE-&gt;Node;
-        curConcept = curNode-&gt;label().getConcept(curTDE-&gt;offset);
-    }
+        <div class=".article-gallery"><hr>
+<h2 id="title-两种基于Tableaux算法的reasoner的源码分析（2）date-2026-07-4-14-49tags-人工智能"><a href="#title-两种基于Tableaux算法的reasoner的源码分析（2）date-2026-07-4-14-49tags-人工智能" class="headerlink" title="title: 两种基于Tableaux算法的reasoner的源码分析（2）date: 2026-07-4 14:49tags: 人工智能"></a>title: 两种基于Tableaux算法的reasoner的源码分析（2）<br>date: 2026-07-4 14:49<br>tags: 人工智能</h2><h1 id="两种基于Tableaux算法的reasoner的源码分析（2）"><a href="#两种基于Tableaux算法的reasoner的源码分析（2）" class="headerlink" title="两种基于Tableaux算法的reasoner的源码分析（2）"></a>两种基于Tableaux算法的reasoner的源码分析（2）</h1><h2 id="FaCT-源码分析"><a href="#FaCT-源码分析" class="headerlink" title="FaCT++源码分析"></a>FaCT++源码分析</h2><h3 id="第一站：图纸与积木-——-dlCompletionTree-h-和-dlCompletionGraph-h"><a href="#第一站：图纸与积木-——-dlCompletionTree-h-和-dlCompletionGraph-h" class="headerlink" title="第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h"></a>第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h</h3><p><strong>为什么先读这个？</strong></p>
+<p><code>Reasoner</code> 类里有三个最重要的成员：<code>CGraph</code>（完工图）、<code>curNode</code>（当前节点）和 <code>TODO</code>（待办清单）。如果不先搞清楚”节点”长什么样、”图”怎么存，后面所有的 <code>createOneNeighbour</code> 和 <code>addToDoEntry</code> 都是空中楼阁。</p>
+<h4 id="1-dlCompletionTree-h-——-节点的定义"><a href="#1-dlCompletionTree-h-——-节点的定义" class="headerlink" title="1. dlCompletionTree.h —— 节点的定义"></a>1. dlCompletionTree.h —— 节点的定义</h4><p>在 Tableau 算法里，节点最核心的职责就是<strong>装着它所属的概念集合</strong>（比如，这个个体属于 <code>A</code>，也属于 <code>∃R.B</code>）。在 FaCT++ 里，这个概念集合通常叫 <code>Label</code> 或 <code>CGLabel</code>。</p>
+<p><strong>核心成员变量：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">CGLabel Label;                     <span class="comment">// 概念标签集合（所有断言的集合）</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> RKG_IR_IN_NODE_LABEL</span></span><br><span class="line">IRInfo IR;                         <span class="comment">// 不等式关系信息（用于处理&quot;不同个体&quot;）</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">ArcCollection Neighbour;           <span class="comment">// 角色边列表（指向其他节点）</span></span><br><span class="line">TSaveList&lt;SaveState&gt; saves;        <span class="comment">// 历史状态栈（用于回溯）</span></span><br><span class="line"></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> id;                   <span class="comment">// 节点唯一 ID</span></span><br><span class="line">BipolarPointer Init;               <span class="comment">// 创建该节点时的初始概念</span></span><br><span class="line"></span><br><span class="line"><span class="type">const</span> DlCompletionTree* Blocker;   <span class="comment">// 当前阻塞该节点的节点（若有）</span></span><br><span class="line">DepSet pDep;                       <span class="comment">// 用于 purge 操作的依赖集</span></span><br><span class="line"></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> curLevel;             <span class="comment">// 当前级别（用于回溯）</span></span><br><span class="line">CTNominalLevel nominalLevel;       <span class="comment">// 名义级别（0=名义，-1=块状）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 布尔标志（位域）</span></span><br><span class="line"><span class="type">bool</span> flagDataNode : <span class="number">1</span>;             <span class="comment">// 是否数据节点（字面量）</span></span><br><span class="line"><span class="type">bool</span> cached : <span class="number">1</span>;                   <span class="comment">// 是否已缓存（用于优化）</span></span><br><span class="line"><span class="type">bool</span> pBlocked : <span class="number">1</span>;                 <span class="comment">// 是否被永久阻塞（purge）</span></span><br><span class="line"><span class="type">bool</span> dBlocked : <span class="number">1</span>;                 <span class="comment">// 是否被直接阻塞（directly）</span></span><br><span class="line"><span class="type">bool</span> affected : <span class="number">1</span>;                 <span class="comment">// 是否因阻塞变化而受影响</span></span><br></pre></td></tr></table></figure>
 
-    if ( ++loop == 5000 ) { /* 超时检查 */ }
+<p><strong>对应 Tableau 概念：</strong></p>
+<table>
+<thead>
+<tr>
+<th>成员</th>
+<th>对应 Tableau 概念</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Label</code></td>
+<td>节点上的概念集合</td>
+<td>如 <code>{A, ∃R.B, ¬C}</code>，Tableau 算法的所有规则都围绕它展开</td>
+</tr>
+<tr>
+<td><code>Neighbour</code></td>
+<td>角色边 <code>R(x, y)</code></td>
+<td>存储该节点的所有角色边，是处理 <code>∀</code> 和 <code>∃</code> 规则的依据</td>
+</tr>
+<tr>
+<td><code>Blocker</code> &#x2F; <code>pBlocked</code> &#x2F; <code>dBlocked</code></td>
+<td>阻塞机制</td>
+<td>保证算法终止。<code>Blocker</code> 指向阻塞者节点，<code>pBlocked</code> 表示被”净化”（间接阻塞），<code>dBlocked</code> 表示直接阻塞</td>
+</tr>
+<tr>
+<td><code>cached</code></td>
+<td>模型缓存</td>
+<td>缓存该节点代表的模型片段，加速包含关系测试</td>
+</tr>
+<tr>
+<td><code>nominalLevel</code></td>
+<td>名义节点标记</td>
+<td>区分名义节点（OWL 中指名道姓的个体）与普通块节点，名义节点不能随意合并</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="2-dlCompletionTreeArc-h-——-边的定义"><a href="#2-dlCompletionTreeArc-h-——-边的定义" class="headerlink" title="2. dlCompletionTreeArc.h —— 边的定义"></a>2. dlCompletionTreeArc.h —— 边的定义</h4><p>这个文件定义了 <code>DlCompletionTreeArc</code> 类。在 Tableau 算法的 ABox（断言盒）里，它代表的就是 <strong><code>R(x, y)</code>（个体间的角色关系）</strong>。</p>
+<p><strong>核心成员变量：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    DlCompletionTree* Node = <span class="literal">nullptr</span>;  <span class="comment">// 1. 箭头指向谁？（指向的目标节点）</span></span><br><span class="line">    <span class="type">const</span> TRole* Role = <span class="literal">nullptr</span>;       <span class="comment">// 2. 这条线上标着什么标签？（比如角色 R）</span></span><br><span class="line">    DepSet depSet;                     <span class="comment">// 3. 这条边依赖哪些&quot;决策&quot;产生的？（用于回溯）</span></span><br><span class="line">    DlCompletionTreeArc* Reverse = <span class="literal">nullptr</span>; <span class="comment">// 4. 反向的边在哪里？（用于双向查找）</span></span><br><span class="line">    <span class="type">bool</span> SuccEdge = <span class="literal">true</span>;              <span class="comment">// 5. 这条边是&quot;向下&quot;（Succ）还是&quot;向上&quot;（Pred）？</span></span><br></pre></td></tr></table></figure>
 
-    if ( commonTactic() )     // 执行规则，若返回 true 表示发生冲突
-    {
-        if ( tunedRestore() ) // 尝试回溯，若失败则不可满足
-            return false;
-    }
-    else
-        curNode = nullptr;
-}
-</code></pre>
-<p>}</p>
+<p><strong>对应 Tableau 概念的关键点：</strong></p>
+<h5 id="1-双向性（Reverse）"><a href="#1-双向性（Reverse）" class="headerlink" title="(1) 双向性（Reverse）"></a>(1) 双向性（<code>Reverse</code>）</h5><p>在 Tableau 推理中，经常需要知道**”谁指向了我”**。如果只存单向的 <code>x -&gt; y</code>，当算法在处理 <code>y</code> 时，就不知道是谁带来了它。</p>
+<p>FaCT++ 采用<strong>双向边设计</strong>（存了 <code>Reverse</code> 反向指针），这使得无论从哪一头都能快速找到另一头，避免在庞大的图中进行低效的全局搜索。</p>
+<h5 id="2-边被”合并”（isIBlocked-检查）"><a href="#2-边被”合并”（isIBlocked-检查）" class="headerlink" title="(2) 边被”合并”（isIBlocked 检查）"></a>(2) 边被”合并”（<code>isIBlocked</code> 检查）</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isIBlocked</span> <span class="params">( <span class="type">void</span> )</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> (Role == <span class="literal">nullptr</span>); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 Tableau 算法的 <strong><code>≤</code>-规则（至多限制）</strong> 中，为了满足”最多 n 个邻居”的约束，如果多了一个，需要把两个节点<strong>合并（Merge）</strong>。合并时，其中一条边会被”删除”。</p>
+<p>在 FaCT++ 里，删除边<strong>不是真的删掉指针</strong>（那样太耗时且容易内存泄漏），而是把这条边上的 <strong><code>Role</code> 直接置为 <code>nullptr</code></strong>！这就好比这条铁路虽然还在，但我把铁轨抽掉了，逻辑上它就不通了。</p>
+<p><code>isIBlocked()</code> 返回 <code>true</code> 就代表”这是一条废弃的边”。这种操作非常快，是性能优化的高招。</p>
+<h5 id="3-依赖集（DepSet）"><a href="#3-依赖集（DepSet）" class="headerlink" title="(3) 依赖集（DepSet）"></a>(3) 依赖集（<code>DepSet</code>）</h5><p><code>depSet</code> 记录了这条边是由哪些**”非确定性分支”<strong>（例如 <code>⊔</code>-规则的选择）产生的。如果这条边导致了冲突，推理机就能通过这个依赖集判断应该</strong>回溯到哪个分支点**，而不是从头开始。</p>
+<hr>
+<h3 id="第二站：checkSatisfiability-——-Tableau-主循环"><a href="#第二站：checkSatisfiability-——-Tableau-主循环" class="headerlink" title="第二站：checkSatisfiability —— Tableau 主循环"></a>第二站：checkSatisfiability —— Tableau 主循环</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">bool</span> DlSatTester :: <span class="built_in">checkSatisfiability</span> ( <span class="type">void</span> )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> loop = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (;;)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> ( curNode == <span class="literal">nullptr</span> )</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> ( TODO.<span class="built_in">empty</span>() )</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> ( <span class="built_in">performAfterReasoning</span>() )     <span class="comment">// 处理公平性等</span></span><br><span class="line">                    <span class="keyword">if</span> ( <span class="built_in">tunedRestore</span>() )</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">if</span> ( TODO.<span class="built_in">empty</span>() )</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">const</span> ToDoEntry* curTDE = TODO.<span class="built_in">getNextEntry</span> ();  <span class="comment">// 取出最高优先级任务</span></span><br><span class="line">            curNode = curTDE-&gt;Node;</span><br><span class="line">            curConcept = curNode-&gt;<span class="built_in">label</span>().<span class="built_in">getConcept</span>(curTDE-&gt;offset);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ( ++loop == <span class="number">5000</span> ) &#123; <span class="comment">/* 超时检查 */</span> &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ( <span class="built_in">commonTactic</span>() )     <span class="comment">// 执行规则，若返回 true 表示发生冲突</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> ( <span class="built_in">tunedRestore</span>() ) <span class="comment">// 尝试回溯，若失败则不可满足</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            curNode = <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="Tableau-概念与代码的对应关系"><a href="#Tableau-概念与代码的对应关系" class="headerlink" title="Tableau 概念与代码的对应关系"></a>Tableau 概念与代码的对应关系</h4><table>
+<thead>
+<tr>
+<th>Tableau 概念</th>
+<th>代码中的体现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ABox</td>
+<td><code>DlCompletionGraph</code> 管理所有 <code>DlCompletionTree</code> 节点和边</td>
+</tr>
+<tr>
+<td>个体节点</td>
+<td><code>DlCompletionTree</code> 对象，每个节点存储概念标签</td>
+</tr>
+<tr>
+<td>概念标签</td>
+<td>节点的 <code>Label</code> 成员，存储所有断言的概念</td>
+</tr>
+<tr>
+<td>待处理队列</td>
+<td><code>ToDoList</code>，按优先级存储待展开的概念</td>
+</tr>
+<tr>
+<td><code>⊓</code>-规则（合取）</td>
+<td><code>commonTacticBodyAnd</code> 拆分合取，将子概念加入 TODO</td>
+</tr>
+<tr>
+<td><code>⊔</code>-规则（析取）</td>
+<td><code>commonTacticBodyOr</code> 创建分支上下文，尝试两个选项</td>
+</tr>
+<tr>
+<td><code>∃</code>-规则（存在）</td>
+<td><code>commonTacticBodySome</code> 创建新节点和边</td>
+</tr>
+<tr>
+<td><code>∀</code>-规则（全称）</td>
+<td><code>commonTacticBodyAll</code> 沿边传播概念</td>
+</tr>
+<tr>
+<td>冲突检测</td>
+<td><code>tryAddConcept</code> &#x2F; <code>checkAddedConcept</code> 检查 <code>A</code> 与 <code>¬A</code></td>
+</tr>
+<tr>
+<td>阻塞（Blocking）</td>
+<td><code>isIBlocked()</code> &#x2F; <code>isPBlocked()</code> 跳过被阻塞节点的扩展</td>
+</tr>
+<tr>
+<td>回溯</td>
+<td><code>tunedRestore()</code> 配合 <code>Stack</code> 和 <code>SaveState</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="关键设计亮点总结"><a href="#关键设计亮点总结" class="headerlink" title="关键设计亮点总结"></a>关键设计亮点总结</h3><table>
+<thead>
+<tr>
+<th>设计亮点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>优先级驱动的 TODO 队列</strong></td>
+<td>FaCT++ 区别于标准 Tableau 的重要优化，通过优先级调度提升搜索效率</td>
+</tr>
+<tr>
+<td><strong>双向边设计</strong></td>
+<td>通过 <code>Reverse</code> 指针实现双向查找，避免全局搜索</td>
+</tr>
+<tr>
+<td><strong>逻辑删除</strong></td>
+<td>合并边时将 <code>Role</code> 置为 <code>nullptr</code>，而非真正删除指针，高效且安全</td>
+</tr>
+<tr>
+<td><strong>依赖集回溯</strong></td>
+<td><code>DepSet</code> 记录分支决策，实现智能回溯（Backjumping）而非简单回溯</td>
+</tr>
+<tr>
+<td><strong>阻塞机制</strong></td>
+<td>通过 <code>Blocker</code> &#x2F; <code>pBlocked</code> &#x2F; <code>dBlocked</code> 实现算法终止保证</td>
+</tr>
+<tr>
+<td><strong>模型缓存</strong></td>
+<td><code>cached</code> 标记加速包含关系测试</td>
+</tr>
+</tbody></table>
+<hr>
+<blockquote>
+<p><strong>AI 参与声明</strong>：本文档在撰写过程中使用了 AI 辅助工具进行内容整理、格式优化与润色。所有核心概念与代码分析均基于 FaCT++ 源码与公开学术文献，并经人工校验与补充。</p>
+</blockquote>
 </div>
     </div>
     <br>

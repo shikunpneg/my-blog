@@ -4,10 +4,10 @@
     <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <meta name="description" content="" />
+    <meta name="description" content="两种reasoner的使用体验对比" />
     <meta name="hexo-theme-A4" content="v2.0.1" />
     <link rel="alternate icon" type="image/webp" href="/img/favicon.webp">
-    <title>shikunpunk的小站</title>
+    <title>两种reasoner的使用体验对比 | shikunpunk的小站</title>
 
     
         
@@ -286,7 +286,7 @@
         
             
                 <div class="post-main-title" style="text-align: center;">
-                    
+                    两种reasoner的使用体验对比
                 </div>
             
         
@@ -308,10 +308,740 @@
     <div class="post-md">
         
             
-                
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#FaCT-vs-HermiT-%E6%8E%A8%E7%90%86%E6%9C%BA%E5%AF%B9%E6%AF%94%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A-Maven-%E7%89%88"><span class="post-toc-text">FaCT++ vs HermiT 推理机对比测试报告 (Maven 版)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-%E6%B5%8B%E8%AF%95%E7%9B%AE%E7%9A%84"><span class="post-toc-text">1. 测试目的</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83"><span class="post-toc-text">2. 测试环境</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-1-Maven-%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="post-toc-text">2.1 Maven 项目结构</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-2-%E5%A4%8D%E7%8E%B0%E5%91%BD%E4%BB%A4"><span class="post-toc-text">2.2 复现命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-%E6%8E%A8%E7%90%86%E6%9C%BA%E7%AE%80%E4%BB%8B"><span class="post-toc-text">3. 推理机简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4-%E6%B5%8B%E8%AF%95%E5%9C%BA%E6%99%AF-8-%E7%BB%84"><span class="post-toc-text">4. 测试场景 (8 组)</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#5-%E5%85%B3%E9%94%AE%E7%BB%93%E8%AE%BA%E4%B8%80%E8%A7%88"><span class="post-toc-text">5. 关键结论一览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#6-%E8%AF%A6%E7%BB%86%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="post-toc-text">6. 详细测试结果</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#T1-%E2%80%94-%E5%9F%BA%E7%A1%80%E4%B8%80%E8%87%B4%E6%80%A7-%E5%88%86%E7%B1%BB-3-%E4%B8%AA%E7%B1%BB-A-%E2%8A%91-B-%E2%8A%91-C"><span class="post-toc-text">T1 — 基础一致性 + 分类 (3 个类 A ⊑ B ⊑ C)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#T2-%E2%80%94-%E4%B8%8D%E4%B8%80%E8%87%B4%E6%9C%AC%E4%BD%93-Person-%E2%8A%93-Dog-%E5%90%8C%E4%B8%80%E5%AE%9E%E4%BE%8B-John"><span class="post-toc-text">T2 — 不一致本体 (Person ⊓ Dog, 同一实例 John)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#T3-%E2%80%94-%E5%AE%9E%E4%BE%8B%E6%A3%80%E7%B4%A2-8-%E4%B8%AA%E4%B8%AA%E4%BD%93%EF%BC%8C4-%E4%B8%AA-Student%E3%80%814-%E4%B8%AA-Teacher%EF%BC%9BStudent-%E2%8A%91-Person-Teacher-%E2%8A%91-Person"><span class="post-toc-text">T3 — 实例检索 (8 个个体，4 个 Student、4 个 Teacher；Student ⊑ Person, Teacher ⊑ Person)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#T4-%E2%80%94-%E5%A4%8D%E6%9D%82-OWL-2-%E7%89%B9%E6%80%A7-Animal-%E2%89%A1-Mammal-%E2%8A%94-Pet%EF%BC%8CPet-%E2%8A%91-%E2%88%83hasOwner-Thing%EF%BC%8ChasOwner-hasPet-%E4%BA%92%E9%80%86"><span class="post-toc-text">T4 — 复杂 OWL 2 特性 (Animal ≡ Mammal ⊔ Pet，Pet ⊑ ∃hasOwner.Thing，hasOwner &#x2F; hasPet 互逆)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#T5-%E2%80%94-%E6%80%A7%E8%83%BD%E5%9F%BA%E5%87%86-%E5%B0%8F%E5%9E%8B%E6%9C%AC%E4%BD%93%EF%BC%8C%E5%8D%95%E6%AC%A1"><span class="post-toc-text">T5 — 性能基准 (小型本体，单次)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#T5b-%E2%80%94-%E6%80%A7%E8%83%BD%E5%9F%BA%E5%87%86-%E5%B0%8F%E5%9E%8B%E6%9C%AC%E4%BD%93%EF%BC%8C5-%E6%AC%A1%E5%B9%B3%E5%9D%87"><span class="post-toc-text">T5b — 性能基准 (小型本体，5 次平均)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#T6-%E2%80%94-%E5%A4%A7%E6%9C%AC%E4%BD%93-pizza-owl-939-axioms-%E2%AD%90-%E6%9C%80%E6%98%BE%E8%91%97%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="post-toc-text">T6 — 大本体 (pizza.owl, 939 axioms) ⭐ 最显著的差异</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#T7-%E2%80%94-%E8%A7%92%E8%89%B2%E5%B1%82%E6%AC%A1-%E4%BC%A0%E9%80%92%E6%80%A7-hasParent-%E2%8A%91-hasAncestor-Transitive-hasAncestor-Alice-hasParent-Bob"><span class="post-toc-text">T7 — 角色层次 + 传递性 (hasParent ⊑ hasAncestor, Transitive(hasAncestor), Alice hasParent Bob)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#T8-%E2%80%94-%E7%9C%9F%E5%AE%9E%E6%9C%AC%E4%BD%93-families-owl-9-axioms"><span class="post-toc-text">T8 — 真实本体 (families.owl, 9 axioms)</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#7-%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90"><span class="post-toc-text">7. 差异分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-1-%E6%80%A7%E8%83%BD%E5%B7%AE%E5%BC%82%E6%9D%A5%E6%BA%90"><span class="post-toc-text">7.1 性能差异来源</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-2-%E4%B8%8E%E5%8E%9F-FaCT-JNI-%E7%89%88%E6%9C%AC%E5%AF%B9%E6%AF%94-%E5%8E%86%E5%8F%B2%E6%95%B0%E6%8D%AE"><span class="post-toc-text">7.2 与原 FaCT++ JNI 版本对比 (历史数据)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-3-%E9%83%A8%E7%BD%B2%E5%B7%AE%E5%BC%82-JFact-vs-HermiT"><span class="post-toc-text">7.3 部署差异 (JFact vs HermiT)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-4-%E6%8E%A5%E5%8F%A3%E5%B7%AE%E5%BC%82"><span class="post-toc-text">7.4 接口差异</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#8-Maven-%E8%BF%81%E7%A7%BB%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93"><span class="post-toc-text">8. Maven 迁移经验总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-1-%E5%8E%9F%E5%A7%8B-lib-%E6%96%B9%E5%BC%8F-vs-%E6%96%B0-pom-xml-%E6%96%B9%E5%BC%8F"><span class="post-toc-text">8.1 原始 lib&#x2F; 方式 vs 新 pom.xml 方式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-2-%E5%8E%9F%E5%A7%8B-pom-xml-%E7%9A%84%E4%BF%AE%E6%AD%A3"><span class="post-toc-text">8.2 原始 pom.xml 的修正</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-3-pom-xml-%E5%85%B3%E9%94%AE%E9%85%8D%E7%BD%AE"><span class="post-toc-text">8.3 pom.xml 关键配置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-4-%E5%8E%86%E5%8F%B2-lib-%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98%EF%BC%88%E5%B7%B2%E9%80%9A%E8%BF%87-Maven-%E8%A7%A3%E5%86%B3%EF%BC%89"><span class="post-toc-text">8.4 历史 lib&#x2F; 依赖问题（已通过 Maven 解决）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#9-%E7%BB%93%E8%AE%BA%E4%B8%8E%E5%BB%BA%E8%AE%AE"><span class="post-toc-text">9. 结论与建议</span></a></li></ol></li></ol>
             
         
-        <div class=".article-gallery"></div>
+        <div class=".article-gallery"><p>开始的时候我们使用的Protégé运行的推理机发现</p>
+<p><a href="/image-3.png" title="alt text" class="gallery-item" style="box-shadow: none;"> <img src="/image-3.png" alt="alt text"></a><br>这里无法构建个体</p>
+<p>然后转向用代码来实现效果上的对比。</p>
+<h1 id="FaCT-vs-HermiT-推理机对比测试报告-Maven-版"><a href="#FaCT-vs-HermiT-推理机对比测试报告-Maven-版" class="headerlink" title="FaCT++ vs HermiT 推理机对比测试报告 (Maven 版)"></a>FaCT++ vs HermiT 推理机对比测试报告 (Maven 版)</h1><blockquote>
+<p>本报告基于 OWL API 5.1.20 + <strong>JFact 5.0.3</strong> (FaCT++ 的纯 Java 移植版) + <strong>HermiT 1.4.3.517</strong> 在 Windows 10 (JDK 17) + Maven 3.9.9 下的实测结果。<br>项目通过 <a href="file:///e:/ccks/reasoner/pom.xml">pom.xml</a> 管理依赖，测试代码: <a href="file:///e:/ccks/reasoner/src/main/java/Test.java">src&#x2F;main&#x2F;java&#x2F;Test.java</a>，原始数据: <a href="file:///e:/ccks/reasoner/test_output.txt">test_output.txt</a>。</p>
+</blockquote>
+<hr>
+<h2 id="1-测试目的"><a href="#1-测试目的" class="headerlink" title="1. 测试目的"></a>1. 测试目的</h2><ul>
+<li>验证两套 OWL 2 DL 推理机（JFact 替代原 FaCT++、HermiT）能否在本机 Maven 环境正常加载、初始化并完成推理；</li>
+<li>在多种 OWL 2 特性与典型本体上，对比二者的<strong>功能正确性</strong>与<strong>性能差异</strong>；</li>
+<li>为本项目（CCKS 知识图谱推理）选定合适的推理机后端提供数据依据；</li>
+<li>探索使用 Maven 替代手动 <code>lib/</code> 依赖管理的可行性。</li>
+</ul>
+<hr>
+<h2 id="2-测试环境"><a href="#2-测试环境" class="headerlink" title="2. 测试环境"></a>2. 测试环境</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>版本&#x2F;配置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>操作系统</td>
+<td>Windows 10 (64-bit)</td>
+</tr>
+<tr>
+<td>JDK</td>
+<td>OpenJDK 17.0.12 (64-bit, Microsoft)</td>
+</tr>
+<tr>
+<td>构建工具</td>
+<td>Apache Maven 3.9.9 (本地解压于 <code>apache-maven-3.9.9/</code>)</td>
+</tr>
+<tr>
+<td>OWL API</td>
+<td>5.1.20 (<code>net.sourceforge.owlapi:owlapi-distribution:5.1.20</code>)</td>
+</tr>
+<tr>
+<td>JFact (FaCT++ 纯 Java 移植)</td>
+<td>5.0.3 (<code>net.sourceforge.owlapi:jfact:5.0.3</code>)</td>
+</tr>
+<tr>
+<td>HermiT</td>
+<td>1.4.3.517 (<code>net.sourceforge.owlapi:org.semanticweb.hermit:1.4.3.517</code>)</td>
+</tr>
+<tr>
+<td>测试本体</td>
+<td>自构造 8 个小型 OWL 本体 + <a href="file:///e:/ccks/reasoner/ontologies/pizza.owl">pizza.owl (939 axioms)</a> + <a href="file:///e:/ccks/reasoner/ontologies/families.owl">families.owl (9 axioms)</a></td>
+</tr>
+</tbody></table>
+<h3 id="2-1-Maven-项目结构"><a href="#2-1-Maven-项目结构" class="headerlink" title="2.1 Maven 项目结构"></a>2.1 Maven 项目结构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">reasoner/</span><br><span class="line">├── pom.xml                          # Maven 配置 (OWL API 5.1.20 + JFact 5.0.3 + HermiT 1.4.3.517)</span><br><span class="line">├── src/main/java/Test.java          # 8 组测试 (T1-T8)</span><br><span class="line">├── ontologies/</span><br><span class="line">│   ├── pizza.owl                    # 939 axioms (大本体基准)</span><br><span class="line">│   └── families.owl                 # 9 axioms (含实例的真实本体)</span><br><span class="line">├── target/</span><br><span class="line">│   ├── OWLReasonerTest-1.0-SNAPSHOT.jar   # 构建产物</span><br><span class="line">│   ├── classes/                     # 编译输出</span><br><span class="line">│   └── lib/                         # maven-dependency-plugin 复制出来的所有依赖</span><br><span class="line">├── test_output.txt                  # 完整运行日志 (UTF-8)</span><br><span class="line">└── reasoner_comparison_report.md    # 本报告</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-复现命令"><a href="#2-2-复现命令" class="headerlink" title="2.2 复现命令"></a>2.2 复现命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译 + 打包 + 复制依赖到 target/lib/</span></span><br><span class="line">mvn package -DskipTests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行测试 (UTF-8 输出)</span></span><br><span class="line">java -Dfile.encoding=UTF-8 -<span class="built_in">cp</span> <span class="string">&quot;target\classes;target\lib\*&quot;</span> Test</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Maven 版本调整说明</strong>：原始 <a href="file:///e:/ccks/reasoner/pom.xml">pom.xml</a> 中指定的 <code>org.semanticweb.hermit:hermit:1.4.3.519</code> 在 Maven Central 不存在，已替换为同 group 下 <code>net.sourceforge.owlapi:org.semanticweb.hermit:1.4.3.517</code>（OWL API 官方维护的坐标）。<code>net.sourceforge.jfact:jfact:4.0.4</code> 也已修正为 <code>net.sourceforge.owlapi:jfact:5.0.3</code>（更新、纯 Java、OWL API 5 兼容）。</p>
+</blockquote>
+<hr>
+<h2 id="3-推理机简介"><a href="#3-推理机简介" class="headerlink" title="3. 推理机简介"></a>3. 推理机简介</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th><strong>JFact</strong> (原 FaCT++ 移植)</th>
+<th><strong>HermiT</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>实现语言</td>
+<td><strong>纯 Java</strong> (FaCT++ 的 1:1 移植)</td>
+<td>纯 Java</td>
+</tr>
+<tr>
+<td>作者</td>
+<td>Ignazio Palmisano, Dmitry Tsarkov (Univ. of Manchester)</td>
+<td>Boris Motik, Ian Horrocks (Univ. of Oxford)</td>
+</tr>
+<tr>
+<td>支持语言</td>
+<td>OWL 2 DL (SROIQ)</td>
+<td>OWL 2 DL (SROIQ)</td>
+</tr>
+<tr>
+<td>推理算法</td>
+<td>Tableau + 优化 (内部缓存、可重用的分类结果)</td>
+<td>Hypertableau + 多种 Blocking 策略 (Single&#x2F;Pairwise&#x2F;Direct)</td>
+</tr>
+<tr>
+<td>部署依赖</td>
+<td><strong>无需 JNI</strong>，单 jar 即可运行；跨平台 (Win&#x2F;Linux&#x2F;macOS)</td>
+<td>无原生库，复制 jar 即可运行</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>启动开销小，大本体分类显著更快</td>
+<td>启动稍慢，JIT 预热后小任务也很快</td>
+</tr>
+<tr>
+<td>许可</td>
+<td>LGPL 2.1 (开源)</td>
+<td>LGPL 3.0 (开源)</td>
+</tr>
+<tr>
+<td>与 OWL API 集成</td>
+<td>官方维护 (<code>net.sourceforge.owlapi:jfact:5.0.3</code>)</td>
+<td>官方维护 (<code>net.sourceforge.owlapi:org.semanticweb.hermit</code>)</td>
+</tr>
+<tr>
+<td>与原 FaCT++ 关系</td>
+<td>共享内核设计，<strong>无 DIG 接口与命令行工具</strong></td>
+<td>与原 FaCT++ 是不同实现路径</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>关于 FaCT++ → JFact 的迁移</strong>：原项目使用的 <code>FaCTpp-OWLAPI-4.x-v1.6.5.jar</code> + <code>FaCTPlusPlusJNI.dll</code> 需在每台目标机器上提供对应位数的 JNI 动态库，部署&#x2F;打包&#x2F;CI 都不友好。<strong>JFact 是 FaCT++ 的官方 Java 移植版</strong>，内核设计一致但用 Java 重写，无 JNI 依赖，OWL API 5 兼容性更好。本测试已完全迁移到 JFact。</p>
+</blockquote>
+<hr>
+<h2 id="4-测试场景-8-组"><a href="#4-测试场景-8-组" class="headerlink" title="4. 测试场景 (8 组)"></a>4. 测试场景 (8 组)</h2><table>
+<thead>
+<tr>
+<th>场景 ID</th>
+<th>名称</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>T1</strong></td>
+<td>基础一致性 + 简单分类</td>
+<td>验证 <code>isConsistent()</code> 与 <code>getSubClasses</code> 基础能力</td>
+</tr>
+<tr>
+<td><strong>T2</strong></td>
+<td>不一致本体处理</td>
+<td>验证两个相互 disjoint 的类 + 同一实例时的检测</td>
+</tr>
+<tr>
+<td><strong>T3</strong></td>
+<td>实例检索 (Realization)</td>
+<td>验证 <code>getInstances</code> 直接&#x2F;间接&#x2F;分层检索</td>
+</tr>
+<tr>
+<td><strong>T4</strong></td>
+<td>复杂 OWL 2 特性</td>
+<td>嵌套等价类、逆属性、存在量化、子类蕴含</td>
+</tr>
+<tr>
+<td><strong>T5</strong></td>
+<td>性能基准 (小型)</td>
+<td>同一任务单次执行耗时</td>
+</tr>
+<tr>
+<td><strong>T5b</strong></td>
+<td>性能基准 (5 次平均)</td>
+<td>排除冷启动噪声的稳态耗时</td>
+</tr>
+<tr>
+<td><strong>T6</strong></td>
+<td>大本体 (pizza.owl)</td>
+<td>939 axioms，分类&#x2F;一致性耗时</td>
+</tr>
+<tr>
+<td><strong>T7</strong></td>
+<td>角色层次 + 传递性</td>
+<td><code>hasParent ⊑ hasAncestor</code> + <code>Transitive(hasAncestor)</code> 推断</td>
+</tr>
+<tr>
+<td><strong>T8</strong></td>
+<td>真实本体 (families.owl)</td>
+<td>含实例的小型真实本体</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="5-关键结论一览"><a href="#5-关键结论一览" class="headerlink" title="5. 关键结论一览"></a>5. 关键结论一览</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>功能正确性</strong></td>
+<td>✅ <strong>两者在全部 8 个测试场景的逻辑结果完全一致</strong>。一致性、分类、实例检索、蕴含、传递性全部相同。</td>
+</tr>
+<tr>
+<td><strong>性能 (小本体)</strong></td>
+<td>几乎无差异，均 &lt; 1ms</td>
+</tr>
+<tr>
+<td><strong>性能 (大本体)</strong></td>
+<td>⚡ <strong>JFact 显著领先</strong>。pizza.owl (939 公理) 分类耗时：HermiT ≈ <strong>475ms</strong> vs JFact ≈ <strong>222ms</strong> (≈ 2.1×)</td>
+</tr>
+<tr>
+<td><strong>启动开销</strong></td>
+<td>JFact 实例化更快（HermiT 单例含 Blocking 策略等额外初始化）</td>
+</tr>
+<tr>
+<td><strong>部署友好度</strong></td>
+<td>二者现在完全平手 (均为纯 Java + Maven 单坐标依赖)；<strong>消除了旧版 FaCT++ 的 JNI 痛点</strong></td>
+</tr>
+<tr>
+<td><strong>维护性</strong></td>
+<td>二者均被 OWL API 官方团队 (<code>net.sourceforge.owlapi</code>) 维护，版本号与 OWL API 主版本对齐</td>
+</tr>
+<tr>
+<td><strong>推荐场景</strong></td>
+<td><strong>JFact</strong> 适合大批量&#x2F;大本体分类；<strong>HermiT</strong> 在实例检索和反例生成场景同样成熟</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="6-详细测试结果"><a href="#6-详细测试结果" class="headerlink" title="6. 详细测试结果"></a>6. 详细测试结果</h2><h3 id="T1-—-基础一致性-分类-3-个类-A-⊑-B-⊑-C"><a href="#T1-—-基础一致性-分类-3-个类-A-⊑-B-⊑-C" class="headerlink" title="T1 — 基础一致性 + 分类 (3 个类 A ⊑ B ⊑ C)"></a>T1 — 基础一致性 + 分类 (3 个类 A ⊑ B ⊑ C)</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">HermiT</th>
+<th align="right">JFact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一致性</td>
+<td align="right"><code>true</code></td>
+<td align="right"><code>true</code></td>
+</tr>
+<tr>
+<td>子类数 (直接)</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>分类耗时 ms</td>
+<td align="right">5</td>
+<td align="right">7</td>
+</tr>
+<tr>
+<td>创建推理机耗时ms</td>
+<td align="right">97</td>
+<td align="right">38</td>
+</tr>
+</tbody></table>
+<p>✅ 两者结果一致，JFact 创建推理机更快。</p>
+<hr>
+<h3 id="T2-—-不一致本体-Person-⊓-Dog-同一实例-John"><a href="#T2-—-不一致本体-Person-⊓-Dog-同一实例-John" class="headerlink" title="T2 — 不一致本体 (Person ⊓ Dog, 同一实例 John)"></a>T2 — 不一致本体 (Person ⊓ Dog, 同一实例 John)</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>HermiT</th>
+<th>JFact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一致性</td>
+<td><strong><code>false</code></strong></td>
+<td><strong><code>false</code></strong></td>
+</tr>
+<tr>
+<td>错误</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>创建推理机耗时ms</td>
+<td>4</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>✅ 两者均正确检测出本体不一致。</p>
+<hr>
+<h3 id="T3-—-实例检索-8-个个体，4-个-Student、4-个-Teacher；Student-⊑-Person-Teacher-⊑-Person"><a href="#T3-—-实例检索-8-个个体，4-个-Student、4-个-Teacher；Student-⊑-Person-Teacher-⊑-Person" class="headerlink" title="T3 — 实例检索 (8 个个体，4 个 Student、4 个 Teacher；Student ⊑ Person, Teacher ⊑ Person)"></a>T3 — 实例检索 (8 个个体，4 个 Student、4 个 Teacher；Student ⊑ Person, Teacher ⊑ Person)</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>HermiT</th>
+<th>JFact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Person 间接实例数</td>
+<td>8</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Person 直接实例数</td>
+<td>0 (均为 Student&#x2F;Teacher 直接类型)</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Student 实例数</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Teacher 实例数</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>完整列表 (按名排序)</td>
+<td><code>[Alice, Bob, Carol, Dave, Eve, Frank, Gina, Hank]</code></td>
+<td><code>[Alice, Bob, Carol, Dave, Eve, Frank, Gina, Hank]</code></td>
+</tr>
+<tr>
+<td>创建推理机耗时ms</td>
+<td>2</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>✅ 两者结果完全一致。</p>
+<hr>
+<h3 id="T4-—-复杂-OWL-2-特性-Animal-≡-Mammal-⊔-Pet，Pet-⊑-∃hasOwner-Thing，hasOwner-hasPet-互逆"><a href="#T4-—-复杂-OWL-2-特性-Animal-≡-Mammal-⊔-Pet，Pet-⊑-∃hasOwner-Thing，hasOwner-hasPet-互逆" class="headerlink" title="T4 — 复杂 OWL 2 特性 (Animal ≡ Mammal ⊔ Pet，Pet ⊑ ∃hasOwner.Thing，hasOwner &#x2F; hasPet 互逆)"></a>T4 — 复杂 OWL 2 特性 (Animal ≡ Mammal ⊔ Pet，Pet ⊑ ∃hasOwner.Thing，hasOwner &#x2F; hasPet 互逆)</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">HermiT</th>
+<th align="right">JFact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一致性</td>
+<td align="right">true</td>
+<td align="right">true</td>
+</tr>
+<tr>
+<td>Animal 等价类节点大小</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>Pet 等价类节点大小</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td><code>Pet ⊑ ∃hasOwner.Thing</code> 是否蕴含</td>
+<td align="right">true</td>
+<td align="right">true</td>
+</tr>
+<tr>
+<td>创建推理机耗时ms</td>
+<td align="right">8</td>
+<td align="right">2</td>
+</tr>
+</tbody></table>
+<p>✅ 两者在嵌套等价类 + 逆属性 + 存在量化下结果完全一致。</p>
+<hr>
+<h3 id="T5-—-性能基准-小型本体，单次"><a href="#T5-—-性能基准-小型本体，单次" class="headerlink" title="T5 — 性能基准 (小型本体，单次)"></a>T5 — 性能基准 (小型本体，单次)</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">HermiT</th>
+<th align="right">JFact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>创建推理机耗时ms</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>综合推理耗时ms</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>小本体下两者都 &lt; 1ms，无法体现差距。详见 T5b 与 T6。</p>
+</blockquote>
+<hr>
+<h3 id="T5b-—-性能基准-小型本体，5-次平均"><a href="#T5b-—-性能基准-小型本体，5-次平均" class="headerlink" title="T5b — 性能基准 (小型本体，5 次平均)"></a>T5b — 性能基准 (小型本体，5 次平均)</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">HermiT</th>
+<th align="right">JFact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>创建推理机耗时ms</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>综合推理平均耗时ms</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>同样 &lt; 1ms，无法体现差距。</p>
+</blockquote>
+<hr>
+<h3 id="T6-—-大本体-pizza-owl-939-axioms-⭐-最显著的差异"><a href="#T6-—-大本体-pizza-owl-939-axioms-⭐-最显著的差异" class="headerlink" title="T6 — 大本体 (pizza.owl, 939 axioms) ⭐ 最显著的差异"></a>T6 — 大本体 (pizza.owl, 939 axioms) ⭐ <strong>最显著的差异</strong></h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">HermiT</th>
+<th align="right">JFact</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一致性</td>
+<td align="right">true</td>
+<td align="right">true</td>
+<td>一致</td>
+</tr>
+<tr>
+<td>一致性耗时ms</td>
+<td align="right">1</td>
+<td align="right">83</td>
+<td>HermiT 一致性检查更快</td>
+</tr>
+<tr>
+<td><strong>分类耗时ms</strong></td>
+<td align="right"><strong>475</strong></td>
+<td align="right"><strong>222</strong></td>
+<td>⚡ <strong>JFact 比 HermiT 分类快约 2.1 倍</strong></td>
+</tr>
+<tr>
+<td>类数</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td>一致</td>
+</tr>
+<tr>
+<td>加载 pizza.owl 耗时ms</td>
+<td align="right">322</td>
+<td align="right">322</td>
+<td>(共享)</td>
+</tr>
+<tr>
+<td>创建推理机耗时ms</td>
+<td align="right">110</td>
+<td align="right">33</td>
+<td>JFact 实例化更快</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>这是本测试<strong>最关键的性能差异</strong>：在 939 axioms 的 pizza 本体上，JFact 完成完整分类只需 ~222ms，而 HermiT 需要 ~475ms。<strong>一致性检查</strong>则相反：HermiT 仅 1ms 而 JFact 用了 83ms (JFact 在 consistency 上内部多做了些工作)，但 222ms 的总分类时间已包含了一致性 + 分类。</p>
+</blockquote>
+<hr>
+<h3 id="T7-—-角色层次-传递性-hasParent-⊑-hasAncestor-Transitive-hasAncestor-Alice-hasParent-Bob"><a href="#T7-—-角色层次-传递性-hasParent-⊑-hasAncestor-Transitive-hasAncestor-Alice-hasParent-Bob" class="headerlink" title="T7 — 角色层次 + 传递性 (hasParent ⊑ hasAncestor, Transitive(hasAncestor), Alice hasParent Bob)"></a>T7 — 角色层次 + 传递性 (hasParent ⊑ hasAncestor, Transitive(hasAncestor), Alice hasParent Bob)</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">HermiT</th>
+<th align="right">JFact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Alice →hasAncestor→ Bob</code> 是否蕴含</td>
+<td align="right">true</td>
+<td align="right">true</td>
+</tr>
+<tr>
+<td><code>Alice →hasParent→ Bob</code> 是否蕴含</td>
+<td align="right">true</td>
+<td align="right">true</td>
+</tr>
+<tr>
+<td>创建推理机耗时ms</td>
+<td align="right">29</td>
+<td align="right">0</td>
+</tr>
+</tbody></table>
+<p>✅ 两者都通过传递性 + 角色层次推导出 hasAncestor 关系。</p>
+<hr>
+<h3 id="T8-—-真实本体-families-owl-9-axioms"><a href="#T8-—-真实本体-families-owl-9-axioms" class="headerlink" title="T8 — 真实本体 (families.owl, 9 axioms)"></a>T8 — 真实本体 (families.owl, 9 axioms)</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th align="right">HermiT</th>
+<th align="right">JFact</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一致性</td>
+<td align="right">true</td>
+<td align="right">true</td>
+</tr>
+<tr>
+<td>类数 (Top 下的直接子类)</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>实例数</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>一致性耗时ms</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>分类耗时ms</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>实例检索耗时ms</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>加载 families.owl 耗时ms</td>
+<td align="right">10</td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td>创建推理机耗时ms</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+</tbody></table>
+<p>✅ 结果完全一致；本体太小，性能差异无法体现。</p>
+<hr>
+<h2 id="7-差异分析"><a href="#7-差异分析" class="headerlink" title="7. 差异分析"></a>7. 差异分析</h2><h3 id="7-1-性能差异来源"><a href="#7-1-性能差异来源" class="headerlink" title="7.1 性能差异来源"></a>7.1 性能差异来源</h3><ul>
+<li><strong>JFact 是在 FaCT++ 设计基础上的纯 Java 移植</strong>：保留了 C++ 版本的高度优化算法，分类阶段直接调用 Java 实现，避开 JVM 解释&#x2F;GC 压力优势（与原版 C++ JNI 相比差距缩小）。</li>
+<li><strong>HermiT 是纯 Java Hypertableau</strong>：策略更复杂、blocking 校验更多，在分类前要构造并维护完整的 hypertableau 数据结构，因此在中大本体上分类开销更明显。</li>
+<li><strong>小本体上差距消失</strong>：当本体公理数 &lt; 50 时，JVM 启动 + JIT 预热的开销会反过来让 JFact 看起来稍慢或相当。</li>
+<li><strong>pizza.owl 场景具体数据</strong>：JFact 一致性耗时 83ms 反而比 HermiT 1ms 慢很多 (因为 JFact 内部需要先构建内部数据结构)；但<strong>最终分类完成时间</strong> JFact (222ms) 仍快于 HermiT (475ms)。</li>
+</ul>
+<h3 id="7-2-与原-FaCT-JNI-版本对比-历史数据"><a href="#7-2-与原-FaCT-JNI-版本对比-历史数据" class="headerlink" title="7.2 与原 FaCT++ JNI 版本对比 (历史数据)"></a>7.2 与原 FaCT++ JNI 版本对比 (历史数据)</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>FaCT++ 1.6.5 + JNI (旧)</th>
+<th>JFact 5.0.3 (新)</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>pizza.owl 分类耗时</td>
+<td>2ms</td>
+<td>222ms</td>
+<td>旧版 C++ JNI 大幅领先，Java 版<strong>被 JNI 拉开差距</strong></td>
+</tr>
+<tr>
+<td>pizza.owl 加载</td>
+<td>100ms</td>
+<td>322ms</td>
+<td>旧版更快 (JNI 路径)</td>
+</tr>
+<tr>
+<td>部署 JNI 依赖</td>
+<td><strong>必须</strong> 32&#x2F;64-bit DLL</td>
+<td><strong>无</strong></td>
+<td>JFact 优势：跨平台、容器友好</td>
+</tr>
+<tr>
+<td>代码可调试性</td>
+<td>JNI 调用栈不友好</td>
+<td>✅ 完整 Java 异常栈</td>
+<td>调试更简单</td>
+</tr>
+<tr>
+<td>商业&#x2F;学术许可</td>
+<td>学术免费</td>
+<td>LGPL 2.1</td>
+<td>JFact 更友好</td>
+</tr>
+<tr>
+<td><strong>推荐</strong></td>
+<td>仅 Windows + 性能极致要求</td>
+<td><strong>通用</strong></td>
+<td><strong>JFact 已成为社区事实标准</strong></td>
+</tr>
+</tbody></table>
+<h3 id="7-3-部署差异-JFact-vs-HermiT"><a href="#7-3-部署差异-JFact-vs-HermiT" class="headerlink" title="7.3 部署差异 (JFact vs HermiT)"></a>7.3 部署差异 (JFact vs HermiT)</h3><table>
+<thead>
+<tr>
+<th>关注点</th>
+<th>JFact</th>
+<th>HermiT</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>跨平台</td>
+<td>✅ 纯 Java，一次打包，到处运行</td>
+<td>✅ 纯 Java，一次打包，到处运行</td>
+</tr>
+<tr>
+<td>容器化</td>
+<td>✅ 标准 JRE 即可</td>
+<td>✅ 标准 JRE 即可</td>
+</tr>
+<tr>
+<td>License</td>
+<td>✅ LGPL 2.1 开源</td>
+<td>✅ LGPL 3.0 开源</td>
+</tr>
+<tr>
+<td>调试</td>
+<td>✅ 完整 Java 异常栈</td>
+<td>✅ 完整 Java 异常栈</td>
+</tr>
+<tr>
+<td>Maven 坐标</td>
+<td><code>net.sourceforge.owlapi:jfact</code></td>
+<td><code>net.sourceforge.owlapi:org.semanticweb.hermit</code></td>
+</tr>
+<tr>
+<td>维护方</td>
+<td>OWL API 官方</td>
+<td>OWL API 官方</td>
+</tr>
+</tbody></table>
+<h3 id="7-4-接口差异"><a href="#7-4-接口差异" class="headerlink" title="7.4 接口差异"></a>7.4 接口差异</h3><p>两者都实现了标准的 <code>OWLReasoner</code> 接口，因此<strong>调用代码完全相同</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">OWLReasoner</span> <span class="variable">r</span> <span class="operator">=</span> factory.createReasoner(ontology);</span><br><span class="line"><span class="type">boolean</span> <span class="variable">consistent</span> <span class="operator">=</span> r.isConsistent();</span><br><span class="line">r.getSubClasses(cls, <span class="literal">true</span>);  <span class="comment">// 直接子类</span></span><br><span class="line">r.getInstances(cls, <span class="literal">false</span>);  <span class="comment">// 所有（推理）实例</span></span><br><span class="line">r.isEntailed(axiom);         <span class="comment">// 蕴含检查</span></span><br><span class="line">r.dispose();                 <span class="comment">// 必须释放</span></span><br></pre></td></tr></table></figure>
+
+<p>唯一区别在于工厂类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JFact (原 FaCT++ 移植)</span></span><br><span class="line"><span class="keyword">import</span> uk.ac.manchester.cs.jfact.JFactFactory;</span><br><span class="line"><span class="type">OWLReasonerFactory</span> <span class="variable">factory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JFactFactory</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// HermiT</span></span><br><span class="line"><span class="keyword">import</span> org.semanticweb.HermiT.ReasonerFactory;</span><br><span class="line"><span class="type">OWLReasonerFactory</span> <span class="variable">factory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReasonerFactory</span>();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="8-Maven-迁移经验总结"><a href="#8-Maven-迁移经验总结" class="headerlink" title="8. Maven 迁移经验总结"></a>8. Maven 迁移经验总结</h2><h3 id="8-1-原始-lib-方式-vs-新-pom-xml-方式"><a href="#8-1-原始-lib-方式-vs-新-pom-xml-方式" class="headerlink" title="8.1 原始 lib/ 方式 vs 新 pom.xml 方式"></a>8.1 原始 <code>lib/</code> 方式 vs 新 <code>pom.xml</code> 方式</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th><code>lib/</code> + 手动 classpath (旧)</th>
+<th><code>pom.xml</code> + <code>mvn package</code> (新)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>依赖数量</td>
+<td>23 个 jar (xz, trove, commons-io, slf4j, sesame-rio, …)</td>
+<td>3 行 XML</td>
+</tr>
+<tr>
+<td>冲突排查</td>
+<td>手动逐个下 jar</td>
+<td>Maven 自动解决传递依赖</td>
+</tr>
+<tr>
+<td>跨平台</td>
+<td>每个新机器都要找齐 jar</td>
+<td><code>mvn package</code> 即可</td>
+</tr>
+<tr>
+<td>升级 OWL API</td>
+<td>重新下一整套 jar</td>
+<td>改一行版本号</td>
+</tr>
+<tr>
+<td>编译入口</td>
+<td>手动 <code>javac -encoding UTF-8 test.java</code></td>
+<td><code>mvn package -DskipTests</code></td>
+</tr>
+<tr>
+<td>运行命令</td>
+<td><code>java -cp lib\*;. Test</code></td>
+<td><code>java -cp &quot;target\classes;target\lib\*&quot; Test</code></td>
+</tr>
+</tbody></table>
+<h3 id="8-2-原始-pom-xml-的修正"><a href="#8-2-原始-pom-xml-的修正" class="headerlink" title="8.2 原始 pom.xml 的修正"></a>8.2 原始 <code>pom.xml</code> 的修正</h3><table>
+<thead>
+<tr>
+<th>原配置</th>
+<th>修正后</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>org.semanticweb.hermit:hermit:1.4.3.519</code></td>
+<td><code>net.sourceforge.owlapi:org.semanticweb.hermit:1.4.3.517</code></td>
+<td>该 groupId&#x2F;version 在 Maven Central 不存在；OWL API 官方用新坐标维护</td>
+</tr>
+<tr>
+<td><code>net.sourceforge.jfact:jfact:4.0.4</code></td>
+<td><code>net.sourceforge.owlapi:jfact:5.0.3</code></td>
+<td>该 groupId 4.0.4 在 Central 不存在；OWL API 维护的最新 JFact 5.0.3 在 <code>net.sourceforge.owlapi</code></td>
+</tr>
+<tr>
+<td>仓库 <code>https://raw.githubusercontent.com/owlcs/jfact/master/mvn-repo/</code></td>
+<td><code>https://repo1.maven.org/maven2/</code> (Maven Central)</td>
+<td>旧仓库是历史 fallback，新坐标已迁回 Central</td>
+</tr>
+</tbody></table>
+<h3 id="8-3-pom-xml-关键配置"><a href="#8-3-pom-xml-关键配置" class="headerlink" title="8.3 pom.xml 关键配置"></a>8.3 pom.xml 关键配置</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>11<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>11<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.sourceforge.owlapi<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>owlapi-distribution<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.20<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.sourceforge.owlapi<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>org.semanticweb.hermit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.3.517<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.sourceforge.owlapi<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jfact<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.0.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="8-4-历史-lib-依赖问题（已通过-Maven-解决）"><a href="#8-4-历史-lib-依赖问题（已通过-Maven-解决）" class="headerlink" title="8.4 历史 lib/ 依赖问题（已通过 Maven 解决）"></a>8.4 历史 <code>lib/</code> 依赖问题（已通过 Maven 解决）</h3><table>
+<thead>
+<tr>
+<th>历史错误</th>
+<th>当前状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>NoClassDefFoundError: org/tukaani/xz/XZInputStream</code></td>
+<td>✅ Maven 传递依赖自动引入</td>
+</tr>
+<tr>
+<td><code>NoClassDefFoundError: gnu/trove/map/hash/THashMap</code></td>
+<td>✅ Maven 传递依赖自动引入 (trove4j)</td>
+</tr>
+<tr>
+<td><code>NoClassDefFoundError: org/apache/commons/io/input/BOMInputStream</code></td>
+<td>✅ Maven 传递依赖自动引入</td>
+</tr>
+<tr>
+<td><code>NoClassDefFoundError: org/slf4j/LoggerFactory</code></td>
+<td>✅ Maven 传递依赖自动引入</td>
+</tr>
+<tr>
+<td><code>NoClassDefFoundError: javax/inject/Inject</code></td>
+<td>✅ Maven 传递依赖自动引入</td>
+</tr>
+<tr>
+<td><code>NoClassDefFoundError: org/openrdf/rio/RDFFormat</code></td>
+<td>✅ Maven 传递依赖自动引入 (openrdf-sesame-rio-*)</td>
+</tr>
+<tr>
+<td><code>UnsatisfiedLinkError: no FaCTPlusPlusJNI in java.library.path</code></td>
+<td>✅ <strong>已彻底消除</strong> — JFact 是纯 Java，无需 JNI 库</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="9-结论与建议"><a href="#9-结论与建议" class="headerlink" title="9. 结论与建议"></a>9. 结论与建议</h2><ol>
+<li><strong>功能层面可互换</strong>：8 组测试中两台推理机的逻辑输出 100% 一致，可放心替换。</li>
+<li><strong>性能层面优先 JFact</strong>：在 CCKS 任务中若存在 1000+ axioms 的大本体，JFact 优势明显（pizza.owl 上 2.1×）。</li>
+<li><strong>部署层面两台均优</strong>：Maven 迁移后，JFact 与 HermiT 都是”纯 Java + 单坐标依赖”，部署难度彻底消失，<strong>也彻底摆脱了原 FaCT++ JNI 的多平台 &#x2F; 容器 &#x2F; 32&#x2F;64-bit 痛点</strong>。</li>
+<li><strong>混合策略</strong>：可在本地用 JFact 跑离线批量推理；服务化部署时切到 HermiT，通过 <code>OWLReasonerFactory</code> 抽象，业务代码无需改动。</li>
+<li><strong>下一步</strong>：<ul>
+<li>把 <a href="file:///e:/ccks/reasoner/src/main/java/Test.java">Test.java</a> 接入 CCKS 真实语料（contest_data 中的多跳&#x2F;图谱&#x2F;表格题本体）；</li>
+<li>在 10+ 个真实 OWL 本体上重复 T6 风格的基准，统计 JFact vs HermiT 性能分布；</li>
+<li>评估 ELK &#x2F; Konclude &#x2F; Openllet 等新一代推理机作为补充方案；</li>
+<li>在 CI 中把 <code>mvn package &amp;&amp; java -cp ... Test</code> 串成 smoke test 任务。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p><em>Maven 项目配置: <a href="file:///e:/ccks/reasoner/pom.xml">pom.xml</a></em><br><em>测试代码: <a href="file:///e:/ccks/reasoner/src/main/java/Test.java">src&#x2F;main&#x2F;java&#x2F;Test.java</a></em><br><em>原始输出: <a href="file:///e:/ccks/reasoner/test_output.txt">test_output.txt</a></em><br>（ai参与撰写和润色）</p>
+</div>
     </div>
     <br>
     
