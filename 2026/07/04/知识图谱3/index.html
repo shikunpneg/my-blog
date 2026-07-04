@@ -4,10 +4,10 @@
     <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <meta name="description" content="" />
+    <meta name="description" content="两种基于Tableaux算法的reasoner的源码分析（2）" />
     <meta name="hexo-theme-A4" content="v2.0.1" />
     <link rel="alternate icon" type="image/webp" href="/img/favicon.webp">
-    <title>shikunpunk的小站</title>
+    <title>两种基于Tableaux算法的reasoner的源码分析（2） | shikunpunk的小站</title>
 
     
         
@@ -286,7 +286,7 @@
         
             
                 <div class="post-main-title" style="text-align: center;">
-                    
+                    两种基于Tableaux算法的reasoner的源码分析（2）
                 </div>
             
         
@@ -308,11 +308,10 @@
     <div class="post-md">
         
             
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#title-%E4%B8%A4%E7%A7%8D%E5%9F%BA%E4%BA%8ETableaux%E7%AE%97%E6%B3%95%E7%9A%84reasoner%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%882%EF%BC%89date-2026-07-4-14-49tags-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD"><span class="post-toc-text">title: 两种基于Tableaux算法的reasoner的源码分析（2）date: 2026-07-4 14:49tags: 人工智能</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E4%B8%A4%E7%A7%8D%E5%9F%BA%E4%BA%8ETableaux%E7%AE%97%E6%B3%95%E7%9A%84reasoner%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%882%EF%BC%89"><span class="post-toc-text">两种基于Tableaux算法的reasoner的源码分析（2）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Fact-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="post-toc-text">Fact++源码分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%99%EF%BC%9A%E5%9B%BE%E7%BA%B8%E4%B8%8E%E7%A7%AF%E6%9C%A8-%E2%80%94%E2%80%94-dlCompletionTree-h-%E5%92%8C-dlCompletionGraph-h"><span class="post-toc-text">第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#dlCompletionTreeArc-h%EF%BC%88%E8%BE%B9%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%89"><span class="post-toc-text">dlCompletionTreeArc.h（边的定义）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#checkSatisfiability%EF%BC%9ATableau-%E4%B8%BB%E5%BE%AA%E7%8E%AF"><span class="post-toc-text">checkSatisfiability：Tableau 主循环</span></a></li></ol></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E4%B8%A4%E7%A7%8D%E5%9F%BA%E4%BA%8ETableaux%E7%AE%97%E6%B3%95%E7%9A%84reasoner%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%882%EF%BC%89"><span class="post-toc-text">两种基于Tableaux算法的reasoner的源码分析（2）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Fact-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="post-toc-text">Fact++源码分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%99%EF%BC%9A%E5%9B%BE%E7%BA%B8%E4%B8%8E%E7%A7%AF%E6%9C%A8-%E2%80%94%E2%80%94-dlCompletionTree-h-%E5%92%8C-dlCompletionGraph-h"><span class="post-toc-text">第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#dlCompletionTreeArc-h%EF%BC%88%E8%BE%B9%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%89"><span class="post-toc-text">dlCompletionTreeArc.h（边的定义）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#checkSatisfiability%EF%BC%9ATableau-%E4%B8%BB%E5%BE%AA%E7%8E%AF"><span class="post-toc-text">checkSatisfiability：Tableau 主循环</span></a></li></ol></li></ol>
             
         
-        <div class=".article-gallery"><hr>
-<h2 id="title-两种基于Tableaux算法的reasoner的源码分析（2）date-2026-07-4-14-49tags-人工智能"><a href="#title-两种基于Tableaux算法的reasoner的源码分析（2）date-2026-07-4-14-49tags-人工智能" class="headerlink" title="title: 两种基于Tableaux算法的reasoner的源码分析（2）date: 2026-07-4 14:49tags: 人工智能"></a>title: 两种基于Tableaux算法的reasoner的源码分析（2）<br>date: 2026-07-4 14:49<br>tags: 人工智能</h2><h1 id="两种基于Tableaux算法的reasoner的源码分析（2）"><a href="#两种基于Tableaux算法的reasoner的源码分析（2）" class="headerlink" title="两种基于Tableaux算法的reasoner的源码分析（2）"></a>两种基于Tableaux算法的reasoner的源码分析（2）</h1><h2 id="Fact-源码分析"><a href="#Fact-源码分析" class="headerlink" title="Fact++源码分析"></a>Fact++源码分析</h2><h3 id="第一站：图纸与积木-——-dlCompletionTree-h-和-dlCompletionGraph-h"><a href="#第一站：图纸与积木-——-dlCompletionTree-h-和-dlCompletionGraph-h" class="headerlink" title="第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h"></a>第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h</h3><p>为什么先读这个？<br>Reasoner 类里有三个最重要的成员：CGraph（完工图）、curNode（当前节点）和 TODO（待办清单）。如果不先搞清楚“节点”长什么样、“图”怎么存，后面所有的 createOneNeighbour 和 addToDoEntry 都是空中楼阁。</p>
+        <div class=".article-gallery"><h1 id="两种基于Tableaux算法的reasoner的源码分析（2）"><a href="#两种基于Tableaux算法的reasoner的源码分析（2）" class="headerlink" title="两种基于Tableaux算法的reasoner的源码分析（2）"></a>两种基于Tableaux算法的reasoner的源码分析（2）</h1><h2 id="Fact-源码分析"><a href="#Fact-源码分析" class="headerlink" title="Fact++源码分析"></a>Fact++源码分析</h2><h3 id="第一站：图纸与积木-——-dlCompletionTree-h-和-dlCompletionGraph-h"><a href="#第一站：图纸与积木-——-dlCompletionTree-h-和-dlCompletionGraph-h" class="headerlink" title="第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h"></a>第一站：图纸与积木 —— dlCompletionTree.h 和 dlCompletionGraph.h</h3><p>为什么先读这个？<br>Reasoner 类里有三个最重要的成员：CGraph（完工图）、curNode（当前节点）和 TODO（待办清单）。如果不先搞清楚“节点”长什么样、“图”怎么存，后面所有的 createOneNeighbour 和 addToDoEntry 都是空中楼阁。</p>
 <p>先阅读dlCompletionTree.h，</p>
 <p>在 Tableau 算法里，节点最核心的职责就是装着它所属的概念集合（比如，这个个体属于 A，也属于 ∃R.B）。在 FaCT++ 里，这个东西通常叫 Label 或 CGLabel。</p>
 <p>CGLabel Label;                     &#x2F;&#x2F; 概念标签集合（所有断言的集合）<br>#ifdef RKG_IR_IN_NODE_LABEL<br>IRInfo IR;                         &#x2F;&#x2F; 不等式关系信息（用于处理“不同个体”）<br>#endif<br>ArcCollection Neighbour;           &#x2F;&#x2F; 角色边列表（指向其他节点）<br>TSaveList<SaveState> saves;        &#x2F;&#x2F; 历史状态栈（用于回溯）<br>unsigned int id;                   &#x2F;&#x2F; 节点唯一 ID<br>BipolarPointer Init;               &#x2F;&#x2F; 创建该节点时的初始概念</p>
