@@ -1,0 +1,3 @@
+# MathJax injection
+scripts:
+  - scripts/mathjax-inject.js
