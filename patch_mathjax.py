@@ -15,7 +15,8 @@ for root in roots:
             continue
         if 'mathjax' in text.lower():
             continue
-        if '$$' not in text and '$' not in text:
+        # 注入条件：含未渲染的 LaTeX 源码（\\mathbf、\\approx 等转义命令）
+        if not any(marker in text for marker in ['\\mathbf', '\\approx', '\\mathcal', '\\sum', '\\max']):
             continue
         if '</body>' not in text:
             continue
