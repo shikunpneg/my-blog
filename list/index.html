@@ -7,7 +7,7 @@
     <meta name="description" content="list" />
     <meta name="hexo-theme-A4" content="v2.0.1" />
     <link rel="alternate icon" type="image/webp" href="/img/favicon.webp">
-    <title>list | shikunpunk的小站</title>
+    <title>shikunpunk的小站</title>
 
     
         
@@ -23,10 +23,6 @@
 <link rel="stylesheet" href="/css/fonts.css">
 
          <!--注意：首页既不是post也不是page-->
-        
-            
-<link rel="stylesheet" href="/css/waline.css">
-
         
 
         
@@ -93,12 +89,6 @@
 
 
 
-
-    <style>
-        .archive-main a:hover {
-            text-decoration: none; 
-        }
-    </style>
 
     
     
@@ -298,74 +288,11 @@
 
       <!--rough-notation风格效果-->
       
-        <script src="/js/roughNotation.js" defer></script>
-        <script>
-          // 浏览器严格模式
-          if (typeof window !== 'undefined') {
-            window.themeConfig = {"menu":{"动态":"/list/","读书笔记":"/tags/读书笔记/","写作":{"诗歌":"/tags/诗歌/","随笔":"/tags/随笔/","灵感":"/tags/灵感/","小说":"/tags/小说/"},"技术文章":{"算法":"/tags/算法/","量子计算":"/tags/量子计算/","网络安全":"/tags/网络安全/","人工智能":"/tags/人工智能/","开发":"/tags/开发/"},"论文":"/tags/论文/","CV":"/tags/cv/","我所爱的一切":{"杨德昌":"/tags/杨德昌/","金基德":"/tags/金基德/","娄烨":"/tags/娄烨/","园子温":"/tags/园子温/","安德烈.祖拉斯基":"/tags/安德烈.祖拉斯基/","顾城":"/tags/顾城/","骆一禾":"/tags/骆一禾/","脏手指":"/tags/脏手指/","明天的盐":"/tags/明天的盐/","萧红":"/tags/萧红/","林棹":"/tags/林棹/","邱妙津":"/tags/邱妙津/"},"其他":"/tags/其他/"},"showInMenu":["动态"],"index":{"header":null,"hitokoto":false,"footer":"","titlePosition":"left","width":"small","list":false},"footerLink":{"info":""},"post":{"footer":"","themeInfo":false,"width":"middle","titlePosition":"center"},"favicon":"/img/favicon.webp","isRoundedAvatar":false,"isAvatarRotating":false,"displayTitleInTab":true,"tool":{"darkMode":true,"returnToTop":true,"returnToLast":true,"topToc":true,"leftToc":true,"recentUpdatePost":true},"indexInfo":{"allWordCount":false,"allViewCount":false},"postInfo":{"updateDate":false,"wordCount":false,"readTime":false,"viewCount":false,"prevAndNextLink":{"status":false,"prevInfo":"〈 上一篇","nextInfo":"下一篇 〉"},"endContent":""},"listInfo":{"enable":true,"hoverStyle":"underline","hoverColor":"#8b5a2b","animationDuration":800},"cdn":{"enable":false,"choose":"zzko"},"color":{"enable":false,"font":"#9e5345","background":"#e8e0c9","indexBackGround":"#efeae2","postBackGround":"#efeae2","codeBackGround":"#e8e0c9","codeFont":"#2e5041","linkBeforeClick":"#2e5041","linkAfterClick":"#9c9caf"},"imageShow":{"enable":false,"background":"/img/paper.jpg"},"font":{"enable":false,"LXGWWenKai":true},"lightgallery":{"thumbnail":true,"zoom":true,"rotate":true,"autoplay":true,"fullScreen":true,"pager":false},"comment":{"enable":true,"use":"giscus","waline":{"serverUrl":null,"lang":"zh-CN","placeholder":"留下你的评论吧。"},"twikoo":{"envId":null,"region":null,"lang":null},"giscus":{"dataRepo":null,"dataRepoId":null,"dataCategory":null,"dataCategoryId":null,"dataMapping":"pathname","dataTerm":null,"dataStrict":"0","dataReactionsEnabled":"1","dataEmitMetadata":"0","dataInputPosition":"bottom","dataTheme":"preferred_color_scheme","dataLang":"zh-CN","dataLoading":null,"crossorigin":"anonymous","async":true,"repo":"shikunpneg/my-blog-comments","repoId":"R_kgDOS7Naug","category":"Announcements","categoryId":"DIC_kwDOS7Naus4C_MLE","mapping":"pathname","strict":"0","reactionsEnabled":"1","emitMetadata":"0","inputPosition":"bottom","theme":"preferred_color_scheme","lang":"zh-CN"},"artalk":{"server":null}},"inject":{"css":"css/custom.css"},"baseElement":{"href":null,"target":null},"version":"v2.0.1"};
-          }
-          document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.archive-title').forEach(el => {
-              const annotation = RoughNotation.annotate(el, {
-                type: themeConfig?.tool?.hoverStyle || 'underline', // 效果,默认为'underline'
-                color: themeConfig?.tool?.hoverColor || '#4f7dde', // 自定义效果颜色
-                animationDuration: themeConfig?.tool?.animationDuration || 800, // 动画持续时间ms
-              });
-              el.addEventListener('mouseenter', () => {
-                if(annotation){
-                annotation.show();
-            }});
-              el.addEventListener('mouseleave', () => {
-                if(annotation){
-                annotation.hide();
-            }});
-            });
-          });
-        </script>
-        
 
       <!--文章先按照时间排好序-->
       
       
       <!--再放 最近更新 文章-->
-      
-        <li>
-          <span class="year-font-color">
-            <a class="archive-title"  href="/recent-updates/">Recent-Updates</a>
-          </span>
-        </li>
-        
-        
-          
-          
-          <li>
-            <span class="archive-date">2026/07/05 
-            </span>
-            <div class="archive-main">
-                <a class="archive-title" href="/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B18/">知识图谱之实体分类</a>
-            </div>
-          </li>
-        
-          
-          
-          <li>
-            <span class="archive-date">2026/07/04 
-            </span>
-            <div class="archive-main">
-                <a class="archive-title" href="/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B16/">表示学习之Word2Vec</a>
-            </div>
-          </li>
-        
-          
-          
-          <li>
-            <span class="archive-date">2026/07/04 
-            </span>
-            <div class="archive-main">
-                <a class="archive-title" href="/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B17/">表示学习之transE论文翻译</a>
-            </div>
-          </li>
-        
       
 
       <!--后放 其他 文章-->
@@ -384,7 +311,7 @@
             </span>
             <div class="archive-main">
               
-                <a class="archive-title" href="/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B18/">知识图谱之实体分类</a>
+                <a class="archive-title" href="/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B17/">表示学习之transE论文翻译</a>
             </div>
           </li>
         
@@ -394,7 +321,7 @@
             </span>
             <div class="archive-main">
               
-                <a class="archive-title" href="/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B17/">表示学习之transE论文翻译</a>
+                <a class="archive-title" href="/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B18/">知识图谱之实体分类</a>
             </div>
           </li>
         
@@ -444,7 +371,7 @@
             </span>
             <div class="archive-main">
               
-                <a class="archive-title" href="/2026/07/03/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B12/">两种基于Tableaux算法的reasoner的源码分析（1）</a>
+                <a class="archive-title" href="/2026/07/03/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B11/">知识图谱推理与 Tableau 算法详解</a>
             </div>
           </li>
         
@@ -454,7 +381,7 @@
             </span>
             <div class="archive-main">
               
-                <a class="archive-title" href="/2026/07/03/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B11/">知识图谱推理与 Tableau 算法详解</a>
+                <a class="archive-title" href="/2026/07/03/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B12/">两种基于Tableaux算法的reasoner的源码分析（1）</a>
             </div>
           </li>
         
@@ -464,27 +391,7 @@
             </span>
             <div class="archive-main">
               
-                <a class="archive-title" href="/2026/06/15/secret%20notes2/">secret notes2</a>
-            </div>
-          </li>
-        
-          
-          <li>
-            <span class="archive-date">&nbsp;&nbsp;&nbsp;06/15 
-            </span>
-            <div class="archive-main">
-              
-                <a class="archive-title" href="/2026/06/15/secret%20notes4/">secret notes4</a>
-            </div>
-          </li>
-        
-          
-          <li>
-            <span class="archive-date">&nbsp;&nbsp;&nbsp;06/15 
-            </span>
-            <div class="archive-main">
-              
-                <a class="archive-title" href="/2026/06/15/secret%20notes3/">secret notes3</a>
+                <a class="archive-title" href="/2026/06/15/%E7%A9%BF%E8%BF%87%E4%BB%96%E8%80%85%E7%9A%84%E5%87%9D%E8%A7%86/">穿过他者的凝视</a>
             </div>
           </li>
         
@@ -524,17 +431,7 @@
             </span>
             <div class="archive-main">
               
-                <a class="archive-title" href="/2026/06/15/%E7%A9%BF%E8%BF%87%E4%BB%96%E8%80%85%E7%9A%84%E5%87%9D%E8%A7%86/">穿过他者的凝视</a>
-            </div>
-          </li>
-        
-          
-          <li>
-            <span class="archive-date">&nbsp;&nbsp;&nbsp;06/15 
-            </span>
-            <div class="archive-main">
-              
-                <a class="archive-title" href="/2026/06/15/secret%20notes1/">secret notes1</a>
+                <a class="archive-title" href="/2026/06/15/secret%20notes4/">secret notes4</a>
             </div>
           </li>
         
@@ -545,6 +442,36 @@
             <div class="archive-main">
               
                 <a class="archive-title" href="/2026/06/15/%E5%BA%B8%E5%8C%BB/">庸医</a>
+            </div>
+          </li>
+        
+          
+          <li>
+            <span class="archive-date">&nbsp;&nbsp;&nbsp;06/15 
+            </span>
+            <div class="archive-main">
+              
+                <a class="archive-title" href="/2026/06/15/secret%20notes3/">secret notes3</a>
+            </div>
+          </li>
+        
+          
+          <li>
+            <span class="archive-date">&nbsp;&nbsp;&nbsp;06/15 
+            </span>
+            <div class="archive-main">
+              
+                <a class="archive-title" href="/2026/06/15/secret%20notes2/">secret notes2</a>
+            </div>
+          </li>
+        
+          
+          <li>
+            <span class="archive-date">&nbsp;&nbsp;&nbsp;06/15 
+            </span>
+            <div class="archive-main">
+              
+                <a class="archive-title" href="/2026/06/15/secret%20notes1/">secret notes1</a>
             </div>
           </li>
         
@@ -621,6 +548,8 @@
 </script>
 
 
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script> 
+
                 </div>
             
             
@@ -639,7 +568,10 @@
                     </svg>
                 </div>
             
-    </body>
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\(", "\)"]], displayMath: [["$", "$"], ["\[", "\]"]], processEscapes: true }, svg: { fontCache: "global" } };</script>
+</body>
 </html>
 <script src="/js/emojiHandler.js"></script>
 <script>
