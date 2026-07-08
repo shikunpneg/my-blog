@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <meta name="description" content="通俗易懂地理解word2vev的原理" />
+    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <link rel="alternate icon" type="image/webp" href="/img/favicon.webp">
+    <title>shikunpunk的小站</title>
+
+    
+        
+<link rel="stylesheet" href="/css/highlight/style1.css">
+
+        
+<link rel="stylesheet" href="/css/reset.css">
+
+        
+<link rel="stylesheet" href="/css/markdown.css">
+
+        
+<link rel="stylesheet" href="/css/fonts.css">
+
+         <!--注意：首页既不是post也不是page-->
+        
+
+        
+<link rel="stylesheet" href="/css/ui.css">
+
+        
+<link rel="stylesheet" href="/css/style.css">
+
+        
+<link rel="stylesheet" href="/css/custom.css">
+
+
+        
+            <!--返回顶部css-->
+            
+<link rel="stylesheet" href="/css/returnToTop.css">
+
+            
+<link rel="stylesheet" href="/css/unicons.css">
+
+        
+        
+            <!--目录-->
+            
+<link rel="stylesheet" href="/css/toc.css">
+
+        
+    
+
+    
+        
+<link rel="stylesheet" href="/css/returnToLastPage.css">
+
+    
+
+    
+<link rel="stylesheet" href="/css/lightgallery-bundle.min.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/custom.css">
+
+    
+
+    
+
+    <!-- <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/lxgwwenkai/dist/LXGWWenKai-Regular/result.css" /> -->
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@chinese-fonts/lxgwwenkai@3.0.0/dist/LXGWWenKai-Regular/result.css' /> 
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+    
+    
+
+    
+    
+
+
+
+    
+
+    
+    
+
+
+
+
+    
+    
+
+
+    <body>
+        
+            
+                <div class="left-toc-container">
+                    <nav id="toc" class="bs-docs-sidebar"></nav>
+                </div>
+            
+        
+        <div class="paper">
+
+            
+
+            
+                <div class="shadow-drop-2-bottom paper-main">
+                    
+
+
+<div class="header">
+    <div class="header-container">
+        <style>
+            .header-img {
+                width: 56px;
+                height: auto;
+                object-fit: cover; /* 保持图片比例 */
+                transition: transform 0.3s ease-in-out; 
+                border-radius: 0; 
+            }
+            
+        </style>
+        <div class="header-content">
+            <a class="logo" href="/">shikunpunk的小站</a> 
+            <span class="description"></span> 
+        </div>
+    </div>
+    
+   
+    <ul class="nav">
+        
+            
+                
+                    <li><a href="/list/">动态</a></li>
+                
+            
+        
+            
+                
+                    <li><a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></li>
+                
+            
+        
+            
+                
+                    
+                        <li><a href="/tags/%E8%AF%97%E6%AD%8C/">诗歌</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E7%81%B5%E6%84%9F/">灵感</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E5%B0%8F%E8%AF%B4/">小说</a></li>
+                    
+                
+            
+        
+            
+                
+                    
+                        <li><a href="/tags/%E7%AE%97%E6%B3%95/">算法</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%87%8F%E5%AD%90%E8%AE%A1%E7%AE%97/">量子计算</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E5%BC%80%E5%8F%91/">开发</a></li>
+                    
+                
+            
+        
+            
+                
+                    <li><a href="/tags/%E8%AE%BA%E6%96%87/">论文</a></li>
+                
+            
+        
+            
+                
+                    <li><a href="/tags/cv/">CV</a></li>
+                
+            
+        
+            
+                
+                    
+                        <li><a href="/tags/%E6%9D%A8%E5%BE%B7%E6%98%8C/">杨德昌</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%87%91%E5%9F%BA%E5%BE%B7/">金基德</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E5%A8%84%E7%83%A8/">娄烨</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E5%9B%AD%E5%AD%90%E6%B8%A9/">园子温</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E5%AE%89%E5%BE%B7%E7%83%88.%E7%A5%96%E6%8B%89%E6%96%AF%E5%9F%BA/">安德烈.祖拉斯基</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%A1%BE%E5%9F%8E/">顾城</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%AA%86%E4%B8%80%E7%A6%BE/">骆一禾</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E8%84%8F%E6%89%8B%E6%8C%87/">脏手指</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E6%98%8E%E5%A4%A9%E7%9A%84%E7%9B%90/">明天的盐</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E8%90%A7%E7%BA%A2/">萧红</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E6%9E%97%E6%A3%B9/">林棹</a></li>
+                    
+                
+                    
+                        <li><a href="/tags/%E9%82%B1%E5%A6%99%E6%B4%A5/">邱妙津</a></li>
+                    
+                
+            
+        
+            
+                
+                    <li><a href="/tags/%E5%85%B6%E4%BB%96/">其他</a></li>
+                
+            
+        
+    </ul>
+</div>
+
+                    
+                    
+
+                    
+                    
+
+                    <!--说明是文章post页面-->
+                    
+                        <div class="post-main">
+    
+
+    
+        
+            
+                <div class="post-main-title" style="text-align: center;">
+                    通俗易懂地理解word2vev的原理
+                </div>
+            
+        
+      
+    
+
+    
+
+        
+            <div class="post-head-meta-center">
+        
+                
+                    <span>最近更新：2026-07-08</span> 
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                     <span>字数总计：2.2k</span>
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                    <span>阅读估时：8分钟</span>
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                    <span id="busuanzi_container_page_pv">
+                        阅读量：<span id="busuanzi_value_page_pv"></span>次
+                    </span>
+                
+            </div>
+    
+
+    <div class="post-md">
+        
+            
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Word2Vec%EF%BC%9A%E4%BB%8EN-gram%E5%88%B0%E8%AF%8D%E5%90%91%E9%87%8F"><span class="post-toc-text">深入理解Word2Vec：从N-gram到词向量</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81Word2Vec%EF%BC%9F"><span class="post-toc-text">一、为什么需要Word2Vec？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-1-N-gram%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%B1%80%E9%99%90"><span class="post-toc-text">1.1 N-gram模型的局限</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-2-%E4%BB%8E%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%88%B0%E9%A6%99%E5%86%9C%EF%BC%9AN-gram%E7%9A%84%E6%80%9D%E6%83%B3%E6%BA%90%E5%A4%B4"><span class="post-toc-text">1.2 从马尔可夫到香农：N-gram的思想源头</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-3-%E5%B9%B3%E6%BB%91%E6%8A%80%E6%9C%AF%EF%BC%9A%E8%A7%A3%E5%86%B3%E9%9B%B6%E6%A6%82%E7%8E%87%E9%97%AE%E9%A2%98"><span class="post-toc-text">1.3 平滑技术：解决零概率问题</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%BA%8C%E3%80%81NNLM%EF%BC%9A%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%B0%9D%E8%AF%95"><span class="post-toc-text">二、NNLM：神经网络的第一次尝试</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-1-%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="post-toc-text">2.1 核心思想</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-2-Embedding%E5%B1%82%EF%BC%9A%E8%AF%8D%E5%90%91%E9%87%8F%E4%BB%8E%E4%BD%95%E8%80%8C%E6%9D%A5%EF%BC%9F"><span class="post-toc-text">2.2 Embedding层：词向量从何而来？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-3-NNLM%E7%9A%84%E5%B1%80%E9%99%90"><span class="post-toc-text">2.3 NNLM的局限</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%B8%89%E3%80%81Word2Vec%E7%9A%84%E7%AA%81%E7%A0%B4"><span class="post-toc-text">三、Word2Vec的突破</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-1-CBoW%EF%BC%88%E8%BF%9E%E7%BB%AD%E8%AF%8D%E8%A2%8B%E6%A8%A1%E5%9E%8B%EF%BC%89"><span class="post-toc-text">3.1 CBoW（连续词袋模型）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-2-Skip-gram%EF%BC%88%E8%B7%B3%E5%AD%97%E6%A8%A1%E5%9E%8B%EF%BC%89"><span class="post-toc-text">3.2 Skip-gram（跳字模型）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%9B%9B%E3%80%81%E8%AE%AD%E7%BB%83%E5%8A%A0%E9%80%9F%E7%9A%84%E4%B8%89%E5%A4%A7%E6%8A%80%E6%9C%AF"><span class="post-toc-text">四、训练加速的三大技术</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-1-%E5%B1%82%E6%AC%A1Softmax%EF%BC%88Hierarchical-Softmax%EF%BC%89"><span class="post-toc-text">4.1 层次Softmax（Hierarchical Softmax）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-2-%E8%B4%9F%E9%87%87%E6%A0%B7%EF%BC%88Negative-Sampling%EF%BC%89"><span class="post-toc-text">4.2 负采样（Negative Sampling）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-3-%E4%B8%8B%E9%87%87%E6%A0%B7%EF%BC%88Subsampling%EF%BC%89"><span class="post-toc-text">4.3 下采样（Subsampling）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%BA%94%E3%80%81%E8%AF%8D%E5%90%91%E9%87%8F%E6%98%AF%E5%A6%82%E4%BD%95%E5%8F%98%E6%88%90%E6%95%B0%E5%AD%97%E7%9A%84%EF%BC%9F%EF%BC%88%E5%AE%8C%E6%95%B4%E6%BC%94%E7%A4%BA%EF%BC%89"><span class="post-toc-text">五、词向量是如何变成数字的？（完整演示）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-1-%E5%88%9D%E5%A7%8B%E5%8C%96%EF%BC%88%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%AD%97%EF%BC%89"><span class="post-toc-text">5.1 初始化（随机数字）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-2-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%AE%AD%E7%BB%83"><span class="post-toc-text">5.2 第一次训练</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-3-%E8%AE%AD%E7%BB%83%E5%90%8E%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="post-toc-text">5.3 训练后的结果</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-4-%E6%A0%B8%E5%BF%83%E7%BB%93%E8%AE%BA"><span class="post-toc-text">5.4 核心结论</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%85%AD%E3%80%81Word2Vec%E7%9A%84%E5%BB%B6%E4%BC%B8%E5%BA%94%E7%94%A8"><span class="post-toc-text">六、Word2Vec的延伸应用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-1-%E8%B7%A8%E8%AF%AD%E8%A8%80%E6%9C%BA%E5%99%A8%E7%BF%BB%E8%AF%91"><span class="post-toc-text">6.1 跨语言机器翻译</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-2-Item2Vec%EF%BC%88%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%EF%BC%89"><span class="post-toc-text">6.2 Item2Vec（推荐系统）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-3-%E8%AF%AD%E4%B9%89%E7%B1%BB%E6%AF%94%E6%8E%A8%E7%90%86"><span class="post-toc-text">6.3 语义类比推理</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%B8%83%E3%80%81%E5%85%B3%E4%BA%8EWord-Embedding%E7%9A%84%E6%B7%B1%E5%BA%A6%E6%80%9D%E8%80%83"><span class="post-toc-text">七、关于Word Embedding的深度思考</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-1-%E4%B8%A4%E7%A7%8D%E8%AE%AD%E7%BB%83%E8%8C%83%E5%BC%8F"><span class="post-toc-text">7.1 两种训练范式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-2-Sentence-Embedding%EF%BC%88%E6%9B%B4%E9%AB%98%E5%B1%82%E6%AC%A1%E7%9A%84%E6%8A%BD%E8%B1%A1%EF%BC%89"><span class="post-toc-text">7.2 Sentence Embedding（更高层次的抽象）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="post-toc-text">参考文献</span></a></li></ol></li></ol>
+            
+        
+        <div class=".article-gallery"><h1 id="深入理解Word2Vec：从N-gram到词向量"><a href="#深入理解Word2Vec：从N-gram到词向量" class="headerlink" title="深入理解Word2Vec：从N-gram到词向量"></a>深入理解Word2Vec：从N-gram到词向量</h1><blockquote>
+<p>本文档汇总了关于Word2Vec算法的完整讨论，涵盖其历史背景、核心原理、模型架构、训练优化技术及本质理解。</p>
+</blockquote>
+<h2 id="一、为什么需要Word2Vec？"><a href="#一、为什么需要Word2Vec？" class="headerlink" title="一、为什么需要Word2Vec？"></a>一、为什么需要Word2Vec？</h2><h3 id="1-1-N-gram模型的局限"><a href="#1-1-N-gram模型的局限" class="headerlink" title="1.1 N-gram模型的局限"></a>1.1 N-gram模型的局限</h3><p>在Word2Vec之前，N-gram模型是统计语言模型的主流方法。它的核心思想是：<strong>一个词出现的概率只依赖于它前面出现的 N-1 个词</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">P(w₁, w₂, ..., wn) ≈ Π P(wᵢ | wᵢ₋ₙ₊₁, ..., wᵢ₋₁)</span><br></pre></td></tr></table></figure>
+
+<p><strong>N-gram的痛点</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>数据稀疏</strong></td>
+<td>长尾N-gram在语料中几乎必然出现0次</td>
+</tr>
+<tr>
+<td><strong>无法捕捉语义</strong></td>
+<td>词被当作原子符号，”猫”和”狗”之间没有任何数学关系</td>
+</tr>
+<tr>
+<td><strong>上下文窗口固定</strong></td>
+<td>无法捕捉长距离依赖</td>
+</tr>
+<tr>
+<td><strong>维度灾难</strong></td>
+<td>随着N增大，参数数量指数级增长</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-从马尔可夫到香农：N-gram的思想源头"><a href="#1-2-从马尔可夫到香农：N-gram的思想源头" class="headerlink" title="1.2 从马尔可夫到香农：N-gram的思想源头"></a>1.2 从马尔可夫到香农：N-gram的思想源头</h3><p><strong>马尔科夫的实验（1913年）</strong>：取普希金小说前20,000个字母，统计元音&#x2F;辅音转移概率，证明<strong>语言遵循可建模的统计规律</strong>。</p>
+<p><strong>香农的实验（1948年）</strong>：通过”猜字母”实验和N-gram模型，计算英文的<strong>冗余度约为50%</strong>，开创了用统计模型理解语言的全新范式。</p>
+<h3 id="1-3-平滑技术：解决零概率问题"><a href="#1-3-平滑技术：解决零概率问题" class="headerlink" title="1.3 平滑技术：解决零概率问题"></a>1.3 平滑技术：解决零概率问题</h3><p>当某个N-gram从未出现时，MLE会给出0概率。平滑技术从已观察的N-gram中”匀”出一部分概率给未观察的N-gram：</p>
+<table>
+<thead>
+<tr>
+<th>平滑技术</th>
+<th>核心思想</th>
+<th>公式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>加一平滑</strong></td>
+<td>所有N-gram计数+1</td>
+<td>$P &#x3D; \frac{count+1}{count(h)+V}$</td>
+</tr>
+<tr>
+<td><strong>Good-Turing</strong></td>
+<td>用$N_{r+1}$调整$N_r$</td>
+<td>$r^* &#x3D; (r+1) \times \frac{N_{r+1}}{N_r}$</td>
+</tr>
+<tr>
+<td><strong>Kneser-Ney</strong></td>
+<td>用”延续概率”替代频率</td>
+<td>最复杂，性能最优</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="二、NNLM：神经网络的第一次尝试"><a href="#二、NNLM：神经网络的第一次尝试" class="headerlink" title="二、NNLM：神经网络的第一次尝试"></a>二、NNLM：神经网络的第一次尝试</h2><h3 id="2-1-核心思想"><a href="#2-1-核心思想" class="headerlink" title="2.1 核心思想"></a>2.1 核心思想</h3><p>Bengio等人在2003年提出了<strong>神经概率语言模型（NNLM）</strong>，首次将神经网络引入语言建模：</p>
+<ol>
+<li>每个词对应一个<strong>连续的特征向量</strong>（词向量）</li>
+<li>假设一个<strong>平滑的概率模型</strong>，输入词向量序列，输出联合概率</li>
+<li><strong>同时学习</strong>词向量和概率模型的参数</li>
+</ol>
+<h3 id="2-2-Embedding层：词向量从何而来？"><a href="#2-2-Embedding层：词向量从何而来？" class="headerlink" title="2.2 Embedding层：词向量从何而来？"></a>2.2 Embedding层：词向量从何而来？</h3><p>Embedding层本质上是一个 <strong>$V \times D$ 的查找表（矩阵 $C$）</strong>：</p>
+<ul>
+<li>$V$：词汇表大小</li>
+<li>$D$：词向量维度</li>
+<li>每一行对应一个词的稠密向量表示</li>
+</ul>
+<p><strong>前向传播过程</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">one-hot向量 (维度V) × 矩阵C (V×D) = 词向量 (维度D)</span><br></pre></td></tr></table></figure>
+
+<p><strong>实际上是查表操作</strong>：找到 one-hot 中”1”的位置，取出矩阵 $C$ 的对应行。</p>
+<h3 id="2-3-NNLM的局限"><a href="#2-3-NNLM的局限" class="headerlink" title="2.3 NNLM的局限"></a>2.3 NNLM的局限</h3><ul>
+<li>包含<strong>非线性隐藏层</strong>（tanh激活），计算量大</li>
+<li>只能利用<strong>前文信息</strong>，不能利用后文</li>
+<li>无法在大规模语料上高效训练</li>
+</ul>
+<hr>
+<h2 id="三、Word2Vec的突破"><a href="#三、Word2Vec的突破" class="headerlink" title="三、Word2Vec的突破"></a>三、Word2Vec的突破</h2><h3 id="3-1-CBoW（连续词袋模型）"><a href="#3-1-CBoW（连续词袋模型）" class="headerlink" title="3.1 CBoW（连续词袋模型）"></a>3.1 CBoW（连续词袋模型）</h3><p><strong>改造思路</strong>：</p>
+<ol>
+<li><strong>去掉隐藏层</strong>：移除 tanh 非线性层，直接连接嵌入层和输出层</li>
+<li><strong>忽略词序</strong>：上下文词向量直接<strong>相加（或平均）</strong></li>
+<li><strong>引入双向上下文</strong>：同时利用前后 $c$ 个词预测中心词</li>
+</ol>
+<p><strong>类比</strong>：像”完形填空”——用上下文的所有词”揉在一起”预测中间缺失的词。</p>
+<p><strong>前向计算</strong>：</p>
+<p>$$<br>\text{context} &#x3D; \frac{1}{2c} \sum_{i} \mathbf{v}_{w_i}<br>$$</p>
+<p>$$<br>p(w_t | \text{context}) &#x3D; \text{softmax}(\mathbf{W} \cdot \text{context})<br>$$</p>
+<h3 id="3-2-Skip-gram（跳字模型）"><a href="#3-2-Skip-gram（跳字模型）" class="headerlink" title="3.2 Skip-gram（跳字模型）"></a>3.2 Skip-gram（跳字模型）</h3><p><strong>核心思路</strong>：用<strong>中心词预测上下文词</strong>，与CBoW方向相反。</p>
+<p><strong>数学本质</strong>：</p>
+<p>$$<br>p(w_o | w_i) &#x3D; \frac{e^{\mathbf{U}_o \cdot \mathbf{V}<em>i}}{\sum</em>{j&#x3D;1}^{V} e^{\mathbf{U}_j \cdot \mathbf{V}_i}}<br>$$</p>
+<ul>
+<li>$\mathbf{V}_i$：输入向量（中心词）</li>
+<li>$\mathbf{U}_o$：输出向量（上下文词）</li>
+</ul>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>对<strong>低频词</strong>效果更好</li>
+<li>能捕捉更精细的语义关系</li>
+<li>每个上下文词独立提供学习信号</li>
+</ul>
+<hr>
+<h2 id="四、训练加速的三大技术"><a href="#四、训练加速的三大技术" class="headerlink" title="四、训练加速的三大技术"></a>四、训练加速的三大技术</h2><h3 id="4-1-层次Softmax（Hierarchical-Softmax）"><a href="#4-1-层次Softmax（Hierarchical-Softmax）" class="headerlink" title="4.1 层次Softmax（Hierarchical Softmax）"></a>4.1 层次Softmax（Hierarchical Softmax）</h3><p><strong>核心思想</strong>：把 $O(V)$ 的多分类问题，拆解成 $O(\log V)$ 个二分类问题。</p>
+<p><strong>具体实现</strong>：</p>
+<ol>
+<li>构造一棵<strong>哈夫曼树</strong>（高频词路径短）</li>
+<li>从根到叶子节点，每个内部节点是一个<strong>二分类器（Sigmoid）</strong></li>
+<li>目标词的概率 &#x3D; 路径上所有Sigmoid概率的乘积</li>
+</ol>
+<p><strong>示例</strong>：假设词表 $V&#x3D;100,000$：</p>
+<ul>
+<li>普通Softmax：计算 $100,000$ 个得分后归一化 → $O(100,000)$</li>
+<li>层次Softmax：只需做 $\log_2(100,000) \approx 17$ 次判断 → $O(17)$</li>
+</ul>
+<p><strong>速度提升约 6,000 倍！</strong></p>
+<h3 id="4-2-负采样（Negative-Sampling）"><a href="#4-2-负采样（Negative-Sampling）" class="headerlink" title="4.2 负采样（Negative Sampling）"></a>4.2 负采样（Negative Sampling）</h3><p><strong>核心思想</strong>：把”多分类”问题变成”二分类”问题。</p>
+<ul>
+<li><strong>正样本</strong>：真实存在的（中心词，上下文）对</li>
+<li><strong>负样本</strong>：随机采样的错误（中心词，随机词）对</li>
+</ul>
+<p><strong>损失函数</strong>：</p>
+<p>$$<br>J &#x3D; \log \sigma(\mathbf{U}<em>o \cdot \mathbf{V}<em>i) + \sum</em>{j&#x3D;1}^{k} \mathbb{E}</em>{w_j \sim P_n} \left[ \log \sigma(-\mathbf{U}_j \cdot \mathbf{V}_i) \right]<br>$$</p>
+<p><strong>只更新 $1+k$ 个词</strong>（1个正样本 + k个负样本），而非整个词表。</p>
+<h3 id="4-3-下采样（Subsampling）"><a href="#4-3-下采样（Subsampling）" class="headerlink" title="4.3 下采样（Subsampling）"></a>4.3 下采样（Subsampling）</h3><p><strong>问题</strong>：高频词（”的”、”是”）出现频繁但信息量少。</p>
+<p><strong>解决方案</strong>：训练时以概率 $P$ 丢弃高频词：</p>
+<p>$$<br>P(discard) &#x3D; 1 - \sqrt{\frac{t}{f(w)}}<br>$$</p>
+<ul>
+<li>$f(w)$：词频</li>
+<li>$t$：超参数（通常 $t \approx 10^{-5}$）</li>
+</ul>
+<p><strong>效果</strong>：显著提高<strong>低频词</strong>的向量质量。</p>
+<hr>
+<h2 id="五、词向量是如何变成数字的？（完整演示）"><a href="#五、词向量是如何变成数字的？（完整演示）" class="headerlink" title="五、词向量是如何变成数字的？（完整演示）"></a>五、词向量是如何变成数字的？（完整演示）</h2><h3 id="5-1-初始化（随机数字）"><a href="#5-1-初始化（随机数字）" class="headerlink" title="5.1 初始化（随机数字）"></a>5.1 初始化（随机数字）</h3><p>假设4个词，3维向量（初始完全随机）：</p>
+<table>
+<thead>
+<tr>
+<th>词</th>
+<th>向量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>猫</td>
+<td>[0.10, 0.20, 0.30]</td>
+</tr>
+<tr>
+<td>宠物</td>
+<td>[0.40, 0.50, 0.60]</td>
+</tr>
+<tr>
+<td>狗</td>
+<td>[0.70, 0.80, 0.90]</td>
+</tr>
+<tr>
+<td>车</td>
+<td>[0.15, 0.25, 0.35]</td>
+</tr>
+</tbody></table>
+<p>此时这些数字<strong>没有任何意义</strong>，只是随机数。</p>
+<h3 id="5-2-第一次训练"><a href="#5-2-第一次训练" class="headerlink" title="5.2 第一次训练"></a>5.2 第一次训练</h3><p><strong>训练样本</strong>（Skip-gram）：</p>
+<ul>
+<li>中心词：”猫” → [0.10, 0.20, 0.30]</li>
+<li>上下文词（正样本）：”宠物” → [0.40, 0.50, 0.60]</li>
+</ul>
+<p><strong>Step 1：计算相似度（点积）</strong></p>
+<p>$$<br>\text{猫} \cdot \text{宠物} &#x3D; 0.10 \times 0.40 + 0.20 \times 0.50 + 0.30 \times 0.60 &#x3D; 0.32<br>$$</p>
+<p><strong>Step 2：修改数字（反向传播）</strong></p>
+<p>让”猫”的向量向”宠物”靠近：</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>猫（旧）</th>
+<th>变化量</th>
+<th>猫（新）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第1维</td>
+<td>0.10</td>
+<td>+0.04</td>
+<td><strong>0.14</strong></td>
+</tr>
+<tr>
+<td>第2维</td>
+<td>0.20</td>
+<td>+0.05</td>
+<td><strong>0.25</strong></td>
+</tr>
+<tr>
+<td>第3维</td>
+<td>0.30</td>
+<td>+0.06</td>
+<td><strong>0.36</strong></td>
+</tr>
+</tbody></table>
+<p>同时”车”作为负样本被拉远，其数字向反方向移动。</p>
+<h3 id="5-3-训练后的结果"><a href="#5-3-训练后的结果" class="headerlink" title="5.3 训练后的结果"></a>5.3 训练后的结果</h3><p>经过上亿次迭代：</p>
+<table>
+<thead>
+<tr>
+<th>词</th>
+<th>训练后向量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>猫</td>
+<td>[0.85, 0.72, 0.11]</td>
+</tr>
+<tr>
+<td>宠物</td>
+<td>[0.88, 0.70, 0.09]</td>
+</tr>
+<tr>
+<td>狗</td>
+<td>[0.82, 0.75, 0.10]</td>
+</tr>
+<tr>
+<td>车</td>
+<td>[-0.55, -0.30, 0.98]</td>
+</tr>
+</tbody></table>
+<p><strong>观察</strong>：</p>
+<ul>
+<li><strong>猫、宠物、狗</strong> 的数字<strong>非常接近</strong>（语义相似）</li>
+<li><strong>车</strong> 的数字和它们<strong>离得很远</strong>（语义不同）</li>
+</ul>
+<h3 id="5-4-核心结论"><a href="#5-4-核心结论" class="headerlink" title="5.4 核心结论"></a>5.4 核心结论</h3><blockquote>
+<p>词向量不是人类手动编码的，而是计算机<strong>在”猜词游戏”中被迫调整出的最优数字</strong>。这组数字的特点是：<strong>语义相近的词，其数字排列也相近</strong>。</p>
+</blockquote>
+<hr>
+<h2 id="六、Word2Vec的延伸应用"><a href="#六、Word2Vec的延伸应用" class="headerlink" title="六、Word2Vec的延伸应用"></a>六、Word2Vec的延伸应用</h2><h3 id="6-1-跨语言机器翻译"><a href="#6-1-跨语言机器翻译" class="headerlink" title="6.1 跨语言机器翻译"></a>6.1 跨语言机器翻译</h3><p><strong>发现</strong>：不同语言的词向量空间具有<strong>几何同构性</strong>。</p>
+<p><strong>方法</strong>：用少量双语词典学习线性映射矩阵 $W$：</p>
+<p>$$<br>J(W) &#x3D; \sum_{i&#x3D;1}^{n} ||W \mathbf{x}_i - \mathbf{z}_i||^2<br>$$</p>
+<p><strong>翻译过程</strong>：</p>
+<ol>
+<li>源语言词向量 $\mathbf{x}$ → 通过 $W$ 映射到目标语言空间</li>
+<li>在目标语言空间中找最近的词向量</li>
+</ol>
+<h3 id="6-2-Item2Vec（推荐系统）"><a href="#6-2-Item2Vec（推荐系统）" class="headerlink" title="6.2 Item2Vec（推荐系统）"></a>6.2 Item2Vec（推荐系统）</h3><p><strong>核心思路</strong>：万物皆可Embedding。</p>
+<ul>
+<li>把用户视为”文档”</li>
+<li>把商品视为”词”</li>
+<li>购物车&#x2F;购买序列视为”句子”</li>
+<li>运行CBoW或Skip-gram计算商品的向量表示</li>
+</ul>
+<h3 id="6-3-语义类比推理"><a href="#6-3-语义类比推理" class="headerlink" title="6.3 语义类比推理"></a>6.3 语义类比推理</h3><p>Word2Vec最著名的性质：</p>
+<p>$$<br>\text{vec(“国王”)} - \text{vec(“男人”)} + \text{vec(“女人”)} \approx \text{vec(“女王”)}<br>$$</p>
+<p>这表明<strong>向量空间中的算术运算</strong>能够反映语义关系。</p>
+<hr>
+<h2 id="七、关于Word-Embedding的深度思考"><a href="#七、关于Word-Embedding的深度思考" class="headerlink" title="七、关于Word Embedding的深度思考"></a>七、关于Word Embedding的深度思考</h2><h3 id="7-1-两种训练范式"><a href="#7-1-两种训练范式" class="headerlink" title="7.1 两种训练范式"></a>7.1 两种训练范式</h3><table>
+<thead>
+<tr>
+<th>范式</th>
+<th>代表</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>无监督预训练</strong></td>
+<td>Word2Vec, Autoencoder</td>
+<td>无需标注数据，海量文本即可训练</td>
+<td>与具体任务无关</td>
+</tr>
+<tr>
+<td><strong>端到端有监督</strong></td>
+<td>情感分类CNN</td>
+<td>任务驱动，向量表征更精准</td>
+<td>需要大量标注数据</td>
+</tr>
+</tbody></table>
+<h3 id="7-2-Sentence-Embedding（更高层次的抽象）"><a href="#7-2-Sentence-Embedding（更高层次的抽象）" class="headerlink" title="7.2 Sentence Embedding（更高层次的抽象）"></a>7.2 Sentence Embedding（更高层次的抽象）</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>思路</th>
+<th>优缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>词向量平均</strong></td>
+<td>直接相加求平均</td>
+<td>简单但丢失词序信息</td>
+</tr>
+<tr>
+<td><strong>Doc2Vec &#x2F; Paragraph Vector</strong></td>
+<td>额外训练段落ID向量</td>
+<td>新文章需重新训练</td>
+</tr>
+<tr>
+<td><strong>RNN&#x2F;CNN编码</strong></td>
+<td>用神经网络编码词向量序列</td>
+<td>当前主流，性能最佳</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Bengio, Y., Ducharme, R., Vincent, P., &amp; Jauvin, C. (2003). A Neural Probabilistic Language Model. <em>Journal of Machine Learning Research</em>.</p>
+<p>[2] Mikolov, T., Chen, K., Corrado, G., &amp; Dean, J. (2013). Efficient Estimation of Word Representations in Vector Space. <em>arXiv:1301.3781</em>.</p>
+<p>[3] Mikolov, T., Sutskever, I., Chen, K., Corrado, G. S., &amp; Dean, J. (2013). Distributed Representations of Words and Phrases and their Compositionality. <em>arXiv:1310.4546</em>.</p>
+<p>[4] Rong, X. (2014). word2vec Parameter Learning Explained. <em>arXiv:1411.2738</em>.</p>
+<hr>
+<blockquote>
+<p><strong>AI参与声明</strong>：本文档汇总了关于Word2Vec的多轮讨论内容，使用AI辅助工具进行内容整理、结构优化与格式排版。所有核心概念与技术细节均基于原始学术论文，并经人工校验与补充。</p>
+</blockquote>
+</div>
+    </div>
+    <br>
+    
+    
+        
+            
+    
+            <div class="post-footer-pre-next">
+                
+
+                
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B17/">表示学习之transE论文翻译</a>
+                    </span>
+                
+            </div>
+    
+        
+    
+
+    
+        
+
+     
+</div>
+
+
+
+
+                    
+
+                    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type="text/javascript" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tocify/1.9.0/javascripts/jquery.tocify.min.js" type="text/javascript" ></script>
+        
+<script src="/js/toc.js"></script>
+
+    
+    
+<script src="/js/randomHeaderContent.js"></script>
+
+    
+        
+<script src="/js/returnToTop.js"></script>
+
+    
+    
+        
+<script src="/js/returnToLastPage.js"></script>
+
+    
+
+
+
+<script src="/js/lightgallery/lightgallery.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-thumbnail.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-fullscreen.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-autoplay.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-zoom.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-rotate.umd.min.js"></script>
+
+
+<script src="/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
+
+
+<script type="text/javascript">
+    if (typeof lightGallery !== "undefined") {
+        var options1 = {
+            selector: '.gallery-item',
+            plugins: [lgThumbnail, lgFullscreen, lgAutoplay, lgZoom, lgRotate, lgPager],
+            thumbnail: true,
+            zoom: true,
+            rotate: true,
+            autoplay: true,
+            fullScreen: true,
+            pager: false,
+            zoomFromOrigin: true,
+            actualSize: true,
+            enableZoomAfter: 300,
+        };
+        lightGallery(document.getElementsByClassName('.article-gallery')[0], options1);
+    }
+</script>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script> 
+
+                </div>
+            
+            
+                <!-- 回到顶部的按钮-->
+                <div class="progress-wrap shadow-drop-2-bottom">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </div>
+            
+            
+                <!-- 返回的按钮-->
+                <div class="return-to-last-progress-wrap shadow-drop-2-bottom">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </div>
+            
+    </body>
+</html>
+<script src="/js/emojiHandler.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        wrapEmojis('.paper');
+    });
+</script>
