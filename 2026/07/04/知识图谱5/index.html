@@ -293,19 +293,19 @@
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                      <span>字数总计：3.4k</span>
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                     <span>阅读估时：14分钟</span>
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                     <span id="busuanzi_container_page_pv">
                         阅读量：<span id="busuanzi_value_page_pv"></span>次
@@ -372,7 +372,7 @@
 </tbody></table>
 <h3 id="2-1-Maven-项目结构"><a href="#2-1-Maven-项目结构" class="headerlink" title="2.1 Maven 项目结构"></a>2.1 Maven 项目结构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">reasoner/</span><br><span class="line">├── pom.xml                          # Maven 配置 (OWL API 5.1.20 + JFact 5.0.3 + HermiT 1.4.3.517)</span><br><span class="line">├── src/main/java/Test.java          # 8 组测试 (T1-T8)</span><br><span class="line">├── ontologies/</span><br><span class="line">│   ├── pizza.owl                    # 939 axioms (大本体基准)</span><br><span class="line">│   └── families.owl                 # 9 axioms (含实例的真实本体)</span><br><span class="line">├── target/</span><br><span class="line">│   ├── OWLReasonerTest-1.0-SNAPSHOT.jar   # 构建产物</span><br><span class="line">│   ├── classes/                     # 编译输出</span><br><span class="line">│   └── lib/                         # maven-dependency-plugin 复制出来的所有依赖</span><br><span class="line">├── test_output.txt                  # 完整运行日志 (UTF-8)</span><br><span class="line">└── reasoner_comparison_report.md    # 本报告</span><br></pre></td></tr></table></figure>
 
-<h3 id="2-2-复现命令"><a href="#2-2-复现命令" class="headerlink" title="2.2 复现命令"></a>2.2 复现命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译 + 打包 + 复制依赖到 target/lib/</span></span><br><span class="line">mvn package -DskipTests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行测试 (UTF-8 输出)</span></span><br><span class="line">java -Dfile.encoding=UTF-8 -<span class="built_in">cp</span> <span class="string">&quot;target\classes;target\lib\*&quot;</span> Test</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-复现命令"><a href="#2-2-复现命令" class="headerlink" title="2.2 复现命令"></a>2.2 复现命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译 + 打包 + 复制依赖到 target/lib/</span></span><br><span class="line">mvn package -DskipTests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行测试 (UTF-8 输出)</span></span><br><span class="line">java -Dfile.encoding=UTF-8 -<span class="built_in">cp</span> <span class="string">"target\classes;target\lib\*"</span> Test</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p><strong>Maven 版本调整说明</strong>：原始 <a href="file:///e:/ccks/reasoner/pom.xml">pom.xml</a> 中指定的 <code>org.semanticweb.hermit:hermit:1.4.3.519</code> 在 Maven Central 不存在，已替换为同 group 下 <code>net.sourceforge.owlapi:org.semanticweb.hermit:1.4.3.517</code>（OWL API 官方维护的坐标）。<code>net.sourceforge.jfact:jfact:4.0.4</code> 也已修正为 <code>net.sourceforge.owlapi:jfact:5.0.3</code>（更新、纯 Java、OWL API 5 兼容）。</p>
@@ -504,7 +504,7 @@
 </tr>
 <tr>
 <td><strong>性能 (小本体)</strong></td>
-<td>几乎无差异，均 &lt; 1ms</td>
+<td>几乎无差异，均 < 1ms</td>
 </tr>
 <tr>
 <td><strong>性能 (大本体)</strong></td>
@@ -682,7 +682,7 @@
 </tr>
 </tbody></table>
 <blockquote>
-<p>小本体下两者都 &lt; 1ms，无法体现差距。详见 T5b 与 T6。</p>
+<p>小本体下两者都 < 1ms，无法体现差距。详见 T5b 与 T6。</p>
 </blockquote>
 <hr>
 <h3 id="T5b-—-性能基准-小型本体，5-次平均"><a href="#T5b-—-性能基准-小型本体，5-次平均" class="headerlink" title="T5b — 性能基准 (小型本体，5 次平均)"></a>T5b — 性能基准 (小型本体，5 次平均)</h3><table>
@@ -705,7 +705,7 @@
 </tr>
 </tbody></table>
 <blockquote>
-<p>同样 &lt; 1ms，无法体现差距。</p>
+<p>同样 < 1ms，无法体现差距。</p>
 </blockquote>
 <hr>
 <h3 id="T6-—-大本体-pizza-owl-939-axioms-⭐-最显著的差异"><a href="#T6-—-大本体-pizza-owl-939-axioms-⭐-最显著的差异" class="headerlink" title="T6 — 大本体 (pizza.owl, 939 axioms) ⭐ 最显著的差异"></a>T6 — 大本体 (pizza.owl, 939 axioms) ⭐ <strong>最显著的差异</strong></h3><table>
@@ -838,7 +838,7 @@
 <h2 id="7-差异分析"><a href="#7-差异分析" class="headerlink" title="7. 差异分析"></a>7. 差异分析</h2><h3 id="7-1-性能差异来源"><a href="#7-1-性能差异来源" class="headerlink" title="7.1 性能差异来源"></a>7.1 性能差异来源</h3><ul>
 <li><strong>JFact 是在 FaCT++ 设计基础上的纯 Java 移植</strong>：保留了 C++ 版本的高度优化算法，分类阶段直接调用 Java 实现，避开 JVM 解释&#x2F;GC 压力优势（与原版 C++ JNI 相比差距缩小）。</li>
 <li><strong>HermiT 是纯 Java Hypertableau</strong>：策略更复杂、blocking 校验更多，在分类前要构造并维护完整的 hypertableau 数据结构，因此在中大本体上分类开销更明显。</li>
-<li><strong>小本体上差距消失</strong>：当本体公理数 &lt; 50 时，JVM 启动 + JIT 预热的开销会反过来让 JFact 看起来稍慢或相当。</li>
+<li><strong>小本体上差距消失</strong>：当本体公理数 < 50 时，JVM 启动 + JIT 预热的开销会反过来让 JFact 看起来稍慢或相当。</li>
 <li><strong>pizza.owl 场景具体数据</strong>：JFact 一致性耗时 83ms 反而比 HermiT 1ms 慢很多 (因为 JFact 内部需要先构建内部数据结构)；但<strong>最终分类完成时间</strong> JFact (222ms) 仍快于 HermiT (475ms)。</li>
 </ul>
 <h3 id="7-2-与原-FaCT-JNI-版本对比-历史数据"><a href="#7-2-与原-FaCT-JNI-版本对比-历史数据" class="headerlink" title="7.2 与原 FaCT++ JNI 版本对比 (历史数据)"></a>7.2 与原 FaCT++ JNI 版本对比 (历史数据)</h3><table>
@@ -969,7 +969,7 @@
 <tr>
 <td>运行命令</td>
 <td><code>java -cp lib\*;. Test</code></td>
-<td><code>java -cp &quot;target\classes;target\lib\*&quot; Test</code></td>
+<td><code>java -cp "target\classes;target\lib\*" Test</code></td>
 </tr>
 </tbody></table>
 <h3 id="8-2-原始-pom-xml-的修正"><a href="#8-2-原始-pom-xml-的修正" class="headerlink" title="8.2 原始 pom.xml 的修正"></a>8.2 原始 <code>pom.xml</code> 的修正</h3><table>
@@ -996,7 +996,7 @@
 <td>旧仓库是历史 fallback，新坐标已迁回 Central</td>
 </tr>
 </tbody></table>
-<h3 id="8-3-pom-xml-关键配置"><a href="#8-3-pom-xml-关键配置" class="headerlink" title="8.3 pom.xml 关键配置"></a>8.3 pom.xml 关键配置</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>11<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>11<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.sourceforge.owlapi<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>owlapi-distribution<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.20<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.sourceforge.owlapi<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>org.semanticweb.hermit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.3.517<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.sourceforge.owlapi<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jfact<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.0.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="8-3-pom-xml-关键配置"><a href="#8-3-pom-xml-关键配置" class="headerlink" title="8.3 pom.xml 关键配置"></a>8.3 pom.xml 关键配置</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag"><<span class="name">properties</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">maven.compiler.source</span>></span>11<span class="tag"></<span class="name">maven.compiler.source</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">maven.compiler.target</span>></span>11<span class="tag"></<span class="name">maven.compiler.target</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">project.build.sourceEncoding</span>></span>UTF-8<span class="tag"></<span class="name">project.build.sourceEncoding</span>></span></span><br><span class="line"><span class="tag"></<span class="name">properties</span>></span></span><br><span class="line"></span><br><span class="line"><span class="tag"><<span class="name">dependencies</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">dependency</span>></span></span><br><span class="line">        <span class="tag"><<span class="name">groupId</span>></span>net.sourceforge.owlapi<span class="tag"></<span class="name">groupId</span>></span></span><br><span class="line">        <span class="tag"><<span class="name">artifactId</span>></span>owlapi-distribution<span class="tag"></<span class="name">artifactId</span>></span></span><br><span class="line">        <span class="tag"><<span class="name">version</span>></span>5.1.20<span class="tag"></<span class="name">version</span>></span></span><br><span class="line">    <span class="tag"></<span class="name">dependency</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">dependency</span>></span></span><br><span class="line">        <span class="tag"><<span class="name">groupId</span>></span>net.sourceforge.owlapi<span class="tag"></<span class="name">groupId</span>></span></span><br><span class="line">        <span class="tag"><<span class="name">artifactId</span>></span>org.semanticweb.hermit<span class="tag"></<span class="name">artifactId</span>></span></span><br><span class="line">        <span class="tag"><<span class="name">version</span>></span>1.4.3.517<span class="tag"></<span class="name">version</span>></span></span><br><span class="line">    <span class="tag"></<span class="name">dependency</span>></span></span><br><span class="line">    <span class="tag"><<span class="name">dependency</span>></span></span><br><span class="line">        <span class="tag"><<span class="name">groupId</span>></span>net.sourceforge.owlapi<span class="tag"></<span class="name">groupId</span>></span></span><br><span class="line">        <span class="tag"><<span class="name">artifactId</span>></span>jfact<span class="tag"></<span class="name">artifactId</span>></span></span><br><span class="line">        <span class="tag"><<span class="name">version</span>></span>5.0.3<span class="tag"></<span class="name">version</span>></span></span><br><span class="line">    <span class="tag"></<span class="name">dependency</span>></span></span><br><span class="line"><span class="tag"></<span class="name">dependencies</span>></span></span><br></pre></td></tr></table></figure>
 
 <h3 id="8-4-历史-lib-依赖问题（已通过-Maven-解决）"><a href="#8-4-历史-lib-依赖问题（已通过-Maven-解决）" class="headerlink" title="8.4 历史 lib/ 依赖问题（已通过 Maven 解决）"></a>8.4 历史 <code>lib/</code> 依赖问题（已通过 Maven 解决）</h3><table>
 <thead>
@@ -1044,7 +1044,7 @@
 <li>把 <a href="file:///e:/ccks/reasoner/src/main/java/Test.java">Test.java</a> 接入 CCKS 真实语料（contest_data 中的多跳&#x2F;图谱&#x2F;表格题本体）；</li>
 <li>在 10+ 个真实 OWL 本体上重复 T6 风格的基准，统计 JFact vs HermiT 性能分布；</li>
 <li>评估 ELK &#x2F; Konclude &#x2F; Openllet 等新一代推理机作为补充方案；</li>
-<li>在 CI 中把 <code>mvn package &amp;&amp; java -cp ... Test</code> 串成 smoke test 任务。</li>
+<li>在 CI 中把 <code>mvn package && java -cp ... Test</code> 串成 smoke test 任务。</li>
 </ul>
 </li>
 </ol>

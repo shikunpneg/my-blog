@@ -293,19 +293,19 @@
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                      <span>字数总计：2.2k</span>
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                     <span>阅读估时：8分钟</span>
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                     <span id="busuanzi_container_page_pv">
                         阅读量：<span id="busuanzi_value_page_pv"></span>次
@@ -365,12 +365,12 @@
 <tbody><tr>
 <td><strong>加一平滑</strong></td>
 <td>所有N-gram计数+1</td>
-<td>$P &#x3D; \frac{count+1}{count(h)+V}$</td>
+<td>$P = \frac{count+1}{count(h)+V}$</td>
 </tr>
 <tr>
 <td><strong>Good-Turing</strong></td>
 <td>用$N_{r+1}$调整$N_r$</td>
-<td>$r^* &#x3D; (r+1) \times \frac{N_{r+1}}{N_r}$</td>
+<td>$r^* = (r+1) \times \frac{N_{r+1}}{N_r}$</td>
 </tr>
 <tr>
 <td><strong>Kneser-Ney</strong></td>
@@ -409,11 +409,11 @@
 </ol>
 <p><strong>类比</strong>：像”完形填空”——用上下文的所有词”揉在一起”预测中间缺失的词。</p>
 <p><strong>前向计算</strong>：</p>
-<p>$$<br>\text{context} &#x3D; \frac{1}{2c} \sum_{i} \mathbf{v}_{w_i}<br>$$</p>
-<p>$$<br>p(w_t | \text{context}) &#x3D; \text{softmax}(\mathbf{W} \cdot \text{context})<br>$$</p>
+<p>$$<br>\text{context} = \frac{1}{2c} \sum_{i} \mathbf{v}_{w_i}<br>$$</p>
+<p>$$<br>p(w_t | \text{context}) = \text{softmax}(\mathbf{W} \cdot \text{context})<br>$$</p>
 <h3 id="3-2-Skip-gram（跳字模型）"><a href="#3-2-Skip-gram（跳字模型）" class="headerlink" title="3.2 Skip-gram（跳字模型）"></a>3.2 Skip-gram（跳字模型）</h3><p><strong>核心思路</strong>：用<strong>中心词预测上下文词</strong>，与CBoW方向相反。</p>
 <p><strong>数学本质</strong>：</p>
-<p>$$<br>p(w_o | w_i) &#x3D; \frac{e^{\mathbf{U}_o \cdot \mathbf{V}<em>i}}{\sum</em>{j&#x3D;1}^{V} e^{\mathbf{U}_j \cdot \mathbf{V}_i}}<br>$$</p>
+<p>$$<br>p(w_o | w_i) = \frac{e^{\mathbf{U}_o \cdot \mathbf{V}<em>i}}{\sum</em>{j=1}^{V} e^{\mathbf{U}_j \cdot \mathbf{V}_i}}<br>$$</p>
 <ul>
 <li>$\mathbf{V}_i$：输入向量（中心词）</li>
 <li>$\mathbf{U}_o$：输出向量（上下文词）</li>
@@ -430,9 +430,9 @@
 <ol>
 <li>构造一棵<strong>哈夫曼树</strong>（高频词路径短）</li>
 <li>从根到叶子节点，每个内部节点是一个<strong>二分类器（Sigmoid）</strong></li>
-<li>目标词的概率 &#x3D; 路径上所有Sigmoid概率的乘积</li>
+<li>目标词的概率 = 路径上所有Sigmoid概率的乘积</li>
 </ol>
-<p><strong>示例</strong>：假设词表 $V&#x3D;100,000$：</p>
+<p><strong>示例</strong>：假设词表 $V=100,000$：</p>
 <ul>
 <li>普通Softmax：计算 $100,000$ 个得分后归一化 → $O(100,000)$</li>
 <li>层次Softmax：只需做 $\log_2(100,000) \approx 17$ 次判断 → $O(17)$</li>
@@ -444,11 +444,11 @@
 <li><strong>负样本</strong>：随机采样的错误（中心词，随机词）对</li>
 </ul>
 <p><strong>损失函数</strong>：</p>
-<p>$$<br>J &#x3D; \log \sigma(\mathbf{U}<em>o \cdot \mathbf{V}<em>i) + \sum</em>{j&#x3D;1}^{k} \mathbb{E}</em>{w_j \sim P_n} \left[ \log \sigma(-\mathbf{U}_j \cdot \mathbf{V}_i) \right]<br>$$</p>
+<p>$$<br>J = \log \sigma(\mathbf{U}<em>o \cdot \mathbf{V}<em>i) + \sum</em>{j=1}^{k} \mathbb{E}</em>{w_j \sim P_n} \left[ \log \sigma(-\mathbf{U}_j \cdot \mathbf{V}_i) \right]<br>$$</p>
 <p><strong>只更新 $1+k$ 个词</strong>（1个正样本 + k个负样本），而非整个词表。</p>
 <h3 id="4-3-下采样（Subsampling）"><a href="#4-3-下采样（Subsampling）" class="headerlink" title="4.3 下采样（Subsampling）"></a>4.3 下采样（Subsampling）</h3><p><strong>问题</strong>：高频词（”的”、”是”）出现频繁但信息量少。</p>
 <p><strong>解决方案</strong>：训练时以概率 $P$ 丢弃高频词：</p>
-<p>$$<br>P(discard) &#x3D; 1 - \sqrt{\frac{t}{f(w)}}<br>$$</p>
+<p>$$<br>P(discard) = 1 - \sqrt{\frac{t}{f(w)}}<br>$$</p>
 <ul>
 <li>$f(w)$：词频</li>
 <li>$t$：超参数（通常 $t \approx 10^{-5}$）</li>
@@ -487,7 +487,7 @@
 <li>上下文词（正样本）：”宠物” → [0.40, 0.50, 0.60]</li>
 </ul>
 <p><strong>Step 1：计算相似度（点积）</strong></p>
-<p>$$<br>\text{猫} \cdot \text{宠物} &#x3D; 0.10 \times 0.40 + 0.20 \times 0.50 + 0.30 \times 0.60 &#x3D; 0.32<br>$$</p>
+<p>$$<br>\text{猫} \cdot \text{宠物} = 0.10 \times 0.40 + 0.20 \times 0.50 + 0.30 \times 0.60 = 0.32<br>$$</p>
 <p><strong>Step 2：修改数字（反向传播）</strong></p>
 <p>让”猫”的向量向”宠物”靠近：</p>
 <table>
@@ -555,7 +555,7 @@
 <hr>
 <h2 id="六、Word2Vec的延伸应用"><a href="#六、Word2Vec的延伸应用" class="headerlink" title="六、Word2Vec的延伸应用"></a>六、Word2Vec的延伸应用</h2><h3 id="6-1-跨语言机器翻译"><a href="#6-1-跨语言机器翻译" class="headerlink" title="6.1 跨语言机器翻译"></a>6.1 跨语言机器翻译</h3><p><strong>发现</strong>：不同语言的词向量空间具有<strong>几何同构性</strong>。</p>
 <p><strong>方法</strong>：用少量双语词典学习线性映射矩阵 $W$：</p>
-<p>$$<br>J(W) &#x3D; \sum_{i&#x3D;1}^{n} ||W \mathbf{x}_i - \mathbf{z}_i||^2<br>$$</p>
+<p>$$<br>J(W) = \sum_{i=1}^{n} ||W \mathbf{x}_i - \mathbf{z}_i||^2<br>$$</p>
 <p><strong>翻译过程</strong>：</p>
 <ol>
 <li>源语言词向量 $\mathbf{x}$ → 通过 $W$ 映射到目标语言空间</li>
@@ -619,9 +619,9 @@
 </tr>
 </tbody></table>
 <hr>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Bengio, Y., Ducharme, R., Vincent, P., &amp; Jauvin, C. (2003). A Neural Probabilistic Language Model. <em>Journal of Machine Learning Research</em>.</p>
-<p>[2] Mikolov, T., Chen, K., Corrado, G., &amp; Dean, J. (2013). Efficient Estimation of Word Representations in Vector Space. <em>arXiv:1301.3781</em>.</p>
-<p>[3] Mikolov, T., Sutskever, I., Chen, K., Corrado, G. S., &amp; Dean, J. (2013). Distributed Representations of Words and Phrases and their Compositionality. <em>arXiv:1310.4546</em>.</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Bengio, Y., Ducharme, R., Vincent, P., & Jauvin, C. (2003). A Neural Probabilistic Language Model. <em>Journal of Machine Learning Research</em>.</p>
+<p>[2] Mikolov, T., Chen, K., Corrado, G., & Dean, J. (2013). Efficient Estimation of Word Representations in Vector Space. <em>arXiv:1301.3781</em>.</p>
+<p>[3] Mikolov, T., Sutskever, I., Chen, K., Corrado, G. S., & Dean, J. (2013). Distributed Representations of Words and Phrases and their Compositionality. <em>arXiv:1310.4546</em>.</p>
 <p>[4] Rong, X. (2014). word2vec Parameter Learning Explained. <em>arXiv:1411.2738</em>.</p>
 <hr>
 <blockquote>

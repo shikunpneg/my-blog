@@ -293,19 +293,19 @@
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                      <span>字数总计：2.7k</span>
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                     <span>阅读估时：10分钟</span>
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                     <span id="busuanzi_container_page_pv">
                         阅读量：<span id="busuanzi_value_page_pv"></span>次
@@ -351,7 +351,7 @@
 <p>这意味着，在向量空间中，“中国”沿着“首都”这个方向平移一段距离后，就应该到达“北京”的位置。</p>
 <hr>
 <h2 id="四、数学模型"><a href="#四、数学模型" class="headerlink" title="四、数学模型"></a>四、数学模型</h2><h3 id="4-1-打分函数（能量函数）"><a href="#4-1-打分函数（能量函数）" class="headerlink" title="4.1 打分函数（能量函数）"></a>4.1 打分函数（能量函数）</h3><p>对于三元组 $(h, r, t)$，TransE 定义了一个<strong>打分函数</strong>（或称能量函数）来衡量该三元组成立的可能性：</p>
-<p>$$<br>f_r(h, t) &#x3D; | \mathbf{h} + \mathbf{r} - \mathbf{t} |_{L1&#x2F;L2}<br>$$</p>
+<p>$$<br>f_r(h, t) = | \mathbf{h} + \mathbf{r} - \mathbf{t} |_{L1&#x2F;L2}<br>$$</p>
 <p>其中：</p>
 <ul>
 <li>$\mathbf{h}$：头实体的嵌入向量</li>
@@ -359,9 +359,9 @@
 <li>$\mathbf{t}$：尾实体的嵌入向量</li>
 <li>$|\cdot|$：L1 或 L2 范数</li>
 </ul>
-<p><strong>分数越低，表示该三元组成立的可能性越高</strong>。在理想情况下，对于正确的三元组，我们希望 $\mathbf{h} + \mathbf{r} &#x3D; \mathbf{t}$，此时分数为 0。</p>
+<p><strong>分数越低，表示该三元组成立的可能性越高</strong>。在理想情况下，对于正确的三元组，我们希望 $\mathbf{h} + \mathbf{r} = \mathbf{t}$，此时分数为 0。</p>
 <h3 id="4-2-损失函数"><a href="#4-2-损失函数" class="headerlink" title="4.2 损失函数"></a>4.2 损失函数</h3><p>TransE 使用<strong>合页损失函数（Hinge Loss）</strong> 进行训练：</p>
-<p>$$<br>\mathcal{L} &#x3D; \sum_{(h,r,t) \in S} \sum_{(h’,r,t’) \in S’} \max(0, \gamma + f_r(h, t) - f_r(h’, t’))<br>$$</p>
+<p>$$<br>\mathcal{L} = \sum_{(h,r,t) \in S} \sum_{(h’,r,t’) \in S’} \max(0, \gamma + f_r(h, t) - f_r(h’, t’))<br>$$</p>
 <p>其中：</p>
 <ul>
 <li>$S$：正样本集合（知识图谱中真实存在的三元组）</li>
@@ -393,7 +393,7 @@
 </ol>
 <p><strong>训练过程的约束</strong>：为了防止训练过程通过单纯增加实体向量的范数来最小化损失，TransE 在每次更新后对实体向量进行 L2 归一化。</p>
 <hr>
-<h2 id="六、训练过程示意图"><a href="#六、训练过程示意图" class="headerlink" title="六、训练过程示意图"></a>六、训练过程示意图</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">    A[初始化实体和关系向量] --&gt; B[L2归一化实体向量]</span><br><span class="line">    B --&gt; C[采样正样本三元组]</span><br><span class="line">    C --&gt; D[构造负样本&lt;br&gt;替换头实体或尾实体]</span><br><span class="line">    D --&gt; E[计算合页损失]</span><br><span class="line">    E --&gt; F[梯度下降更新向量]</span><br><span class="line">    F --&gt; G[L2归一化实体向量]</span><br><span class="line">    G --&gt; H&#123;收敛或达到迭代次数?&#125;</span><br><span class="line">    H --&gt;|否| C</span><br><span class="line">    H --&gt;|是| I[输出实体和关系嵌入]</span><br><span class="line">    </span><br><span class="line">    style A fill:#f9f,stroke:#333,stroke-width:2px</span><br><span class="line">    style D fill:#bbf,stroke:#333,stroke-width:2px</span><br><span class="line">    style E fill:#f96,stroke:#333,stroke-width:2px</span><br><span class="line">    style I fill:#9f9,stroke:#333,stroke-width:2px</span><br></pre></td></tr></table></figure>
+<h2 id="六、训练过程示意图"><a href="#六、训练过程示意图" class="headerlink" title="六、训练过程示意图"></a>六、训练过程示意图</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">    A[初始化实体和关系向量] --> B[L2归一化实体向量]</span><br><span class="line">    B --> C[采样正样本三元组]</span><br><span class="line">    C --> D[构造负样本<br>替换头实体或尾实体]</span><br><span class="line">    D --> E[计算合页损失]</span><br><span class="line">    E --> F[梯度下降更新向量]</span><br><span class="line">    F --> G[L2归一化实体向量]</span><br><span class="line">    G --> H&#123;收敛或达到迭代次数?&#125;</span><br><span class="line">    H -->|否| C</span><br><span class="line">    H -->|是| I[输出实体和关系嵌入]</span><br><span class="line">    </span><br><span class="line">    style A fill:#f9f,stroke:#333,stroke-width:2px</span><br><span class="line">    style D fill:#bbf,stroke:#333,stroke-width:2px</span><br><span class="line">    style E fill:#f96,stroke:#333,stroke-width:2px</span><br><span class="line">    style I fill:#9f9,stroke:#333,stroke-width:2px</span><br></pre></td></tr></table></figure>
 
 <hr>
 <h2 id="七、实验与评估"><a href="#七、实验与评估" class="headerlink" title="七、实验与评估"></a>七、实验与评估</h2><h3 id="7-1-评估任务"><a href="#7-1-评估任务" class="headerlink" title="7.1 评估任务"></a>7.1 评估任务</h3><p>论文在两个标准任务上评估了 TransE 的性能：</p>
@@ -500,8 +500,8 @@
 </ol>
 <p>尽管 TransE 在处理复杂关系模式时存在局限性，但它作为知识图谱嵌入的<strong>基准模型（baseline）</strong>，为后续的 TransH、TransR、RotatE 等一系列模型奠定了基础，是知识图谱表示学习领域不可绕过的里程碑。</p>
 <hr>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Bordes, A., Usunier, N., Garcia-Durán, A., Weston, J., &amp; Yakhnenko, O. (2013). Translating Embeddings for Modeling Multi-relational Data. In <em>Advances in Neural Information Processing Systems (NIPS 2013)</em>, pp. 2787-2795.</p>
-<p>[2] Bordes, A., Usunier, N., Garcia-Durán, A., Weston, J., &amp; Yakhnenko, O. (2013). Translating Embeddings for Modeling Multi-relational Data. <em>arXiv preprint</em>.</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Bordes, A., Usunier, N., Garcia-Durán, A., Weston, J., & Yakhnenko, O. (2013). Translating Embeddings for Modeling Multi-relational Data. In <em>Advances in Neural Information Processing Systems (NIPS 2013)</em>, pp. 2787-2795.</p>
+<p>[2] Bordes, A., Usunier, N., Garcia-Durán, A., Weston, J., & Yakhnenko, O. (2013). Translating Embeddings for Modeling Multi-relational Data. <em>arXiv preprint</em>.</p>
 <hr>
 <blockquote>
 <p><strong>AI参与声明</strong>：本文档在撰写过程中使用了AI辅助工具进行内容整理、格式优化与润色。所有核心概念与论文引用均基于原始学术文献与公开资料，并经人工校验与补充。</p>
