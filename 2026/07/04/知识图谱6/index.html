@@ -72,7 +72,21 @@
 
     <!-- <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/lxgwwenkai/dist/LXGWWenKai-Regular/result.css" /> -->
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@chinese-fonts/lxgwwenkai@3.0.0/dist/LXGWWenKai-Regular/result.css' /> 
-<meta name="generator" content="Hexo 8.1.2"></head>
+<meta name="generator" content="Hexo 8.1.2">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true
+  },
+  svg: { fontCache: 'global' },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js" async></script>
+</head>
 
     
     
@@ -293,19 +307,19 @@
                 
                 
                     
-                          |  
+                        &nbsp; | &nbsp;
                     
                      <span>字数总计：3.2k</span>
                 
                 
                     
-                          |  
+                        &nbsp; | &nbsp;
                     
                     <span>阅读估时：12分钟</span>
                 
                 
                     
-                          |  
+                        &nbsp; | &nbsp;
                     
                     <span id="busuanzi_container_page_pv">
                         阅读量：<span id="busuanzi_value_page_pv"></span>次
@@ -338,7 +352,7 @@
 </thead>
 <tbody><tr>
 <td><strong>1-gram (Unigram)</strong></td>
-<td>单个字母/单词</td>
+<td>单个字母&#x2F;单词</td>
 <td>“A”, “我”</td>
 </tr>
 <tr>
@@ -358,24 +372,24 @@
 <p><strong>第一步：链式法则（Chain Rule）</strong></p>
 <p>将联合概率分解为一系列条件概率的乘积：</p>
 <p>\[
-P(w_1, w_2, …, w_n) = \prod_{i=1}^{n} P(w_i \mid w_1, …, w_{i-1})
+P(w_1, w_2, ..., w_n) = \prod_{i=1}^{n} P(w_i \mid w_1, ..., w_{i-1})
 \]</p>
 <p><strong>第二步：马尔可夫假设（Markov Assumption）</strong></p>
 <p>这是N-gram模型诞生的最关键一步：<strong>一个词出现的概率，只依赖于它前面出现的 N-1 个词</strong>。</p>
 <p>\[
-P(w_i \mid w_1, …, w_{i-1}) \approx P(w_i \mid w_{i-N+1}, …, w_{i-1})
+P(w_i \mid w_1, ..., w_{i-1}) \approx P(w_i \mid w_{i-N+1}, ..., w_{i-1})
 \]</p>
 <p>代入链式法则，得到N-gram模型的核心公式：</p>
 <p>\[
-P(w_1, w_2, …, w_n) \approx \prod_{i=1}^{n} P(w_i \mid w_{i-N+1}, …, w_{i-1})
+P(w_1, w_2, ..., w_n) \approx \prod_{i=1}^{n} P(w_i \mid w_{i-N+1}, ..., w_{i-1})
 \]</p>
 <p><strong>第三步：参数估计（最大似然估计）</strong></p>
 <p>对于一个特定的N-gram，其概率估计为：</p>
 <p>\[
-P(w_i \mid w_{i-N+1}, …, w_{i-1}) = \frac{\text{count}(w_{i-N+1}, …, w_{i-1}, w_i)}{\text{count}(w_{i-N+1}, …, w_{i-1})}
+P(w_i \mid w_{i-N+1}, ..., w_{i-1}) = \frac{\text{count}(w_{i-N+1}, ..., w_{i-1}, w_i)}{\text{count}(w_{i-N+1}, ..., w_{i-1})}
 \]</p>
 <h3 id="1-4-平滑技术：解决零概率问题"><a href="#1-4-平滑技术：解决零概率问题" class="headerlink" title="1.4 平滑技术：解决零概率问题"></a>1.4 平滑技术：解决零概率问题</h3><p>MLE估计存在致命缺陷：如果某个N-gram在训练语料中<strong>从未出现过</strong>，其概率即为0。<strong>平滑（Smoothing）</strong> 技术应运而生。</p>
-<p><strong>加一平滑（Add-one / Laplace Smoothing）</strong></p>
+<p><strong>加一平滑（Add-one &#x2F; Laplace Smoothing）</strong></p>
 <p>假装每个N-gram都比实际多出现一次：</p>
 <p>\[
 P_{\text{Add-1}}(w_i \mid h) = \frac{\text{count}(h, w_i) + 1}{\text{count}(h) + V}
@@ -438,7 +452,7 @@ P_{\text{interp}}(w_i \mid h) = \lambda_3 P_3 + \lambda_2 P_2 + \lambda_1 P_1
 <h3 id="2-5-源代码解析"><a href="#2-5-源代码解析" class="headerlink" title="2.5 源代码解析"></a>2.5 源代码解析</h3><p>Google开源了Word2Vec的C语言实现，可从GitHub获取。核心数据结构：</p>
 <ul>
 <li><strong><code>syn0</code></strong>：词的<strong>输入向量</strong>。作为中心词输入时使用，随机初始化。</li>
-<li><strong><code>syn1</code> / <code>syn1neg</code></strong>：词的<strong>输出向量</strong>。作为上下文词被预测时使用，初始化为零。</li>
+<li><strong><code>syn1</code> &#x2F; <code>syn1neg</code></strong>：词的<strong>输出向量</strong>。作为上下文词被预测时使用，初始化为零。</li>
 </ul>
 <p>训练主循环：</p>
 <ol>
@@ -449,12 +463,12 @@ P_{\text{interp}}(w_i \mid h) = \lambda_3 P_3 + \lambda_2 P_2 + \lambda_1 P_1
 <li><strong>反向传播</strong>：调整<code>syn0</code>和<code>syn1/syn1neg</code></li>
 <li><strong>重复</strong>直到遍历完整个文本</li>
 </ol>
-<h3 id="2-6-训练过程示意图"><a href="#2-6-训练过程示意图" class="headerlink" title="2.6 训练过程示意图"></a>2.6 训练过程示意图</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">    A[输入词 “国王”] --> B(获取输入向量 syn0)</span><br><span class="line">    B --> C&#123;预测上下文&#125;</span><br><span class="line">    C --> D[预测到 “王冠”]</span><br><span class="line">    C --> E[预测到 “权力”]</span><br><span class="line">    C --> F[预测到 “女王”]</span><br><span class="line">    </span><br><span class="line">    D --> G[计算误差]</span><br><span class="line">    E --> G</span><br><span class="line">    F --> G</span><br><span class="line">    </span><br><span class="line">    G --> H[更新向量]</span><br><span class="line">    H --> I[调整 syn0 和 syn1]</span><br><span class="line">    </span><br><span class="line">    I --> J[下一个词...]</span><br><span class="line">    </span><br><span class="line">    style A fill:#f9f,stroke:#333,stroke-width:2px</span><br><span class="line">    style C fill:#bbf,stroke:#333,stroke-width:2px</span><br><span class="line">    style G fill:#f96,stroke:#333,stroke-width:2px</span><br></pre></td></tr></table></figure>
+<h3 id="2-6-训练过程示意图"><a href="#2-6-训练过程示意图" class="headerlink" title="2.6 训练过程示意图"></a>2.6 训练过程示意图</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">flowchart TD</span><br><span class="line">    A[输入词 “国王”] --&gt; B(获取输入向量 syn0)</span><br><span class="line">    B --&gt; C&#123;预测上下文&#125;</span><br><span class="line">    C --&gt; D[预测到 “王冠”]</span><br><span class="line">    C --&gt; E[预测到 “权力”]</span><br><span class="line">    C --&gt; F[预测到 “女王”]</span><br><span class="line">    </span><br><span class="line">    D --&gt; G[计算误差]</span><br><span class="line">    E --&gt; G</span><br><span class="line">    F --&gt; G</span><br><span class="line">    </span><br><span class="line">    G --&gt; H[更新向量]</span><br><span class="line">    H --&gt; I[调整 syn0 和 syn1]</span><br><span class="line">    </span><br><span class="line">    I --&gt; J[下一个词...]</span><br><span class="line">    </span><br><span class="line">    style A fill:#f9f,stroke:#333,stroke-width:2px</span><br><span class="line">    style C fill:#bbf,stroke:#333,stroke-width:2px</span><br><span class="line">    style G fill:#f96,stroke:#333,stroke-width:2px</span><br></pre></td></tr></table></figure>
 
 <h3 id="2-7-流行实现"><a href="#2-7-流行实现" class="headerlink" title="2.7 流行实现"></a>2.7 流行实现</h3><ul>
 <li><strong>Gensim（Python）</strong>：最流行的实现，提供高层API</li>
-<li><strong>官方C语言实现</strong>：效率最高，适合Linux/macOS</li>
-<li><strong>PyTorch/TensorFlow实现</strong>：便于理解模型细节和二次开发</li>
+<li><strong>官方C语言实现</strong>：效率最高，适合Linux&#x2F;macOS</li>
+<li><strong>PyTorch&#x2F;TensorFlow实现</strong>：便于理解模型细节和二次开发</li>
 </ul>
 <hr>
 <h2 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h2><table>
@@ -478,7 +492,7 @@ P_{\text{interp}}(w_i \mid h) = \lambda_3 P_3 + \lambda_2 P_2 + \lambda_1 P_1
 <tr>
 <td><strong>上下文建模</strong></td>
 <td>固定长度N-gram</td>
-<td>可变窗口（Skip-gram/CBOW）</td>
+<td>可变窗口（Skip-gram&#x2F;CBOW）</td>
 </tr>
 <tr>
 <td><strong>数据稀疏问题</strong></td>
@@ -493,8 +507,8 @@ P_{\text{interp}}(w_i \mid h) = \lambda_3 P_3 + \lambda_2 P_2 + \lambda_1 P_1
 </tbody></table>
 <p>Word2Vec通过其精巧的设计，将离散的语言符号映射到连续的向量空间，让这个空间中的数学运算能够反映词语之间的语义和语法关系。它让“语义”不再是一个抽象标签，而是被具体落实为<strong>预测任务中的可利用结构</strong>。</p>
 <hr>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Mikolov, T., Chen, K., Corrado, G., & Dean, J. (2013). Efficient Estimation of Word Representations in Vector Space. <em>arXiv preprint arXiv:1301.3781</em>. </p>
-<p>[2] Mikolov, T., Sutskever, I., Chen, K., Corrado, G. S., & Dean, J. (2013). Distributed Representations of Words and Phrases and their Compositionality. <em>arXiv preprint arXiv:1310.4546</em>. </p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Mikolov, T., Chen, K., Corrado, G., &amp; Dean, J. (2013). Efficient Estimation of Word Representations in Vector Space. <em>arXiv preprint arXiv:1301.3781</em>. </p>
+<p>[2] Mikolov, T., Sutskever, I., Chen, K., Corrado, G. S., &amp; Dean, J. (2013). Distributed Representations of Words and Phrases and their Compositionality. <em>arXiv preprint arXiv:1310.4546</em>. </p>
 <p>[3] Rong, X. (2014). word2vec Parameter Learning Explained. <em>arXiv preprint arXiv:1411.2738</em>. </p>
 <hr>
 <blockquote>
@@ -514,7 +528,7 @@ P_{\text{interp}}(w_i \mid h) = \lambda_3 P_3 + \lambda_2 P_2 + \lambda_1 P_1
                 
 
                 
-                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B14/">两种基于Tableaux算法的reasoner的源码分析（3）</a>
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B15/">两种reasoner的使用体验对比</a>
                     </span>
                 
             </div>
@@ -622,23 +636,7 @@ P_{\text{interp}}(w_i \mid h) = \lambda_3 P_3 + \lambda_2 P_2 + \lambda_1 P_1
                     </svg>
                 </div>
             
-    
-<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\(", "\)"]], displayMath: [["$", "$"], ["\[", "\]"]], processEscapes: true }, svg: { fontCache: "global" } };</script>
-
-<script>
-window.MathJax = {
-  tex: {
-    inlineMath: [["\\(", "\\)"]],
-    displayMath: [["\\[", "\\]"]],
-    processEscapes: true,
-    processEnvironments: true
-  },
-  svg: { fontCache: "global" },
-  options: { skipHtmlTags: ["script","noscript","style","textarea","pre","code"] }
-};
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js" async></script>
-</body>
+    </body>
 </html>
 <script src="/js/emojiHandler.js"></script>
 <script>

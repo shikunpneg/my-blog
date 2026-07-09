@@ -72,7 +72,21 @@
 
     <!-- <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/lxgwwenkai/dist/LXGWWenKai-Regular/result.css" /> -->
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@chinese-fonts/lxgwwenkai@3.0.0/dist/LXGWWenKai-Regular/result.css' /> 
-<meta name="generator" content="Hexo 8.1.2"></head>
+<meta name="generator" content="Hexo 8.1.2">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true
+  },
+  svg: { fontCache: 'global' },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js" async></script>
+</head>
 
     
     
@@ -293,19 +307,19 @@
                 
                 
                     
-                          |  
+                        &nbsp; | &nbsp;
                     
                      <span>字数总计：2.4k</span>
                 
                 
                     
-                          |  
+                        &nbsp; | &nbsp;
                     
                     <span>阅读估时：9分钟</span>
                 
                 
                     
-                          |  
+                        &nbsp; | &nbsp;
                     
                     <span id="busuanzi_container_page_pv">
                         阅读量：<span id="busuanzi_value_page_pv"></span>次
@@ -450,7 +464,7 @@
 <li><strong>TBox（术语盒）</strong>：定义概念间关系，如 <code>母亲 ⊑ 女性</code>。</li>
 <li><strong>ABox（断言盒）</strong>：存储具体事实，如 <code>玛丽 : 母亲</code>，<code>玛丽 生孩子 小明</code>。</li>
 </ul>
-<p><strong>推理机 = 用 TBox 规则检查 ABox 事实，发现矛盾或推导新事实</strong>。</p>
+<p><strong>推理机 &#x3D; 用 TBox 规则检查 ABox 事实，发现矛盾或推导新事实</strong>。</p>
 <hr>
 <h3 id="3-3-描述逻辑构造子语义表"><a href="#3-3-描述逻辑构造子语义表" class="headerlink" title="3.3 描述逻辑构造子语义表"></a>3.3 描述逻辑构造子语义表</h3><table>
 <thead>
@@ -478,22 +492,22 @@
 <tr>
 <td>存在限制 (∃ r.C)</td>
 <td>至少有一个 r-邻居属于 C</td>
-<td>\({x \mid \exists y, (x,y)\in r^\mathcal{I} \land y \in C^\mathcal{I}}\)</td>
+<td>\(\{x \mid \exists y, (x,y)\in r^\mathcal{I} \land y \in C^\mathcal{I}\}\)</td>
 </tr>
 <tr>
 <td>值限制 (∀ r.C)</td>
 <td>所有 r-邻居都属于 C</td>
-<td>\({x \mid \forall y, (x,y)\in r^\mathcal{I} \to y \in C^\mathcal{I}}\)</td>
+<td>\(\{x \mid \forall y, (x,y)\in r^\mathcal{I} \to y \in C^\mathcal{I}\}\)</td>
 </tr>
 <tr>
 <td>至少限制 (≥ n r.C)</td>
 <td>不少于 n 个 r-邻居属于 C</td>
-<td>\({x \mid #{y \mid (x,y)\in r^\mathcal{I} \land y\in C^\mathcal{I}} \ge n}\)</td>
+<td>\(\{x \mid \#\{y \mid (x,y)\in r^\mathcal{I} \land y\in C^\mathcal{I}\} \ge n\}\)</td>
 </tr>
 <tr>
 <td>至多限制 (≤ n r.C)</td>
 <td>不超过 n 个 r-邻居属于 C</td>
-<td>\({x \mid #{…} \le n}\)</td>
+<td>\(\{x \mid \#\{...\} \le n\}\)</td>
 </tr>
 </tbody></table>
 <hr>
@@ -508,12 +522,12 @@
 <tbody><tr>
 <td><strong>⊓-规则</strong>（合取）</td>
 <td>\((C_1 \sqcap C_2)(s)\) 在 ABox 中</td>
-<td>添加 $C_1(s)$ 和 $C_2(s)$</td>
+<td>添加 \(C_1(s)\) 和 \(C_2(s)\)</td>
 </tr>
 <tr>
 <td><strong>⊔-规则</strong>（析取）</td>
 <td>\((C_1 \sqcup C_2)(s)\) 在 ABox 中</td>
-<td><strong>非确定</strong> 添加 $C_1(s)$ 或 $C_2(s)$</td>
+<td><strong>非确定</strong> 添加 \(C_1(s)\) 或 \(C_2(s)\)</td>
 </tr>
 <tr>
 <td><strong>∃-规则</strong>（存在）</td>
@@ -623,10 +637,10 @@
 <p>Tableau 系列算法是当前 OWL 推理机的基石，Hypertableau 则代表了其最先进的优化方向。</p>
 <hr>
 <h2 id="7-参考文献"><a href="#7-参考文献" class="headerlink" title="7. 参考文献"></a>7. 参考文献</h2><ol>
-<li>Baader, F., Calvanese, D., McGuinness, D., Nardi, D., & Patel-Schneider, P. F. (Eds.). (2007). <em>The Description Logic Handbook: Theory, Implementation and Applications</em> (2nd ed.). Cambridge University Press.</li>
-<li>Horrocks, I., & Sattler, U. (2007). A Tableau Decision Procedure for SHOIQ. <em>Journal of Automated Reasoning</em>, 39(3), 249–276.</li>
-<li>Shearer, R., Motik, B., & Horrocks, I. (2008). HermiT: A Highly-Efficient OWL Reasoner. In <em>Proc. of the 5th OWL Experiences and Directions Workshop (OWLED 2008)</em>.</li>
-<li>Motik, B., Shearer, R., & Horrocks, I. (2009). Hypertableau Reasoning for Description Logics. <em>Journal of Artificial Intelligence Research</em>, 36, 165–228.</li>
+<li>Baader, F., Calvanese, D., McGuinness, D., Nardi, D., &amp; Patel-Schneider, P. F. (Eds.). (2007). <em>The Description Logic Handbook: Theory, Implementation and Applications</em> (2nd ed.). Cambridge University Press.</li>
+<li>Horrocks, I., &amp; Sattler, U. (2007). A Tableau Decision Procedure for SHOIQ. <em>Journal of Automated Reasoning</em>, 39(3), 249–276.</li>
+<li>Shearer, R., Motik, B., &amp; Horrocks, I. (2008). HermiT: A Highly-Efficient OWL Reasoner. In <em>Proc. of the 5th OWL Experiences and Directions Workshop (OWLED 2008)</em>.</li>
+<li>Motik, B., Shearer, R., &amp; Horrocks, I. (2009). Hypertableau Reasoning for Description Logics. <em>Journal of Artificial Intelligence Research</em>, 36, 165–228.</li>
 </ol>
 <hr>
 <blockquote>
@@ -643,11 +657,11 @@
     
             <div class="post-footer-pre-next">
                 
-                    <span>上一篇：<a href='/2026/07/04/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B13/'>两种基于Tableaux算法的reasoner的源码分析（2）</a></span>
+                    <span>上一篇：<a href='/2026/07/03/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B12/'>两种基于Tableaux算法的reasoner的源码分析（1）</a></span>
                 
 
                 
-                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/2026/07/03/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B12/">两种基于Tableaux算法的reasoner的源码分析（1）</a>
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/2026/06/15/secret%20notes2/">secret notes2</a>
                     </span>
                 
             </div>
@@ -755,23 +769,7 @@
                     </svg>
                 </div>
             
-    
-<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\(", "\)"]], displayMath: [["$", "$"], ["\[", "\]"]], processEscapes: true }, svg: { fontCache: "global" } };</script>
-
-<script>
-window.MathJax = {
-  tex: {
-    inlineMath: [["\\(", "\\)"]],
-    displayMath: [["\\[", "\\]"]],
-    processEscapes: true,
-    processEnvironments: true
-  },
-  svg: { fontCache: "global" },
-  options: { skipHtmlTags: ["script","noscript","style","textarea","pre","code"] }
-};
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js" async></script>
-</body>
+    </body>
 </html>
 <script src="/js/emojiHandler.js"></script>
 <script>
