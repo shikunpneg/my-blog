@@ -320,17 +320,21 @@
                 <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#HermiT-Reasoner-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="post-toc-text">HermiT Reasoner 源码分析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%B8%80%E3%80%81HermiT-%E7%AE%80%E4%BB%8B"><span class="post-toc-text">一、HermiT 简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%EF%BC%9ANode-java%E3%80%81Edge-java-%E4%B8%8E-DependencySet-java"><span class="post-toc-text">二、数据模型：Node.java、Edge.java 与 DependencySet.java</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-1-Node-java-%E2%80%94%E2%80%94-Hypertableau-%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B9"><span class="post-toc-text">2.1 Node.java —— Hypertableau 中的节点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-2-%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E4%BA%AE%E7%82%B9"><span class="post-toc-text">2.2 关键设计亮点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-3-Edge-java-%E2%80%94%E2%80%94-%E8%A7%92%E8%89%B2%E8%BE%B9"><span class="post-toc-text">2.3 Edge.java —— 角色边</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-DependencySet-java-%E2%80%94%E2%80%94-%E4%BE%9D%E8%B5%96%E9%9B%86%E6%8E%A5%E5%8F%A3"><span class="post-toc-text">2.4 DependencySet.java —— 依赖集接口</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%B8%89%E3%80%81Reasoner-java-%E2%80%94%E2%80%94-%E6%A0%B8%E5%BF%83%E6%8E%A8%E7%90%86%E5%99%A8"><span class="post-toc-text">三、Reasoner.java —— 核心推理器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-1-%E6%8E%A8%E7%90%86%E5%99%A8%E6%9E%B6%E6%9E%84"><span class="post-toc-text">3.1 推理器架构</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-2-%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95"><span class="post-toc-text">3.2 核心方法</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%9B%9B%E3%80%81%E4%B8%8E-FaCT-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="post-toc-text">四、与 FaCT++ 的对比</span></a></li></ol></li></ol>
             
         
-        <div class=".article-gallery"><h1 id="HermiT-Reasoner-源码分析"><a href="#HermiT-Reasoner-源码分析" class="headerlink" title="HermiT Reasoner 源码分析"></a>HermiT Reasoner 源码分析</h1><h2 id="一、HermiT-简介"><a href="#一、HermiT-简介" class="headerlink" title="一、HermiT 简介"></a>一、HermiT 简介</h2><p>HermiT 是使用 Web Ontology Language（OWL）编写本体的推理器。给定一个 OWL 文件，HermiT 可以判断本体是否一致，识别类间的包含关系（subsumption），以及执行更多推理任务。</p>
+        <div class=".article-gallery"><h1 id="HermiT-Reasoner-源码分析">HermiT Reasoner 源码分析</h1>
+<h2 id="一、HermiT-简介">一、HermiT 简介</h2>
+<p>HermiT 是使用 Web Ontology Language（OWL）编写本体的推理器。给定一个 OWL 文件，HermiT 可以判断本体是否一致，识别类间的包含关系（subsumption），以及执行更多推理任务。</p>
 <p>HermiT 是首个公开可用的 OWL 推理器，基于一种新颖的 <strong>“Hypertableau”（超表）演算</strong>，其推理效率远高于以往任何已知算法。以前分类需要几分钟或数小时的本体，现在通常可以在几秒内被 HermiT 完成分类。HermiT 也是第一个能够对许多此前被证明过于复杂、任何可用系统都无法处理的本体进行分类的推理器。</p>
 <p>HermiT 使用直接语义（Direct Semantics），并通过了所有 OWL 2 直接语义推理器的符合性测试。</p>
 <blockquote>
 <p>官网：<a target="_blank" rel="noopener" href="http://www.hermit-reasoner.com/">http://www.hermit-reasoner.com/</a></p>
 </blockquote>
 <hr>
-<h2 id="二、数据模型：Node-java、Edge-java-与-DependencySet-java"><a href="#二、数据模型：Node-java、Edge-java-与-DependencySet-java" class="headerlink" title="二、数据模型：Node.java、Edge.java 与 DependencySet.java"></a>二、数据模型：Node.java、Edge.java 与 DependencySet.java</h2><h3 id="2-1-Node-java-——-Hypertableau-中的节点"><a href="#2-1-Node-java-——-Hypertableau-中的节点" class="headerlink" title="2.1 Node.java —— Hypertableau 中的节点"></a>2.1 Node.java —— Hypertableau 中的节点</h3><p><code>Node.java</code> 定义了 Hypertableau 算法中最核心的数据结构——<code>Node</code> 类，它代表 Tableau 中的一个<strong>个体节点</strong>。</p>
+<h2 id="二、数据模型：Node-java、Edge-java-与-DependencySet-java">二、数据模型：Node.java、Edge.java 与 DependencySet.java</h2>
+<h3 id="2-1-Node-java-——-Hypertableau-中的节点">2.1 Node.java —— Hypertableau 中的节点</h3>
+<p><code>Node.java</code> 定义了 Hypertableau 算法中最核心的数据结构——<code>Node</code> 类，它代表 Tableau 中的一个<strong>个体节点</strong>。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Node</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="comment">// === 基本标识 ===</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">final</span> Tableau m_tableau;   <span class="comment">// 所属的 Tableau 实例</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span> m_nodeID;              <span class="comment">// 节点唯一 ID</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// === 节点状态 ===</span></span><br><span class="line">    <span class="keyword">protected</span> NodeState m_nodeState;     <span class="comment">// ACTIVE / MERGED / PRUNED</span></span><br><span class="line">    <span class="keyword">protected</span> Node m_mergedInto;         <span class="comment">// 被合并到的目标节点</span></span><br><span class="line">    <span class="keyword">protected</span> PermanentDependencySet m_mergedIntoDependencySet; <span class="comment">// 合并的依赖集</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// === 树结构 ===</span></span><br><span class="line">    <span class="keyword">protected</span> Node m_parent;             <span class="comment">// 父节点</span></span><br><span class="line">    <span class="keyword">protected</span> NodeType m_nodeType;       <span class="comment">// TREE_NODE / ROOT_NODE / NOMINAL_NODE</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span> m_treeDepth;           <span class="comment">// 树深度（用于阻塞）</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// === 概念计数（用于快速冲突检测） ===</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span> m_numberOfPositiveAtomicConcepts;  <span class="comment">// 正原子概念计数</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span> m_numberOfNegatedAtomicConcepts;   <span class="comment">// 负原子概念计数</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span> m_numberOfNegatedRoleAssertions;   <span class="comment">// 负角色断言计数</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// === 待处理存在量词 ===</span></span><br><span class="line">    <span class="keyword">protected</span> List&lt;ExistentialConcept&gt; m_unprocessedExistentials;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// === 阻塞相关 ===</span></span><br><span class="line">    <span class="keyword">protected</span> Node m_blocker;            <span class="comment">// 阻塞该节点的节点</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">boolean</span> m_directlyBlocked; <span class="comment">// 是否直接阻塞</span></span><br><span class="line">    <span class="keyword">protected</span> Object m_blockingObject;   <span class="comment">// 阻塞信息（用于缓存）</span></span><br><span class="line">    <span class="keyword">protected</span> Object m_blockingCargo;    <span class="comment">// 阻塞缓存条目</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// === 链表结构（用于 Tableau 遍历） ===</span></span><br><span class="line">    <span class="keyword">protected</span> Node m_previousTableauNode;</span><br><span class="line">    <span class="keyword">protected</span> Node m_nextTableauNode;</span><br><span class="line">    <span class="keyword">protected</span> Node m_previousMergedOrPrunedNode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-2-关键设计亮点"><a href="#2-2-关键设计亮点" class="headerlink" title="2.2 关键设计亮点"></a>2.2 关键设计亮点</h3><table>
+<h3 id="2-2-关键设计亮点">2.2 关键设计亮点</h3>
+<table>
 <thead>
 <tr>
 <th>成员</th>
@@ -338,7 +342,8 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td><code>m_nodeState</code></td>
 <td>节点状态</td>
 <td>枚举三种状态：<code>ACTIVE</code>（活跃）、<code>MERGED</code>（已合并）、<code>PRUNED</code>（已裁剪），比布尔标志更清晰</td>
@@ -346,7 +351,7 @@
 <tr>
 <td><code>m_mergedInto</code></td>
 <td><code>≤</code>-规则合并</td>
-<td>指向被合并到的目标节点，实现节点的”逻辑合并”而不删除</td>
+<td>指向被合并到的目标节点，实现节点的&quot;逻辑合并&quot;而不删除</td>
 </tr>
 <tr>
 <td><code>m_unprocessedExistentials</code></td>
@@ -354,19 +359,20 @@
 <td>存储尚未展开的存在量词，类似 FaCT++ 的 TODO 列表的局部视图</td>
 </tr>
 <tr>
-<td><code>m_blocker</code> &#x2F; <code>m_directlyBlocked</code></td>
+<td><code>m_blocker</code> / <code>m_directlyBlocked</code></td>
 <td>阻塞机制</td>
-<td>支持”任何地方阻塞”（Anywhere Blocking），<code>m_blocker</code> 指向阻塞者，<code>m_directlyBlocked</code> 区分直接&#x2F;间接阻塞</td>
+<td>支持&quot;任何地方阻塞&quot;（Anywhere Blocking），<code>m_blocker</code> 指向阻塞者，<code>m_directlyBlocked</code> 区分直接/间接阻塞</td>
 </tr>
 <tr>
-<td><code>m_blockingObject</code> &#x2F; <code>m_blockingCargo</code></td>
+<td><code>m_blockingObject</code> / <code>m_blockingCargo</code></td>
 <td>阻塞缓存</td>
 <td>优化阻塞检查的性能，避免重复计算</td>
 </tr>
-</tbody></table>
-<h3 id="2-3-Edge-java-——-角色边"><a href="#2-3-Edge-java-——-角色边" class="headerlink" title="2.3 Edge.java —— 角色边"></a>2.3 Edge.java —— 角色边</h3><p>在 HermiT 中，角色边（Role Assertions）通过 <code>Edge.java</code> 定义。与 FaCT++ 的 <code>DlCompletionTreeArc</code> 类似，<code>Edge</code> 表示个体之间的角色关系 <code>R(x, y)</code>：</p>
+</tbody>
+</table>
+<h3 id="2-3-Edge-java-——-角色边">2.3 Edge.java —— 角色边</h3>
+<p>在 HermiT 中，角色边（Role Assertions）通过 <code>Edge.java</code> 定义。与 FaCT++ 的 <code>DlCompletionTreeArc</code> 类似，<code>Edge</code> 表示个体之间的角色关系 <code>R(x, y)</code>：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Edge</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">protected</span> Node m_fromNode;           <span class="comment">// 边的起点</span></span><br><span class="line">    <span class="keyword">protected</span> Node m_toNode;             <span class="comment">// 边的终点</span></span><br><span class="line">    <span class="keyword">protected</span> Role m_role;               <span class="comment">// 边上的角色标签</span></span><br><span class="line">    <span class="keyword">protected</span> DependencySet m_dependencySet; <span class="comment">// 依赖集（用于回溯）</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><strong>与 FaCT++ 的对比</strong>：</p>
 <table>
 <thead>
@@ -376,7 +382,8 @@
 <th>HermiT (<code>Edge</code>)</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>双向性</td>
 <td>通过 <code>Reverse</code> 指针</td>
 <td>通过 <code>getReverseEdge()</code> 方法</td>
@@ -391,9 +398,10 @@
 <td><code>DepSet depSet</code></td>
 <td><code>DependencySet m_dependencySet</code></td>
 </tr>
-</tbody></table>
-<h3 id="2-4-DependencySet-java-——-依赖集接口"><a href="#2-4-DependencySet-java-——-依赖集接口" class="headerlink" title="2.4 DependencySet.java —— 依赖集接口"></a>2.4 DependencySet.java —— 依赖集接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">DependencySet</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">containsBranchingPoint</span><span class="params">(<span class="type">int</span> branchingPoint)</span>;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span>;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">getMaximumBranchingPoint</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+</tbody>
+</table>
+<h3 id="2-4-DependencySet-java-——-依赖集接口">2.4 DependencySet.java —— 依赖集接口</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">DependencySet</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">containsBranchingPoint</span><span class="params">(<span class="type">int</span> branchingPoint)</span>;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span>;</span><br><span class="line">    <span class="type">int</span> <span class="title function_">getMaximumBranchingPoint</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>DependencySet</code> 是 HermiT 实现**定向回溯（Directed Backtracking）**的核心抽象：</p>
 <table>
 <thead>
@@ -402,7 +410,8 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td><code>containsBranchingPoint(int branchingPoint)</code></td>
 <td>检查依赖集是否包含某个分支点</td>
 </tr>
@@ -414,19 +423,23 @@
 <td><code>getMaximumBranchingPoint()</code></td>
 <td>获取依赖集中最大的分支点（用于回溯跳跃）</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
-<h2 id="三、Reasoner-java-——-核心推理器"><a href="#三、Reasoner-java-——-核心推理器" class="headerlink" title="三、Reasoner.java —— 核心推理器"></a>三、Reasoner.java —— 核心推理器</h2><h3 id="3-1-推理器架构"><a href="#3-1-推理器架构" class="headerlink" title="3.1 推理器架构"></a>3.1 推理器架构</h3><p><code>Reasoner.java</code> 是 HermiT 的<strong>主入口类</strong>，负责协调整个推理过程。其核心工作流程分为三个阶段：</p>
+<h2 id="三、Reasoner-java-——-核心推理器">三、Reasoner.java —— 核心推理器</h2>
+<h3 id="3-1-推理器架构">3.1 推理器架构</h3>
+<p><code>Reasoner.java</code> 是 HermiT 的<strong>主入口类</strong>，负责协调整个推理过程。其核心工作流程分为三个阶段：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────────────┐</span><br><span class="line">│                        Reasoner 推理流程                           │</span><br><span class="line">├─────────────────────────────────────────────────────────────────────┤</span><br><span class="line">│                                                                     │</span><br><span class="line">│  1. 预处理 (Preprocessing)                                         │</span><br><span class="line">│     ├── 解析 OWL 本体                                              │</span><br><span class="line">│     ├── 将公理转换为 Hypertableau 规则                             │</span><br><span class="line">│     └── 初始化 Tableau 数据结构                                    │</span><br><span class="line">│                                                                     │</span><br><span class="line">│  2. 模型构建 (Model Construction)                                  │</span><br><span class="line">│     ├── 创建根节点 (Root Node)                                     │</span><br><span class="line">│     ├── 应用 Hypertableau 规则                                     │</span><br><span class="line">│     │   ├── DL-Clause 规则（确定性推导）                           │</span><br><span class="line">│     │   ├── ∃-规则（创建新节点）                                   │</span><br><span class="line">│     │   └── ≤-规则（合并节点）                                     │</span><br><span class="line">│     └── 阻塞检查 (Anywhere Blocking)                               │</span><br><span class="line">│                                                                     │</span><br><span class="line">│  3. 冲突处理与回溯 (Conflict Handling &amp; Backtracking)              │</span><br><span class="line">│     ├── 检测冲突（如 A 与 ¬A 同时存在）                            │</span><br><span class="line">│     ├── 通过 DependencySet 定向回溯                                │</span><br><span class="line">│     └── 返回结果（可满足 / 不可满足）                              │</span><br><span class="line">│                                                                     │</span><br><span class="line">└─────────────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-2-核心方法"><a href="#3-2-核心方法" class="headerlink" title="3.2 核心方法"></a>3.2 核心方法</h3><table>
+<h3 id="3-2-核心方法">3.2 核心方法</h3>
+<table>
 <thead>
 <tr>
 <th>方法</th>
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td><code>isSatisfiable()</code></td>
 <td>检查本体是否一致</td>
 </tr>
@@ -442,9 +455,11 @@
 <td><code>realize()</code></td>
 <td>计算个体的类型归属</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
-<h2 id="四、与-FaCT-的对比"><a href="#四、与-FaCT-的对比" class="headerlink" title="四、与 FaCT++ 的对比"></a>四、与 FaCT++ 的对比</h2><table>
+<h2 id="四、与-FaCT-的对比">四、与 FaCT++ 的对比</h2>
+<table>
 <thead>
 <tr>
 <th>特性</th>
@@ -452,7 +467,8 @@
 <th>HermiT</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td><strong>核心算法</strong></td>
 <td>标准 Tableau 演算</td>
 <td><strong>Hypertableau（超表）演算</strong></td>
@@ -482,7 +498,8 @@
 <td>较少</td>
 <td><strong>Datalog 规则预处理</strong></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <blockquote>
 <p><strong>AI 参与声明</strong>：本文档在撰写过程中使用了 AI 辅助工具进行内容整理、格式优化与润色。所有核心概念与代码分析均基于 HermiT 源码与公开学术文献，并经人工校验与补充。</p>
