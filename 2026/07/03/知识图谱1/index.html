@@ -463,37 +463,37 @@
 <tbody><tr>
 <td>否定 (¬C)</td>
 <td>全集去掉 C</td>
-<td>$\Delta \setminus C^\mathcal{I}$</td>
+<td>\(\Delta \setminus C^\mathcal{I}\)</td>
 </tr>
 <tr>
 <td>合取 (C ⊓ D)</td>
 <td>既是 C 又是 D</td>
-<td>$C^\mathcal{I} \cap D^\mathcal{I}$</td>
+<td>\(C^\mathcal{I} \cap D^\mathcal{I}\)</td>
 </tr>
 <tr>
 <td>析取 (C ⊔ D)</td>
 <td>是 C 或 D</td>
-<td>$C^\mathcal{I} \cup D^\mathcal{I}$</td>
+<td>\(C^\mathcal{I} \cup D^\mathcal{I}\)</td>
 </tr>
 <tr>
 <td>存在限制 (∃ r.C)</td>
 <td>至少有一个 r-邻居属于 C</td>
-<td>${x \mid \exists y, (x,y)\in r^\mathcal{I} \land y \in C^\mathcal{I}}$</td>
+<td>\({x \mid \exists y, (x,y)\in r^\mathcal{I} \land y \in C^\mathcal{I}}\)</td>
 </tr>
 <tr>
 <td>值限制 (∀ r.C)</td>
 <td>所有 r-邻居都属于 C</td>
-<td>${x \mid \forall y, (x,y)\in r^\mathcal{I} \to y \in C^\mathcal{I}}$</td>
+<td>\({x \mid \forall y, (x,y)\in r^\mathcal{I} \to y \in C^\mathcal{I}}\)</td>
 </tr>
 <tr>
 <td>至少限制 (≥ n r.C)</td>
 <td>不少于 n 个 r-邻居属于 C</td>
-<td>${x \mid #{y \mid (x,y)\in r^\mathcal{I} \land y\in C^\mathcal{I}} \ge n}$</td>
+<td>\({x \mid #{y \mid (x,y)\in r^\mathcal{I} \land y\in C^\mathcal{I}} \ge n}\)</td>
 </tr>
 <tr>
 <td>至多限制 (≤ n r.C)</td>
 <td>不超过 n 个 r-邻居属于 C</td>
-<td>${x \mid #{…} \le n}$</td>
+<td>\({x \mid #{…} \le n}\)</td>
 </tr>
 </tbody></table>
 <hr>
@@ -507,28 +507,28 @@
 </thead>
 <tbody><tr>
 <td><strong>⊓-规则</strong>（合取）</td>
-<td>$(C_1 \sqcap C_2)(s)$ 在 ABox 中</td>
+<td>\((C_1 \sqcap C_2)(s)\) 在 ABox 中</td>
 <td>添加 $C_1(s)$ 和 $C_2(s)$</td>
 </tr>
 <tr>
 <td><strong>⊔-规则</strong>（析取）</td>
-<td>$(C_1 \sqcup C_2)(s)$ 在 ABox 中</td>
+<td>\((C_1 \sqcup C_2)(s)\) 在 ABox 中</td>
 <td><strong>非确定</strong> 添加 $C_1(s)$ 或 $C_2(s)$</td>
 </tr>
 <tr>
 <td><strong>∃-规则</strong>（存在）</td>
-<td>$(\exists R.C)(s)$ 在 ABox 中</td>
-<td>创建新个体 $t$，添加 $R(s,t)$ 和 $C(t)$</td>
+<td>\((\exists R.C)(s)\) 在 ABox 中</td>
+<td>创建新个体 \(t\)，添加 \(R(s,t)\) 和 \(C(t)\)</td>
 </tr>
 <tr>
 <td><strong>∀-规则</strong>（全称）</td>
-<td>$(\forall R.C)(s)$ 且 $R(s,t)$ 存在</td>
-<td>添加 $C(t)$</td>
+<td>\((\forall R.C)(s)\) 且 \(R(s,t)\) 存在</td>
+<td>添加 \(C(t)\)</td>
 </tr>
 <tr>
 <td><strong>⊑-规则</strong>（包含）</td>
-<td>公理 $C \sqsubseteq D$ 且个体 $s$</td>
-<td>添加 $(\neg C \sqcup D)(s)$</td>
+<td>公理 \(C \sqsubseteq D\) 且个体 \(s\)</td>
+<td>添加 \((\neg C \sqcup D)(s)\)</td>
 </tr>
 </tbody></table>
 <blockquote>

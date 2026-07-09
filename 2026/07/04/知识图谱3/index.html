@@ -346,7 +346,7 @@
 <td>存储该节点的所有角色边，是处理 <code>∀</code> 和 <code>∃</code> 规则的依据</td>
 </tr>
 <tr>
-<td><code>Blocker</code> &#x2F; <code>pBlocked</code> &#x2F; <code>dBlocked</code></td>
+<td><code>Blocker</code> / <code>pBlocked</code> / <code>dBlocked</code></td>
 <td>阻塞机制</td>
 <td>保证算法终止。<code>Blocker</code> 指向阻塞者节点，<code>pBlocked</code> 表示被”净化”（间接阻塞），<code>dBlocked</code> 表示直接阻塞</td>
 </tr>
@@ -420,11 +420,11 @@
 </tr>
 <tr>
 <td>冲突检测</td>
-<td><code>tryAddConcept</code> &#x2F; <code>checkAddedConcept</code> 检查 <code>A</code> 与 <code>¬A</code></td>
+<td><code>tryAddConcept</code> / <code>checkAddedConcept</code> 检查 <code>A</code> 与 <code>¬A</code></td>
 </tr>
 <tr>
 <td>阻塞（Blocking）</td>
-<td><code>isIBlocked()</code> &#x2F; <code>isPBlocked()</code> 跳过被阻塞节点的扩展</td>
+<td><code>isIBlocked()</code> / <code>isPBlocked()</code> 跳过被阻塞节点的扩展</td>
 </tr>
 <tr>
 <td>回溯</td>
@@ -457,7 +457,7 @@
 </tr>
 <tr>
 <td><strong>阻塞机制</strong></td>
-<td>通过 <code>Blocker</code> &#x2F; <code>pBlocked</code> &#x2F; <code>dBlocked</code> 实现算法终止保证</td>
+<td>通过 <code>Blocker</code> / <code>pBlocked</code> / <code>dBlocked</code> 实现算法终止保证</td>
 </tr>
 <tr>
 <td><strong>模型缓存</strong></td>

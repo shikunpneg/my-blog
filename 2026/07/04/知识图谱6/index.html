@@ -338,7 +338,7 @@
 </thead>
 <tbody><tr>
 <td><strong>1-gram (Unigram)</strong></td>
-<td>单个字母&#x2F;单词</td>
+<td>单个字母/单词</td>
 <td>“A”, “我”</td>
 </tr>
 <tr>
@@ -357,29 +357,43 @@
 <h3 id="1-3-数学推导：从整句概率到N-gram"><a href="#1-3-数学推导：从整句概率到N-gram" class="headerlink" title="1.3 数学推导：从整句概率到N-gram"></a>1.3 数学推导：从整句概率到N-gram</h3><p>语言模型的核心任务是计算一个词序列的联合概率 ( P(w_1, w_2, …, w_n) )。直接统计整句频率面临<strong>数据稀疏性（data sparsity）</strong> 问题——几乎任何长句子在有限语料中都可能从未出现过。</p>
 <p><strong>第一步：链式法则（Chain Rule）</strong></p>
 <p>将联合概率分解为一系列条件概率的乘积：</p>
-<p>$$<br>P(w_1, w_2, …, w_n) = \prod_{i=1}^{n} P(w_i \mid w_1, …, w_{i-1})<br>$$</p>
+<p>\[
+P(w_1, w_2, …, w_n) = \prod_{i=1}^{n} P(w_i \mid w_1, …, w_{i-1})
+\]</p>
 <p><strong>第二步：马尔可夫假设（Markov Assumption）</strong></p>
 <p>这是N-gram模型诞生的最关键一步：<strong>一个词出现的概率，只依赖于它前面出现的 N-1 个词</strong>。</p>
-<p>$$<br>P(w_i \mid w_1, …, w_{i-1}) \approx P(w_i \mid w_{i-N+1}, …, w_{i-1})<br>$$</p>
+<p>\[
+P(w_i \mid w_1, …, w_{i-1}) \approx P(w_i \mid w_{i-N+1}, …, w_{i-1})
+\]</p>
 <p>代入链式法则，得到N-gram模型的核心公式：</p>
-<p>$$<br>P(w_1, w_2, …, w_n) \approx \prod_{i=1}^{n} P(w_i \mid w_{i-N+1}, …, w_{i-1})<br>$$</p>
+<p>\[
+P(w_1, w_2, …, w_n) \approx \prod_{i=1}^{n} P(w_i \mid w_{i-N+1}, …, w_{i-1})
+\]</p>
 <p><strong>第三步：参数估计（最大似然估计）</strong></p>
 <p>对于一个特定的N-gram，其概率估计为：</p>
-<p>$$<br>P(w_i \mid w_{i-N+1}, …, w_{i-1}) = \frac{\text{count}(w_{i-N+1}, …, w_{i-1}, w_i)}{\text{count}(w_{i-N+1}, …, w_{i-1})}<br>$$</p>
+<p>\[
+P(w_i \mid w_{i-N+1}, …, w_{i-1}) = \frac{\text{count}(w_{i-N+1}, …, w_{i-1}, w_i)}{\text{count}(w_{i-N+1}, …, w_{i-1})}
+\]</p>
 <h3 id="1-4-平滑技术：解决零概率问题"><a href="#1-4-平滑技术：解决零概率问题" class="headerlink" title="1.4 平滑技术：解决零概率问题"></a>1.4 平滑技术：解决零概率问题</h3><p>MLE估计存在致命缺陷：如果某个N-gram在训练语料中<strong>从未出现过</strong>，其概率即为0。<strong>平滑（Smoothing）</strong> 技术应运而生。</p>
-<p><strong>加一平滑（Add-one &#x2F; Laplace Smoothing）</strong></p>
+<p><strong>加一平滑（Add-one / Laplace Smoothing）</strong></p>
 <p>假装每个N-gram都比实际多出现一次：</p>
-<p>$$<br>P_{\text{Add-1}}(w_i \mid h) = \frac{\text{count}(h, w_i) + 1}{\text{count}(h) + V}<br>$$</p>
+<p>\[
+P_{\text{Add-1}}(w_i \mid h) = \frac{\text{count}(h, w_i) + 1}{\text{count}(h) + V}
+\]</p>
 <p>其中 ( V ) 为词汇表大小。优点：极其简单。缺点：给未出现词分配过多概率。</p>
 <p><strong>古德-图灵估计（Good-Turing Estimation）</strong></p>
 <p>核心思想：“用我们观察到的总次数，来估计未观察到的事物的总次数。”对于出现 ( r ) 次的事件：</p>
-<p>$$<br>r^* = (r+1) \times \frac{N_{r+1}}{N_r}<br>$$</p>
+<p>\[
+r^* = (r+1) \times \frac{N_{r+1}}{N_r}
+\]</p>
 <p>其中 ( N_r ) 为恰好出现 ( r ) 次的N-gram数量。</p>
 <p><strong>回退模型（Backoff）</strong></p>
 <p>如果高阶N-gram计数为零，就“回退”到低阶N-gram。代表性算法为<strong>Katz回退</strong>。</p>
 <p><strong>插值模型（Interpolation）</strong></p>
 <p>始终将高阶、低阶N-gram的概率进行<strong>加权线性组合</strong>：</p>
-<p>$$<br>P_{\text{interp}}(w_i \mid h) = \lambda_3 P_3 + \lambda_2 P_2 + \lambda_1 P_1<br>$$</p>
+<p>\[
+P_{\text{interp}}(w_i \mid h) = \lambda_3 P_3 + \lambda_2 P_2 + \lambda_1 P_1
+\]</p>
 <p><strong>Kneser-Ney 平滑</strong></p>
 <p>目前性能最优的方法。它不只看低阶N-gram的频率，而是考虑其<strong>延续概率</strong>——即一个词在多少种不同上下文中出现过。</p>
 <h3 id="1-5-N-gram的局限"><a href="#1-5-N-gram的局限" class="headerlink" title="1.5 N-gram的局限"></a>1.5 N-gram的局限</h3><p>N-gram模型是统计自然语言处理的<strong>基石（cornerstone）</strong>，但也存在显著局限：上下文窗口固定，无法捕捉长距离依赖；数据稀疏问题依然存在；<strong>缺乏语义理解</strong>——无法识别“猫”和“狗”是相似的动物。</p>
@@ -392,7 +406,9 @@
 <p>发表于2013年10月，作者为Tomas Mikolov、Ilya Sutskever、Kai Chen、Greg Corrado和Jeffrey Dean。这篇论文提出了多项扩展，<strong>同时提升了向量质量和训练速度</strong>。论文详细描述了<strong>负采样（Negative Sampling）</strong> 作为层次Softmax的替代方案，以及<strong>高频词下采样（Subsampling of Frequent Words）</strong> 技术。</p>
 <h3 id="2-2-核心思想：让“语义”可以被计算"><a href="#2-2-核心思想：让“语义”可以被计算" class="headerlink" title="2.2 核心思想：让“语义”可以被计算"></a>2.2 核心思想：让“语义”可以被计算</h3><p>Word2Vec的理论基础是语言学中的**“分布式假设”（Distributional Hypothesis）<strong>：</strong>“一个词的含义由其周围的词所决定”**（You shall know a word by the company it keeps）。</p>
 <p>Word2Vec的突破性在于，它证明了语义关系可以通过简单的数学向量运算来体现：</p>
-<p>$$<br>\text{vec(“国王”) - vec(“男人”) + vec(“女人”) ≈ vec(“女王”)}<br>$$</p>
+<p>\[
+\text{vec(“国王”) - vec(“男人”) + vec(“女人”) ≈ vec(“女王”)}
+\]</p>
 <p>这种特性意味着：<strong>语义相近的词在向量空间中距离更近，且向量之间的加减运算能够捕捉词语间的语义关系</strong>。</p>
 <p>Mikolov等人在论文中明确指出，他们期望“<strong>相似的词不仅倾向于彼此靠近，而且词可以具有多种程度的相似性</strong>”。他们在词向量空间中发现了<strong>线性正则性（linear regularities）</strong>，例如通过简单的向量运算可以解决诸如“国家-首都”等类比推理问题。</p>
 <h3 id="2-3-两种模型架构"><a href="#2-3-两种模型架构" class="headerlink" title="2.3 两种模型架构"></a>2.3 两种模型架构</h3><p>Word2Vec包含两种主要模型架构：</p>
@@ -422,7 +438,7 @@
 <h3 id="2-5-源代码解析"><a href="#2-5-源代码解析" class="headerlink" title="2.5 源代码解析"></a>2.5 源代码解析</h3><p>Google开源了Word2Vec的C语言实现，可从GitHub获取。核心数据结构：</p>
 <ul>
 <li><strong><code>syn0</code></strong>：词的<strong>输入向量</strong>。作为中心词输入时使用，随机初始化。</li>
-<li><strong><code>syn1</code> &#x2F; <code>syn1neg</code></strong>：词的<strong>输出向量</strong>。作为上下文词被预测时使用，初始化为零。</li>
+<li><strong><code>syn1</code> / <code>syn1neg</code></strong>：词的<strong>输出向量</strong>。作为上下文词被预测时使用，初始化为零。</li>
 </ul>
 <p>训练主循环：</p>
 <ol>
@@ -437,8 +453,8 @@
 
 <h3 id="2-7-流行实现"><a href="#2-7-流行实现" class="headerlink" title="2.7 流行实现"></a>2.7 流行实现</h3><ul>
 <li><strong>Gensim（Python）</strong>：最流行的实现，提供高层API</li>
-<li><strong>官方C语言实现</strong>：效率最高，适合Linux&#x2F;macOS</li>
-<li><strong>PyTorch&#x2F;TensorFlow实现</strong>：便于理解模型细节和二次开发</li>
+<li><strong>官方C语言实现</strong>：效率最高，适合Linux/macOS</li>
+<li><strong>PyTorch/TensorFlow实现</strong>：便于理解模型细节和二次开发</li>
 </ul>
 <hr>
 <h2 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h2><table>
@@ -462,7 +478,7 @@
 <tr>
 <td><strong>上下文建模</strong></td>
 <td>固定长度N-gram</td>
-<td>可变窗口（Skip-gram&#x2F;CBOW）</td>
+<td>可变窗口（Skip-gram/CBOW）</td>
 </tr>
 <tr>
 <td><strong>数据稀疏问题</strong></td>

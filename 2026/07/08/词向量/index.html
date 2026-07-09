@@ -293,19 +293,19 @@
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                      <span>字数总计：2.2k</span>
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                     <span>阅读估时：8分钟</span>
                 
                 
                     
-                        &nbsp; | &nbsp;
+                          |  
                     
                     <span id="busuanzi_container_page_pv">
                         阅读量：<span id="busuanzi_value_page_pv"></span>次
@@ -351,7 +351,7 @@
 <td>随着N增大，参数数量指数级增长</td>
 </tr>
 </tbody></table>
-<h3 id="1-2-从马尔可夫到香农：N-gram的思想源头"><a href="#1-2-从马尔可夫到香农：N-gram的思想源头" class="headerlink" title="1.2 从马尔可夫到香农：N-gram的思想源头"></a>1.2 从马尔可夫到香农：N-gram的思想源头</h3><p><strong>马尔科夫的实验（1913年）</strong>：取普希金小说前20,000个字母，统计元音&#x2F;辅音转移概率，证明<strong>语言遵循可建模的统计规律</strong>。</p>
+<h3 id="1-2-从马尔可夫到香农：N-gram的思想源头"><a href="#1-2-从马尔可夫到香农：N-gram的思想源头" class="headerlink" title="1.2 从马尔可夫到香农：N-gram的思想源头"></a>1.2 从马尔可夫到香农：N-gram的思想源头</h3><p><strong>马尔科夫的实验（1913年）</strong>：取普希金小说前20,000个字母，统计元音/辅音转移概率，证明<strong>语言遵循可建模的统计规律</strong>。</p>
 <p><strong>香农的实验（1948年）</strong>：通过”猜字母”实验和N-gram模型，计算英文的<strong>冗余度约为50%</strong>，开创了用统计模型理解语言的全新范式。</p>
 <h3 id="1-3-平滑技术：解决零概率问题"><a href="#1-3-平滑技术：解决零概率问题" class="headerlink" title="1.3 平滑技术：解决零概率问题"></a>1.3 平滑技术：解决零概率问题</h3><p>当某个N-gram从未出现时，MLE会给出0概率。平滑技术从已观察的N-gram中”匀”出一部分概率给未观察的N-gram：</p>
 <table>
@@ -365,12 +365,12 @@
 <tbody><tr>
 <td><strong>加一平滑</strong></td>
 <td>所有N-gram计数+1</td>
-<td>$P &#x3D; \frac{count+1}{count(h)+V}$</td>
+<td>\(P = \frac{count+1}{count(h)+V}\)</td>
 </tr>
 <tr>
 <td><strong>Good-Turing</strong></td>
-<td>用$N_{r+1}$调整$N_r$</td>
-<td>$r^* &#x3D; (r+1) \times \frac{N_{r+1}}{N_r}$</td>
+<td>用$N_{r+1}$调整\(N_r\)</td>
+<td>\(r^* = (r+1) \times \frac{N_{r+1}}{N_r}\)</td>
 </tr>
 <tr>
 <td><strong>Kneser-Ney</strong></td>
@@ -385,16 +385,16 @@
 <li>假设一个<strong>平滑的概率模型</strong>，输入词向量序列，输出联合概率</li>
 <li><strong>同时学习</strong>词向量和概率模型的参数</li>
 </ol>
-<h3 id="2-2-Embedding层：词向量从何而来？"><a href="#2-2-Embedding层：词向量从何而来？" class="headerlink" title="2.2 Embedding层：词向量从何而来？"></a>2.2 Embedding层：词向量从何而来？</h3><p>Embedding层本质上是一个 <strong>$V \times D$ 的查找表（矩阵 $C$）</strong>：</p>
+<h3 id="2-2-Embedding层：词向量从何而来？"><a href="#2-2-Embedding层：词向量从何而来？" class="headerlink" title="2.2 Embedding层：词向量从何而来？"></a>2.2 Embedding层：词向量从何而来？</h3><p>Embedding层本质上是一个 <strong>\(V \times D\) 的查找表（矩阵 \(C\)）</strong>：</p>
 <ul>
-<li>$V$：词汇表大小</li>
-<li>$D$：词向量维度</li>
+<li>\(V\)：词汇表大小</li>
+<li>\(D\)：词向量维度</li>
 <li>每一行对应一个词的稠密向量表示</li>
 </ul>
 <p><strong>前向传播过程</strong>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">one-hot向量 (维度V) × 矩阵C (V×D) = 词向量 (维度D)</span><br></pre></td></tr></table></figure>
 
-<p><strong>实际上是查表操作</strong>：找到 one-hot 中”1”的位置，取出矩阵 $C$ 的对应行。</p>
+<p><strong>实际上是查表操作</strong>：找到 one-hot 中”1”的位置，取出矩阵 \(C\) 的对应行。</p>
 <h3 id="2-3-NNLM的局限"><a href="#2-3-NNLM的局限" class="headerlink" title="2.3 NNLM的局限"></a>2.3 NNLM的局限</h3><ul>
 <li>包含<strong>非线性隐藏层</strong>（tanh激活），计算量大</li>
 <li>只能利用<strong>前文信息</strong>，不能利用后文</li>
@@ -405,18 +405,24 @@
 <ol>
 <li><strong>去掉隐藏层</strong>：移除 tanh 非线性层，直接连接嵌入层和输出层</li>
 <li><strong>忽略词序</strong>：上下文词向量直接<strong>相加（或平均）</strong></li>
-<li><strong>引入双向上下文</strong>：同时利用前后 $c$ 个词预测中心词</li>
+<li><strong>引入双向上下文</strong>：同时利用前后 \(c\) 个词预测中心词</li>
 </ol>
 <p><strong>类比</strong>：像”完形填空”——用上下文的所有词”揉在一起”预测中间缺失的词。</p>
 <p><strong>前向计算</strong>：</p>
-<p>$$<br>\text{context} &#x3D; \frac{1}{2c} \sum_{i} \mathbf{v}_{w_i}<br>$$</p>
-<p>$$<br>p(w_t | \text{context}) &#x3D; \text{softmax}(\mathbf{W} \cdot \text{context})<br>$$</p>
+<p>\[
+\text{context} = \frac{1}{2c} \sum_{i} \mathbf{v}_{w_i}
+\]</p>
+<p>\[
+p(w_t | \text{context}) = \text{softmax}(\mathbf{W} \cdot \text{context})
+\]</p>
 <h3 id="3-2-Skip-gram（跳字模型）"><a href="#3-2-Skip-gram（跳字模型）" class="headerlink" title="3.2 Skip-gram（跳字模型）"></a>3.2 Skip-gram（跳字模型）</h3><p><strong>核心思路</strong>：用<strong>中心词预测上下文词</strong>，与CBoW方向相反。</p>
 <p><strong>数学本质</strong>：</p>
-<p>$$<br>p(w_o | w_i) &#x3D; \frac{e^{\mathbf{U}_o \cdot \mathbf{V}<em>i}}{\sum</em>{j&#x3D;1}^{V} e^{\mathbf{U}_j \cdot \mathbf{V}_i}}<br>$$</p>
+<p>\[
+p(w_o | w_i) = \frac{e^{\mathbf{U}_o \cdot \mathbf{V}<em>i}}{\sum</em>{j=1}^{V} e^{\mathbf{U}_j \cdot \mathbf{V}_i}}
+\]</p>
 <ul>
-<li>$\mathbf{V}_i$：输入向量（中心词）</li>
-<li>$\mathbf{U}_o$：输出向量（上下文词）</li>
+<li>\(\mathbf{V}_i\)：输入向量（中心词）</li>
+<li>\(\mathbf{U}_o\)：输出向量（上下文词）</li>
 </ul>
 <p><strong>优势</strong>：</p>
 <ul>
@@ -425,17 +431,17 @@
 <li>每个上下文词独立提供学习信号</li>
 </ul>
 <hr>
-<h2 id="四、训练加速的三大技术"><a href="#四、训练加速的三大技术" class="headerlink" title="四、训练加速的三大技术"></a>四、训练加速的三大技术</h2><h3 id="4-1-层次Softmax（Hierarchical-Softmax）"><a href="#4-1-层次Softmax（Hierarchical-Softmax）" class="headerlink" title="4.1 层次Softmax（Hierarchical Softmax）"></a>4.1 层次Softmax（Hierarchical Softmax）</h3><p><strong>核心思想</strong>：把 $O(V)$ 的多分类问题，拆解成 $O(\log V)$ 个二分类问题。</p>
+<h2 id="四、训练加速的三大技术"><a href="#四、训练加速的三大技术" class="headerlink" title="四、训练加速的三大技术"></a>四、训练加速的三大技术</h2><h3 id="4-1-层次Softmax（Hierarchical-Softmax）"><a href="#4-1-层次Softmax（Hierarchical-Softmax）" class="headerlink" title="4.1 层次Softmax（Hierarchical Softmax）"></a>4.1 层次Softmax（Hierarchical Softmax）</h3><p><strong>核心思想</strong>：把 \(O(V)\) 的多分类问题，拆解成 \(O(\log V)\) 个二分类问题。</p>
 <p><strong>具体实现</strong>：</p>
 <ol>
 <li>构造一棵<strong>哈夫曼树</strong>（高频词路径短）</li>
 <li>从根到叶子节点，每个内部节点是一个<strong>二分类器（Sigmoid）</strong></li>
-<li>目标词的概率 &#x3D; 路径上所有Sigmoid概率的乘积</li>
+<li>目标词的概率 = 路径上所有Sigmoid概率的乘积</li>
 </ol>
-<p><strong>示例</strong>：假设词表 $V&#x3D;100,000$：</p>
+<p><strong>示例</strong>：假设词表 \(V=100,000\)：</p>
 <ul>
-<li>普通Softmax：计算 $100,000$ 个得分后归一化 → $O(100,000)$</li>
-<li>层次Softmax：只需做 $\log_2(100,000) \approx 17$ 次判断 → $O(17)$</li>
+<li>普通Softmax：计算 $100,000$ 个得分后归一化 → \(O(100,000)\)</li>
+<li>层次Softmax：只需做 \(\log_2(100,000) \approx 17\) 次判断 → \(O(17)\)</li>
 </ul>
 <p><strong>速度提升约 6,000 倍！</strong></p>
 <h3 id="4-2-负采样（Negative-Sampling）"><a href="#4-2-负采样（Negative-Sampling）" class="headerlink" title="4.2 负采样（Negative Sampling）"></a>4.2 负采样（Negative Sampling）</h3><p><strong>核心思想</strong>：把”多分类”问题变成”二分类”问题。</p>
@@ -444,14 +450,18 @@
 <li><strong>负样本</strong>：随机采样的错误（中心词，随机词）对</li>
 </ul>
 <p><strong>损失函数</strong>：</p>
-<p>$$<br>J &#x3D; \log \sigma(\mathbf{U}<em>o \cdot \mathbf{V}<em>i) + \sum</em>{j&#x3D;1}^{k} \mathbb{E}</em>{w_j \sim P_n} \left[ \log \sigma(-\mathbf{U}_j \cdot \mathbf{V}_i) \right]<br>$$</p>
+<p>\[
+J = \log \sigma(\mathbf{U}<em>o \cdot \mathbf{V}<em>i) + \sum</em>{j=1}^{k} \mathbb{E}</em>{w_j \sim P_n} \left[ \log \sigma(-\mathbf{U}_j \cdot \mathbf{V}_i) \right]
+\]</p>
 <p><strong>只更新 $1+k$ 个词</strong>（1个正样本 + k个负样本），而非整个词表。</p>
 <h3 id="4-3-下采样（Subsampling）"><a href="#4-3-下采样（Subsampling）" class="headerlink" title="4.3 下采样（Subsampling）"></a>4.3 下采样（Subsampling）</h3><p><strong>问题</strong>：高频词（”的”、”是”）出现频繁但信息量少。</p>
-<p><strong>解决方案</strong>：训练时以概率 $P$ 丢弃高频词：</p>
-<p>$$<br>P(discard) &#x3D; 1 - \sqrt{\frac{t}{f(w)}}<br>$$</p>
+<p><strong>解决方案</strong>：训练时以概率 \(P\) 丢弃高频词：</p>
+<p>\[
+P(discard) = 1 - \sqrt{\frac{t}{f(w)}}
+\]</p>
 <ul>
-<li>$f(w)$：词频</li>
-<li>$t$：超参数（通常 $t \approx 10^{-5}$）</li>
+<li>\(f(w)\)：词频</li>
+<li>\(t\)：超参数（通常 \(t \approx 10^{-5}\)）</li>
 </ul>
 <p><strong>效果</strong>：显著提高<strong>低频词</strong>的向量质量。</p>
 <hr>
@@ -487,7 +497,9 @@
 <li>上下文词（正样本）：”宠物” → [0.40, 0.50, 0.60]</li>
 </ul>
 <p><strong>Step 1：计算相似度（点积）</strong></p>
-<p>$$<br>\text{猫} \cdot \text{宠物} &#x3D; 0.10 \times 0.40 + 0.20 \times 0.50 + 0.30 \times 0.60 &#x3D; 0.32<br>$$</p>
+<p>\[
+\text{猫} \cdot \text{宠物} = 0.10 \times 0.40 + 0.20 \times 0.50 + 0.30 \times 0.60 = 0.32
+\]</p>
 <p><strong>Step 2：修改数字（反向传播）</strong></p>
 <p>让”猫”的向量向”宠物”靠近：</p>
 <table>
@@ -554,22 +566,26 @@
 </blockquote>
 <hr>
 <h2 id="六、Word2Vec的延伸应用"><a href="#六、Word2Vec的延伸应用" class="headerlink" title="六、Word2Vec的延伸应用"></a>六、Word2Vec的延伸应用</h2><h3 id="6-1-跨语言机器翻译"><a href="#6-1-跨语言机器翻译" class="headerlink" title="6.1 跨语言机器翻译"></a>6.1 跨语言机器翻译</h3><p><strong>发现</strong>：不同语言的词向量空间具有<strong>几何同构性</strong>。</p>
-<p><strong>方法</strong>：用少量双语词典学习线性映射矩阵 $W$：</p>
-<p>$$<br>J(W) &#x3D; \sum_{i&#x3D;1}^{n} ||W \mathbf{x}_i - \mathbf{z}_i||^2<br>$$</p>
+<p><strong>方法</strong>：用少量双语词典学习线性映射矩阵 \(W\)：</p>
+<p>\[
+J(W) = \sum_{i=1}^{n} ||W \mathbf{x}_i - \mathbf{z}_i||^2
+\]</p>
 <p><strong>翻译过程</strong>：</p>
 <ol>
-<li>源语言词向量 $\mathbf{x}$ → 通过 $W$ 映射到目标语言空间</li>
+<li>源语言词向量 \(\mathbf{x}\) → 通过 \(W\) 映射到目标语言空间</li>
 <li>在目标语言空间中找最近的词向量</li>
 </ol>
 <h3 id="6-2-Item2Vec（推荐系统）"><a href="#6-2-Item2Vec（推荐系统）" class="headerlink" title="6.2 Item2Vec（推荐系统）"></a>6.2 Item2Vec（推荐系统）</h3><p><strong>核心思路</strong>：万物皆可Embedding。</p>
 <ul>
 <li>把用户视为”文档”</li>
 <li>把商品视为”词”</li>
-<li>购物车&#x2F;购买序列视为”句子”</li>
+<li>购物车/购买序列视为”句子”</li>
 <li>运行CBoW或Skip-gram计算商品的向量表示</li>
 </ul>
 <h3 id="6-3-语义类比推理"><a href="#6-3-语义类比推理" class="headerlink" title="6.3 语义类比推理"></a>6.3 语义类比推理</h3><p>Word2Vec最著名的性质：</p>
-<p>$$<br>\text{vec(“国王”)} - \text{vec(“男人”)} + \text{vec(“女人”)} \approx \text{vec(“女王”)}<br>$$</p>
+<p>\[
+\text{vec(“国王”)} - \text{vec(“男人”)} + \text{vec(“女人”)} \approx \text{vec(“女王”)}
+\]</p>
 <p>这表明<strong>向量空间中的算术运算</strong>能够反映语义关系。</p>
 <hr>
 <h2 id="七、关于Word-Embedding的深度思考"><a href="#七、关于Word-Embedding的深度思考" class="headerlink" title="七、关于Word Embedding的深度思考"></a>七、关于Word Embedding的深度思考</h2><h3 id="7-1-两种训练范式"><a href="#7-1-两种训练范式" class="headerlink" title="7.1 两种训练范式"></a>7.1 两种训练范式</h3><table>
@@ -608,20 +624,20 @@
 <td>简单但丢失词序信息</td>
 </tr>
 <tr>
-<td><strong>Doc2Vec &#x2F; Paragraph Vector</strong></td>
+<td><strong>Doc2Vec / Paragraph Vector</strong></td>
 <td>额外训练段落ID向量</td>
 <td>新文章需重新训练</td>
 </tr>
 <tr>
-<td><strong>RNN&#x2F;CNN编码</strong></td>
+<td><strong>RNN/CNN编码</strong></td>
 <td>用神经网络编码词向量序列</td>
 <td>当前主流，性能最佳</td>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Bengio, Y., Ducharme, R., Vincent, P., &amp; Jauvin, C. (2003). A Neural Probabilistic Language Model. <em>Journal of Machine Learning Research</em>.</p>
-<p>[2] Mikolov, T., Chen, K., Corrado, G., &amp; Dean, J. (2013). Efficient Estimation of Word Representations in Vector Space. <em>arXiv:1301.3781</em>.</p>
-<p>[3] Mikolov, T., Sutskever, I., Chen, K., Corrado, G. S., &amp; Dean, J. (2013). Distributed Representations of Words and Phrases and their Compositionality. <em>arXiv:1310.4546</em>.</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Bengio, Y., Ducharme, R., Vincent, P., & Jauvin, C. (2003). A Neural Probabilistic Language Model. <em>Journal of Machine Learning Research</em>.</p>
+<p>[2] Mikolov, T., Chen, K., Corrado, G., & Dean, J. (2013). Efficient Estimation of Word Representations in Vector Space. <em>arXiv:1301.3781</em>.</p>
+<p>[3] Mikolov, T., Sutskever, I., Chen, K., Corrado, G. S., & Dean, J. (2013). Distributed Representations of Words and Phrases and their Compositionality. <em>arXiv:1310.4546</em>.</p>
 <p>[4] Rong, X. (2014). word2vec Parameter Learning Explained. <em>arXiv:1411.2738</em>.</p>
 <hr>
 <blockquote>
@@ -749,7 +765,21 @@
                     </svg>
                 </div>
             
-    </body>
+    
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [["\\(", "\\)"], ["$", "$"]],
+    displayMath: [["\\[", "\\]"], ["$", "$"]],
+    processEscapes: true,
+    processEnvironments: true
+  },
+  svg: { fontCache: "global" },
+  options: { skipHtmlTags: ["script","noscript","style","textarea","pre","code"] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</body>
 </html>
 <script src="/js/emojiHandler.js"></script>
 <script>
