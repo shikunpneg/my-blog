@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>当缩放遇上 LLM 微调：数据、模型与微调方法的影响</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body {
+    background-color: #fef9f0;
+    color: #2b2b2b;
+    font-family: "Noto Serif SC", "SimSun", "Microsoft YaHei", serif;
+    line-height: 1.75;
+    max-width: 880px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+  }
+  h1, h2, h3 {
+    font-family: "Noto Serif SC", "SimSun", serif;
+    color: #4a3520;
+    line-height: 1.4;
+  }
+  h1 { font-size: 1.9em; border-bottom: 2px solid #c8a878; padding-bottom: 0.4em; }
+  h2 { font-size: 1.5em; margin-top: 1.8em; border-left: 4px solid #c8a878; padding-left: 0.5em; }
+  h3 { font-size: 1.2em; margin-top: 1.4em; color: #6b4a2b; }
+  p { text-align: justify; margin: 0.8em 0; }
+  ul { padding-left: 1.5em; }
+  li { margin: 0.4em 0; }
+  .abstract-ref {
+    background: #f6ecda;
+    border: 1px dashed #c8a878;
+    padding: 1em 1.2em;
+    margin: 1.5em 0 2em 0;
+    border-radius: 6px;
+    font-size: 0.95em;
+  }
+  .abstract-ref h4 {
+    margin: 0 0 0.6em 0;
+    color: #6b4a2b;
+    font-size: 1.05em;
+  }
+  .abstract-ref p { margin: 0.3em 0; }
+  .math { font-family: "Cambria Math", "Latin Modern Math", serif; }
+  sup, sub { font-size: 0.75em; }
+  .keyword { font-weight: bold; color: #6b4a2b; }
+  .meta {
+    color: #6b4a2b;
+    font-size: 0.92em;
+    margin-bottom: 1.5em;
+  }
+  .formula {
+    background: #faf3e3;
+    padding: 0.6em 1em;
+    margin: 0.8em 0;
+    border-radius: 4px;
+    font-family: "Cambria Math", "Latin Modern Math", serif;
+    text-align: center;
+  }
+  table.table-info {
+    border-collapse: collapse;
+    margin: 1em auto;
+    background: #fffaf0;
+  }
+  table.table-info th, table.table-info td {
+    border: 1px solid #c8a878;
+    padding: 4px 10px;
+    text-align: left;
+    font-size: 0.95em;
+  }
+  table.table-info th { background: #f0e3c8; }
+</style>
+</head>
+<body>
+
+<h1>当缩放遇上 LLM 微调：数据、模型与微调方法的影响</h1>
+
+<div class="meta">
+  <strong>作者：</strong>Biao Zhang, Zhongtao Liu, Colin Cherry, Orhan Firat<br>
+  <strong>单位：</strong>Google DeepMind<br>
+  <strong>论文：</strong>arXiv:2402.17193 (ar5iv 渲染版)
+</div>
+
+<!-- 原始英文摘要 -->
+<div class="abstract-ref">
+  <h4>📄 原始英文摘要（参考用）</h4>
+  <p><em>While large language models (LLMs) often adopt finetuning to unlock their capabilities for downstream applications, our understanding on the inductive biases (especially the scaling properties) of different finetuning methods is still limited. To fill this gap, we conduct systematic experiments studying whether and how different scaling factors, including LLM model size, pretraining data size, new finetuning parameter size and finetuning data size, affect the finetuning performance. We consider two types of finetuning – full-model tuning (FMT) and parameter efficient tuning (PET, including prompt tuning and LoRA), and explore their scaling behaviors in the data-limited regime where the LLM model size substantially outweighs the finetuning data size. Based on two sets of pretrained bilingual LLMs from 1B to 16B and experiments on bilingual machine translation and multilingual summarization benchmarks, we find that 1) LLM finetuning follows a power-based multiplicative joint scaling law between finetuning data size and each other scaling factor; 2) LLM finetuning benefits more from LLM model scaling than pretraining data scaling, and PET parameter scaling is generally ineffective; and 3) the optimal finetuning method is highly task- and finetuning data-dependent. We hope our findings could shed light on understanding, selecting and developing LLM finetuning methods.</em></p>
+</div>
+
+<!-- 中文摘要 -->
+<h2>中文摘要</h2>
+<p>虽然大语言模型（LLM）通常采用微调来解锁其在下游应用中的能力，但我们对不同微调方法的归纳偏置（尤其是其缩放特性）的理解仍然有限。为填补这一空白，我们开展了系统性的实验，研究不同的缩放因素——包括 LLM 模型规模、预训练数据规模、新增微调参数规模以及微调数据规模——是否以及如何影响微调性能。我们考虑了两种类型的微调方式：全模型微调（FMT）和参数高效微调（PET，包括提示微调 Prompt Tuning 和 LoRA），并探索它们在"数据受限"场景下的缩放行为——在该场景中，LLM 模型规模远大于微调数据规模。基于两组从 1B 到 16B 的预训练双语 LLM，以及在双语机器翻译和多语言摘要任务上的实验，我们发现：1）LLM 微调遵循一种基于幂律的、乘法形式的联合缩放定律——它连接微调数据规模与每一个其他缩放因素；2）相比缩放预训练数据，缩放 LLM 模型对微调效果贡献更大，而 PET 参数的缩放总体上效果不佳；3）最优微调方法高度依赖于任务与微调数据。我们希望这些发现能为理解、选择和开发 LLM 微调方法带来启示。</p>
+
+<h2>1 &nbsp; 引言</h2>
+
+<p>利用大规模预训练模型中编码的知识并将其迁移到下游应用，已成为近期各领域取得成功的标准范式（Devlin 等人 2019；Lewis 等人 2020；Raffel 等人 2020；Dosovitskiy 等人 2021；Baevski 等人 2020），其中大语言模型（LLM）所取得的突破性进展更是树立了显著的里程碑，它们在各类语言任务上表现优异（Brown 等人 2020；Zhang 等人 2022b；Scao 等人 2022；Touvron 等人 2023）。先进的 LLM（如 GPT-4（OpenAI 2023）和 PaLM 2（Anil 等人 2023））展现出涌现能力，并支持上下文学习（in-context learning）——只需少量示例就能完成复杂的推理和生成任务（Wei 等人 2022；Zhang 等人 2023；Fu 等人 2023；Shen 等人 2023）。然而，为了解锁针对创造性任务的新能力、提升面向特定下游任务的表现，LLM 微调依然是必要且被广泛采用的手段。</p>
+
+<p>影响 LLM 微调性能的因素有很多，主要包括 1）预训练条件，如 LLM 模型规模和预训练数据规模；以及 2）微调条件，如下游任务、微调数据规模和微调方法。直观地说，预训练决定了 LLM 所学到的表示与知识的质量，而微调则决定了向下游任务迁移的程度。尽管以往的研究已深入探索了 LLM 预训练及从头训练的缩放规律（Kaplan 等人 2020；Hoffmann 等人 2022），以及先进的参数高效微调方法（Hu 等人 2021；He 等人 2022），但 LLM 微调是否以及如何随上述因素缩放，却鲜有研究关注（Hernandez 等人 2021），而这正是本文的研究重点。需要指出的是，研究 LLM 微调的缩放，不仅有助于提升微调性能，还能从微调的角度帮助我们理解不同预训练因素的影响，从而为 LLM 预训练带来启示。</p>
+
+<p>在本文中，我们通过系统地研究两种主流的 LLM 微调方式，来回答上述问题：<span class="keyword">全模型微调（FMT）</span>——更新所有 LLM 参数；以及<span class="keyword">参数高效微调（PET）</span>——仅优化少量（新增的）参数，例如提示微调（Lester 等人 2021，即 Prompt）和低秩自适应（Hu 等人 2021，即 LoRA）。我们首先研究微调数据规模的缩放（Hernandez 等人 2021），在此基础上进一步探索其与其他缩放因素（包括 LLM 模型规模、预训练数据规模以及 PET 参数规模）之间的缩放关系。我们重点关注"数据受限"场景——即微调数据远少于 LLM 模型的规模，这更贴近 LLM 时代的真实情况。实验中，我们预训练了两组双语 LLM（英德、英中），模型规模从 1B 到 16B，并在 WMT 机器翻译（英德、英中）以及多语言摘要（英语、德语、法语和西班牙语）任务上展开了大规模研究，涉及最多 2000 万条微调样本。我们的主要发现总结如下：</p>
+
+<ul>
+  <li>我们为 LLM 微调提出如下<span class="keyword">乘法形式的联合缩放定律</span>：
+    <div class="formula">
+      ℒ̂(X, D<sub>f</sub>) = A × (1 / X<sup>α</sup>) × (1 / D<sub>f</sub><sup>β</sup>) + E &nbsp;&nbsp;(1)
+    </div>
+    其中 {A, E, α, β} 是与数据相关的待拟合参数，D<sub>f</sub> 表示微调数据规模，X 表示其他任一缩放因素。我们提供了实证证据，表明该联合定律可推广到不同的设置中。
+  </li>
+  <li><span class="keyword">缩放 LLM 模型对微调的收益大于缩放预训练数据。</span></li>
+  <li><span class="keyword">增加 PET 参数对 LoRA 与 Prompt 而言并不能良好地缩放</span>，尽管 LoRA 在训练稳定性方面表现更优。</li>
+  <li>LLM 微调的缩放特性高度依赖于任务和数据，这使得为下游任务选择最优微调方法变得并非易事。</li>
+  <li>基于 LLM 的微调能够促进向相关任务的零样本泛化，而 PET 在零样本场景下表现远优于 FMT。</li>
+</ul>
+
+<h2>2 &nbsp; 实验设置</h2>
+
+<h3>下游任务</h3>
+<p>我们选择机器翻译和多语言摘要作为微调的下游任务，原因在于：1）这些任务需要解决跨语言的理解与生成，具有较高复杂度且颇具挑战；2）它们是 NLP 领域中成熟的研究任务，拥有丰富的微调语料。具体地，我们采用 WMT14 英德（En-De）和 WMT19 英中（En-Zh）（Kocmi 等人 2022）作为翻译任务。在摘要任务方面，我们将多语言摘要数据集（Scialom 等人 2020）的德语（De）、西班牙语（Es）和法语（Fr）部分与 CNN/Daily-Mail（Hermann 等人 2015，英文）合并，统称为 MLSum。各任务的详细信息列于表 1(a)。需要说明的是，对于 MLSum，我们直接将不同语言的数据集拼接用于训练和评估，并在每篇文章前添加一个指示其语言的提示词："<em>Summarize the following document in {lang}:</em>"（用 {lang} 替换为对应语言）。</p>
+
+<h3>LLM 与预训练</h3>
+<p>我们采用与 Garcia 等人 2023 完全相同的设置进行 LLM 预训练。模型为仅解码器的 Transformer，使用多查询注意力（multi-query attention）（Chowdhery 等人 2022），并采用改进的 UL2 训练目标（Tay 等人 2022）。</p>
+<p>考虑到本文关注的下游任务，同时也为保证研究的泛化性，我们预训练了两组双语 LLM：英德 LLM 和英中 LLM。预训练数据为两种语言的单语数据混合：使用约 280B token 的英/德数据预训练英德 LLM，使用约 206B token 的英/中数据预训练英中 LLM。我们通过改变模型配置（如表 3 所示）训练了从 1B 到 16B 参数规模的 LLM，其他设置保持一致。所有 LLM 均使用 Adafactor（Shazeer 和 Stern 2018）在余弦学习率衰减（从 0.01 衰减到 0.001）下训练一个 epoch。关于预训练的更多细节，请参阅 Garcia 等人 2023。</p>
+
+<h3>微调设置</h3>
+<p>我们主要研究以下三种微调方法的缩放行为：</p>
+
+<ul>
+  <li><span class="keyword">全模型微调（Full-Model Tuning, FMT）</span>：这是最朴素的微调方式，简单地优化 LLM 的全部参数；</li>
+
+  <li><span class="keyword">提示微调（Prompt Tuning, Prompt）</span>：Prompt 在输入嵌入 X∈ℝ<sup>|X|×d</sup> 前面拼接一个可训练的"软提示"（soft-prompt）P∈ℝ<sup>|P|×d</sup>，并将它们的拼接 [P;X]∈ℝ<sup>(|P|+|X|)×d</sup> 输入 LLM。其中 |·| 表示序列长度，d 是嵌入维度。在该方法中，仅训练 P，而 LLM 主体参数保持冻结。</li>
+
+  <li><span class="keyword">低秩自适应（Low-Rank Adaptation, LoRA）</span>：LoRA 不修改 LLM 的输入，而是通过可训练的一对秩分解矩阵 B∈ℝ<sup>m×r</sup>、A∈ℝ<sup>r×n</sup> 来更新预训练权重 W∈ℝ<sup>m×n</sup>，并在微调时使用 W + BA 代替 W。其中 m、n 为维度，r 为 LoRA 的秩。仅 B、A 被训练，原参数 W 保持冻结。</li>
+</ul>
+
+<p>我们探索了 4 种不同的缩放因素，总结于表 1(b)。除 LLM 模型缩放外，所有实验均基于对应的 1B LLM。对于预训练数据规模缩放，由于计算预算限制，我们采用中间预训练检查点作为近似，同时承认这种做法的次优性。优化相关的细节见附录。</p>
+
+<h3>评估方法</h3>
+<p>我们基于开发集上 token 级困惑度（PPL）挑选最优检查点进行评估。对于缩放定律，我们报告测试集上的 PPL；对于一般生成任务，我们采用贪心解码，并分别报告翻译任务的 BLEURT（Sellam 等人 2020）和摘要任务的 RougeL（Lin 2004）。在零样本评估中，我们采用 Flores200（NLLB Team 2022），对英中和英德翻译任务分别评估 {Fr, De, Hindi (Hi), Turkish (Tr), Polish (Po)→Zh} 与 {Fr, Zh, Hi, Tr, Po→De}。对于缩放定律的评估，我们将经验数据点分为两组：<em>经验拟合集</em>和<em>留出集</em>，前者用于拟合缩放参数，后者用于评估。我们报告平均绝对偏差。</p>
+<p>为降低噪声，我们对每次实验进行三次随机子集采样并取平均性能。在对 MLSum 采样时，保持不同语言之间的混合比例不变。</p>
+
+<!-- 缩放因素概览表 -->
+<table class="table-info">
+<caption><strong>表 1(b) 各缩放因素的设置概览（摘要翻译）</strong></caption>
+<tr><th>缩放因素</th><th>类别</th><th>取值范围</th></tr>
+<tr><td>LLM 模型规模</td><td>—</td><td>1B, 2B, 4B, 8B, <b>16B</b></td></tr>
+<tr><td>预训练数据规模</td><td>En-De LLM</td><td>84B, 126B, 167B, <b>209B</b>, 283B</td></tr>
+<tr><td>预训练数据规模</td><td>En-Zh LLM</td><td>84B, 105B, 126B, 147B, <b>167B</b>, 206B</td></tr>
+<tr><td>PET 参数规模</td><td>Prompt 长度</td><td>50, 100, 150, 200, 300, 400, <b>600</b></td></tr>
+<tr><td>PET 参数规模</td><td>LoRA 秩</td><td>4, 8, 16, 32, 48, 64, <b>128</b></td></tr>
+<tr><td>微调数据规模</td><td>Prompt / LoRA</td><td>8K, 10K, 20K, …, 90K, <b>100K</b></td></tr>
+<tr><td>微调数据规模</td><td>FMT – WMT En-De</td><td>100K, 500K, …, 4M, <b>4.5M</b></td></tr>
+<tr><td>微调数据规模</td><td>FMT – WMT En-Zh</td><td>1M, 2M, …, 20M, <b>25M</b></td></tr>
+<tr><td>微调数据规模</td><td>FMT – MLSum</td><td>100K, 200K, …, 800K, <b>900K</b></td></tr>
+</table>
+
+<hr>
+<p style="font-size:0.9em; color:#6b4a2b; margin-top:2em;">
+
+<div class="paper-section">
+<h3>3. 为什么是乘法联合缩放定律？</h3>
+<p>本研究考虑 4 个缩放因子，但联合建模全部在时间与资源上都代价高昂。我们转而将<strong>微调数据视为枢轴因子</strong>，分别将它与其它的每个因子做联合缩放分析。先在 WMT14 En-De 上做 FMT、Prompt、LoRA 的微调实验，再探索联合缩放的形式化表达。</p>
+
+<h4>3.1 微调数据缩放遵循幂律</h4>
+<p>首先针对每个模型规模独立地考察微调数据规模的缩放，使用单变量形式：</p>
+<div class="formula-blue">L̂(D_f) = A / D_f<sup>β</sup> + E</div>
+<p>参照 Hoffmann et al. 2022，使用 <strong>Huber 损失</strong>（δ=0.001）与 <strong>L-BFGS 算法</strong>估计 {A, β, E}，并从初始化网格选取最优拟合。该形式很好地描述了 LLM 微调数据缩放，预测误差小（复现 Hernandez et al. 2021 的发现）。</p>
+
+<h4>3.2 加法还是乘法？</h4>
+<p>图 1 也显示了随模型规模的缩放趋势，暗示存在联合缩放定律。我们探索两种形式：乘法（式1）与<strong>加法</strong>：</p>
+<div class="formula-blue">L̂(X, D_f) = A / X<sup>α</sup> + B / D_f<sup>β</sup> + E（加法）</div>
+<p>在两种形式中，α 与 β 分别反映因子 X 与微调数据规模对性能的影响，E 是依赖模型与任务的不可约损失项。为减少过拟合、提升泛化，我们先用 LLM 模型缩放与预训练数据缩放的结果估计 β 和 E，再固定它们分因子重拟合其它参数。联合拟合损失为：</p>
+<div class="formula-blue">min Σ<sub>跑次 i</sub> Huber<sub>δ</sub>( L̂(X<sup>i</sup>, D_f<sup>i</sup>) - L<sup>i</sup> )</div>
+<p><strong>结论</strong>：表 2 显示两种联合定律表现相近，但<strong>乘法形式</strong>的平均外推误差略低，故采用式（1）。</p>
+</div>
+
+<div class="paper-section">
+<h3>4. LLM 微调的缩放结果</h3>
+<h4>4.1 乘法定律捕捉不同因子与微调数据的缩放关系</h4>
+<p>每组实验都沿各缩放维度留若干数据点作 held-out 集，报告拟合集（Δ<sub>e</sub>）与 held-out 集（Δ<sub>h</sub>）的平均绝对偏差，以分别衡量拟合能力与预测能力。总体上式（1）以很小的拟合与外推误差捕捉了不同因子在微调数据缩放下的趋势。个别失配（如外推至 16B）归因于：1）模型规模实测数据点不足（仅 4 个）；2）16B 模型优化不稳定、dev 集过拟合。</p>
+
+<h4>4.2 模型缩放 > 预训练数据缩放</h4>
+<p>虽然模型规模与预训练数据规模在预训练的"计算预算最优缩放"下影响相近，但在微调缩放中角色略有不同。<strong>模型规模缩放指数 α<sub>m</sub> 常常超过预训练数据缩放指数 α<sub>p</sub></strong>——即增大 LLM 模型规模比增加预训练数据对微调性能提升更显著。</p>
+
+<h4>4.3 PET 参数缩放无效</h4>
+<p>新增可训练参数量常构成 PET 表达力的瓶颈（由 Prompt 的长度 |P| 与 LoRA 的秩 r 控制）。但图 4 与表 4 显示，增大 PET 参数规模对微调性能的边际影响极小（缩放指数 α<sub>t</sub> 很小）。其中 LoRA 比 Prompt 更稳定可靠。</p>
+
+<h4>4.4 微调数据对 FMT 的影响 > PET</h4>
+<p>不同微调方法的数据缩放程度不同。FMT 的缩放指数 β 常常显著高于 PET——说明 <strong>FMT 更"数据饥饿"，从增加微调数据中获益更多</strong>。而在 PET 内部，LoRA 的 β 常略胜 Prompt。</p>
+
+<h4>4.5 PET 更依赖模型/预训练数据缩放</h4>
+<p>由于微调时冻结了绝大多数 LLM 参数，PET 高度依赖预训练 LLM 中编码的知识。表 4 显示 PET 中 α<sub>m</sub>、α<sub>p</sub> 明显大于 β。随模型增大，FMT 与 PET 的性能差距显著缩小（图 2、3）。</p>
+</div>
+
+<div class="paper-section">
+<h3>5. 讨论：该用哪种微调方法？</h3>
+<div class="finding-box">
+  <strong>📌 没有普适的答案！</strong><br><br>
+  直觉上存在一个<strong>临界微调数据量</strong>，超过它某一种方法优于另一种。由于联合缩放定律的高度非线性，难以解析地找到该点（但在两方法性能差固定时，微调数据量遵循幂律，见附录）。我们转而用外推拟合缩放定律的实证方法。图 5 显示了临界点随模型规模与预训练数据的函数关系。
+</div>
+<p><strong>实践指导</strong>（基于缩放趋势）：</p>
+<ul>
+  <li><strong>仅数千样本</strong> → 优先考虑 PET（Prompt 或 LoRA）。</li>
+  <li><strong>稍大数据</strong> → 选 LoRA（更稳定 + 数据可扩性略好）。</li>
+  <li><strong>百万级数据</strong> → FMT 更优。</li>
+</ul>
+
+<h4>微调如何影响基础 LLM 的泛化能力？</h4>
+<p>虽然微调提升了特定任务性能，但可能让基础 LLM 过度特化、损害泛化。零样本翻译实验表明：<strong>微调仍能激发并改善紧密相关任务（共享目标语言）的泛化</strong>，尽管整体零样本质量较低。总体而言，<strong>Prompt 与 LoRA 在基础 LLM 较大时获得相对 FMT 更好的结果</strong>——因 LLM 参数冻结、所学知识被继承。当泛化能力是重要关注点时，应优先考虑 PET。</p>
+</div>
+
+<div class="paper-section">
+<h3>6. 相关工作</h3>
+<p><strong>LLM 微调</strong>：随模型规模大幅增长，更新全部参数变得低效。研究者转向参数高效调优（PET），如插入小前馈层的 adapter、在输入拼接可调嵌入的 prefix/prompt tuning、低秩分解的 LoRA/Compacter、加可调偏置的 BitFit、缩放激活的 IA3、量化 LoRA 的 QLoRA 等。</p>
+<p><strong>缩放定律</strong>：神经模型性能可由模型和/或数据规模的幂律预测（Hestness 2017, Kaplan 2020），广泛存在于视觉、自回归生成、神经机器翻译、多语言翻译、多模态与稀疏架构等领域。这些定律为训练决策（Hoffmann 2022）与模型开发提供了宝贵工具。可惜微调阶段的缩放规律此前缺乏系统研究。</p>
+</div>
+
+<div class="paper-section">
+<h3>7. 结论</h3>
+<p>本研究系统建立了 LLM 微调的<strong>乘法联合缩放定律</strong>：<strong>L̂(X, D_f) = A·X<sup>-α</sup>·D_f<sup>-β</sup> + E</strong>，并给出三大核心发现：1）模型缩放比预训练数据缩放更有效；2）PET 参数缩放普遍无效；3）最优微调方法高度依赖任务与数据量。这些结论为理解、选择与开发 LLM 微调方法提供了可预测的框架。</p>
+</div>
+
+</div>
+</body>
+</html>
