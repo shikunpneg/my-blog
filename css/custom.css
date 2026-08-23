@@ -417,6 +417,32 @@ html, body {
   color: #fff;
 }
 
+/* ---- 3.5 精选推荐 ---- */
+#featured-section {
+  margin-bottom: 3em;
+}
+#featured-section h2 {
+  font-size: 0.8em;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: normal;
+  margin: 0 0 1em 0;
+}
+#featured-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+.featured-item a {
+  color: #ddd;
+}
+.featured-item a::before {
+  content: "★ ";
+  color: #888;
+  font-size: 0.85em;
+}
+
 /* ---- 4. 友情链接 ---- */
 #friends-section {
   margin-top: 2em;
