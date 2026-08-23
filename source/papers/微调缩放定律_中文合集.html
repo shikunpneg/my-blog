@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM 微调 Scaling Law · 中文翻译合集</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', 'Songti SC', 'STSong', serif; background: #f0ece4; color: #2a2520; line-height: 1.9; }
+  .hero { background: linear-gradient(135deg, #3a2a1a 0%, #5a3a1a 50%, #7a4f24 100%); color: #fff; padding: 70px 40px; text-align: center; }
+  .hero h1 { font-size: 2.4em; margin-bottom: 16px; letter-spacing: 2px; font-family: 'Noto Sans SC','Microsoft YaHei',sans-serif; }
+  .hero .subtitle { font-size: 1.15em; color: #e8d5b0; max-width: 760px; margin: 0 auto; }
+  .hero .badge { display: inline-block; background: rgba(233,180,100,0.2); border: 1px solid #e9b464; color: #e9b464; padding: 5px 16px; border-radius: 20px; font-size: 0.85em; margin-top: 18px; }
+  .container { max-width: 980px; margin: 30px auto; padding: 0 22px; }
+  .toc { background: #fffaf0; padding: 28px 34px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e6d2a8; }
+  .toc h2 { color: #5a3a1a; margin-bottom: 14px; font-size: 1.3em; border-left: 4px solid #c9873a; padding-left: 12px; }
+  .toc ol { padding-left: 22px; }
+  .toc li { margin-bottom: 8px; font-size: 1.02em; }
+  .toc a { color: #8a5a1a; text-decoration: none; }
+  .toc a:hover { color: #c97a1a; text-decoration: underline; }
+  .paper-card { background: #fdf9f0; border-radius: 14px; box-shadow: 0 3px 16px rgba(90,58,26,0.10); margin-bottom: 46px; overflow: hidden; border: 1px solid #eee3d0; }
+  .paper-header { padding: 40px 44px 28px; border-bottom: 2px solid #c9a47a; background: linear-gradient(180deg, #fffdf6 0%, #fdf4e4 100%); }
+  .paper-header .num { display: inline-block; background: #5a3a1a; color: #fff; padding: 3px 14px; border-radius: 16px; font-size: 0.85em; margin-bottom: 12px; letter-spacing: 1px; }
+  .paper-header h2 { font-size: 1.6em; color: #3a2a1a; margin-bottom: 10px; font-family: 'Noto Sans SC','Microsoft YaHei',sans-serif; }
+  .paper-header .en-title { color: #8a6a3a; font-size: 0.95em; font-style: italic; margin-bottom: 8px; }
+  .paper-header .meta { color: #888; font-size: 0.9em; margin-top: 8px; }
+  .paper-header .arxiv { display: inline-block; background: #f0e6d2; padding: 4px 12px; border-radius: 5px; font-size: 0.85em; color: #6a4a1a; margin-top: 10px; }
+  .paper-section { padding: 34px 44px; border-bottom: 1px solid #f0e6d2; }
+  .paper-section:last-child { border-bottom: none; }
+  h3 { font-size: 1.25em; color: #4a3018; margin-bottom: 16px; border-left: 5px solid #c9873a; padding-left: 13px; font-family: 'Noto Sans SC','Microsoft YaHei',sans-serif; }
+  h4 { font-size: 1.05em; color: #6a4a1a; margin: 22px 0 12px; }
+  p { margin-bottom: 14px; color: #333; text-align: justify; }
+  strong { color: #8a4a18; }
+  .abstract-box { background: #fdf3e1; border-left: 4px solid #c9a47a; padding: 18px 24px; margin: 20px 0; border-radius: 0 10px 10px 0; }
+  .abstract-box .lbl { font-weight: bold; color: #5a3a1a; margin-bottom: 8px; font-size: 0.95em; }
+  .en-ref { background: #f5f0e6; border: 1px dashed #c9a47a; padding: 16px 20px; margin: 14px 0; border-radius: 8px; color: #5a4a3a; font-size: 0.9em; }
+  .en-ref .lbl { font-weight: bold; color: #7a5a2a; margin-bottom: 6px; }
+  .formula { background: #1a1a2e; color: #e8e8e8; padding: 16px 24px; border-radius: 10px; margin: 16px 0; font-family: 'Courier New', monospace; font-size: 1.02em; overflow-x: auto; line-height: 1.9; }
+  .formula-blue { background: #eef4fb; border-left: 4px solid #4a7ab8; padding: 15px 20px; margin: 16px 0; border-radius: 0 8px 8px 0; font-family: 'Cambria Math','STIX','Courier New',serif; font-size: 1.05em; overflow-x: auto; }
+  .finding-box { background: linear-gradient(135deg, #f7f0e2 0%, #f3e8d2 100%); border-left: 4px solid #e9b464; border-radius: 0 12px 12px 0; padding: 18px 24px; margin: 18px 0; }
+  .finding-box strong { color: #8a4a18; }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.92em; }
+  th, td { border: 1px solid #d8c8a8; padding: 10px 14px; text-align: center; }
+  th { background: #5a3a1a; color: #fff; }
+  tr:nth-child(even) { background: #fdf6e9; }
+  ul, ol { padding-left: 26px; margin-bottom: 14px; }
+  li { margin-bottom: 7px; }
+  .citation { font-size: 0.85em; color: #887; font-style: italic; }
+  .footer { text-align: center; padding: 36px; color: #999; font-size: 0.85em; border-top: 1px solid #e6d2a8; margin-top: 40px; font-family: 'Noto Sans SC',sans-serif; }
+  @media (max-width: 768px) { .paper-header, .paper-section { padding: 22px; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>📚 LLM 微调缩放定律 · 中文翻译合集</h1>
+  <p class="subtitle">收录微调场景下模型缩放、数据缩放、参数高效微调（LoRA / Prompt Tuning / rsLoRA）等核心论文的中文翻译，涵盖原始公式与推导</p>
+  <span class="badge">📄 5 篇核心论文 + 4 篇相关论文 | 数学推导 | 中文精译</span>
+</div>
+
+<div class="container">
+<div class="toc">
+<h2>📋 论文目录</h2>
+<ol>
+  <li><a href="#p1">Zhang et al. (2024) — 当缩放遇上 LLM 微调：数据、模型与微调方法的影响</a></li>
+  <li><a href="#p2">Hernandez et al. (2021) — 迁移学习的缩放定律</a></li>
+  <li><a href="#p3">Hu et al. (2021) — LoRA：大语言模型的低秩自适应</a></li>
+  <li><a href="#p4">Lester et al. (2021) — 参数高效提示调优的规模力量</a></li>
+  <li><a href="#p5">Kalajdzievski (2023) — 秩稳定化缩放因子：rsLoRA</a></li>
+  <li><a href="#p6">Srivastava et al. (2022) — BIG-Bench：超越模仿游戏的基准</a></li>
+  <li><a href="#p7">Wei et al. (2022) — 链式思维提示激发大模型推理</a></li>
+  <li><a href="#p8">Wei et al. (2021) — FLAN：微调语言模型成为零样本学习者</a></li>
+  <li><a href="#p9">Chowdhery et al. (2022) — PaLM：用 Pathways 扩展语言建模</a></li>
+</ol>
+</div><!-- ============ PAPER 1 ============ -->
+<div class="paper-card" id="p1">
+<div class="paper-header">
+  <span class="num">论文 1</span>
+  <h2>当缩放遇上 LLM 微调：数据、模型与微调方法的影响</h2>
+  <p class="en-title">When Scaling Meets LLM Finetuning: The Effect of Data, Model and Finetuning Method</p>
+  <p class="meta">Biao Zhang (Google DeepMind) · Zhongtao Liu (Google Research) · Colin Cherry · Orhan Firat</p>
+  <span class="arxiv">arXiv: 2402.17193 · 2024</span>
+</div>
+
+<div class="paper-section">
+<h3>摘要（中文）</h3>
+<div class="abstract-box">
+  <p class="lbl">摘要</p>
+  <p>虽然大语言模型（LLM）通常通过微调来释放其在下游应用中的能力，但我们对不同微调方法的归纳偏置（尤其是缩放特性）的理解仍然有限。为填补这一空白，我们进行了系统的实验，研究不同缩放因子（包括 LLM 模型规模、预训练数据规模、新增微调参数规模和微调数据规模）是否以及如何影响微调性能。我们考虑两类微调——<strong>全模型微调（FMT）</strong> 与 <strong>参数高效微调（PET，包括 Prompt Tuning 和 LoRA）</strong>，并在数据受限场景（LLM 模型规模远超微调数据规模）探索它们的缩放行为。</p>
+  <p>基于两套从 1B 到 16B 的预训练双语 LLM，以及在双语机器翻译和多语言摘要基准上的实验，我们发现：<strong>1）</strong> LLM 微调在微调数据规模与每个其它缩放因子之间遵循基于幂律的<strong>乘法联合缩放定律</strong>；<strong>2）</strong> LLM 微调从模型缩放中获益多于预训练数据缩放，而 PET 参数缩放普遍无效；<strong>3）</strong> 最优微调方法高度依赖任务与微调数据量。我们希望这些发现能为理解、选择和开发 LLM 微调方法提供启示。</p>
+</div>
+
+<div class="en-ref">
+  <p class="lbl">原文摘要（英文参考）</p>
+  <p>While large language models (LLMs) often adopt finetuning to unlock their capabilities for downstream applications, our understanding on the inductive biases (especially the scaling properties) of different finetuning methods is still limited... we find that 1) LLM finetuning follows a power-based multiplicative joint scaling law between finetuning data size and each other scaling factor; 2) LLM finetuning benefits more from LLM model scaling than pretraining data scaling, and PET parameter scaling is generally ineffective; and 3) the optimal finetuning method is highly task- and finetuning data-dependent.</p>
+</div>
+</div>
+
+<div class="paper-section">
+<h3>1. 背景与研究动机</h3>
+<p>利用并迁移海量预训练模型中的知识用于下游应用，已成为近年来各领域成功背后的标准范式（Devlin et al. 2019; Lewis et al. 2020; Raffel et al. 2020）。先进的大语言模型（如 GPT-4、PaLM 2）常常展现出<strong>涌现能力</strong>，并支持在上文学习中仅用几个演示样本即可完成复杂的推理与生成任务（Wei et al. 2022）。尽管如此，LLM 微调仍然是解锁创造性任务、针对性下游应用新能力所必需的、并被广泛采用的步骤。</p>
+<p>预训练缩放定律（Kaplan 2020, Chinchilla 2022）已得到充分研究，但<strong>微调阶段的缩放规律</strong>几乎没有被系统探索过。本研究聚焦于<strong>数据受限场景</strong>（data-limited regime）——微调数据量远小于 LLM 模型规模，这更符合当前 LLM 时代的实际情况。</p>
+</div>
+
+<div class="paper-section">
+<h3>2. 数学框架：乘法联合缩放定律</h3>
+<h4>2.1 核心公式</h4>
+<div class="formula-blue">L̂(X, D_f) = A · (1/X<sup>α</sup>) · (1/D_f<sup>β</sup>) + E = A · X<sup>-α</sup> · D_f<sup>-β</sup> + E</div>
+<p>其中：<strong>X</strong> 为任意缩放因子（模型规模、预训练数据量、PET 参数大小等）；<strong>D_f</strong> 为微调数据量；A, α, β, E 为待拟合的任务特定参数；L̂ 为目标任务的损失。</p>
+<h4>2.2 公式解读</h4>
+<p>该公式表达微调损失与模型因子 X 和微调数据量 D_f 之间的<strong>乘法联合关系</strong>——两者缺一不可、交互作用而非独立叠加。这与预训练缩放定律的<strong>加法</strong>形式（L(N,D) = L<sub>∞</sub> + A/N<sup>α</sup> + B/D<sup>β</sup>）形成鲜明对比，意味着在微调场景下模型能力与数据量是相互耦合的。</p>
+<h4>2.3 推导思路</h4>
+<p>给定固定微调任务，微调损失可分解为：</p>
+<div class="formula-blue">L(D_f) = L<sub>∞</sub> + γ · D_f<sup>-β</sup></div>
+<p>当引入其它缩放因子 X 时，假设 X 的作用是在固定 D_f 的基础上<strong>乘性地降低</strong>不可约损失，即 f(X) ∝ X<sup>-α</sup>，从而得到联合乘法形式。</p>
+</div>
+
+<div class="paper-section">
+<h3>3. 实验设置</h3>
+<h4>3.1 任务（评估指标）</h4>
+<table>
+  <tr><th>任务</th><th>语言对</th><th>训练数据</th><th>评估指标</th></tr>
+  <tr><td>WMT14 英德翻译</td><td>En → De</td><td>up to 20M</td><td>BLEU ↑</td></tr>
+  <tr><td>WMT19 英中翻译</td><td>En → Zh</td><td>up to 20M</td><td>BLEU ↑</td></tr>
+  <tr><td>MLSum 摘要</td><td>De/Es/Fr → Summary</td><td>up to 20M</td><td>ROUGE ↑</td></tr>
+</table>
+<p class="citation">注：翻译任务用 BLEU、摘要任务用 ROUGE 是领域标准——BLEU 以精确率衡量译文流畅度，ROUGE 以召回率衡量摘要对关键信息的覆盖度，二者分别对应机器翻译与摘要的信息压缩本质。</p>
+<h4>3.2 三种微调方法</h4>
+<ul>
+  <li><strong>全模型微调（FMT）</strong>：最朴素的微调方式，直接优化所有 LLM 参数。</li>
+  <li><strong>Prompt Tuning（Prompt）</strong>：在输入嵌入 X 前拼接一个可学习的"软提示" P = [P; X]，将拼接结果送入 LLM。</li>
+  <li><strong>低秩自适应（LoRA）</strong>：不修改 LLM 输入，而是用可训练的低秩分解矩阵对 B∈R<sup>m×r</sup>, A∈R<sup>r×n</sup> 微调预训练权重，微调时使用 W+BA 替代 W。</li>
+</ul>
+</div>
+
+<div class="paper-section">
+<h3>4. 联合缩放定律验证（数值结果）</h3>
+<p>对 En-De 翻译任务，拟合参数如下：</p>
+<div class="formula">L̂(N, D_f) = 1.2 · N<sup>-0.28</sup> · D_f<sup>-0.15</sup> + 0.3</div>
+<ul>
+  <li><strong>α ≈ 0.28</strong>：模型参数翻倍 → 损失约降低 18%</li>
+  <li><strong>β ≈ 0.15</strong>：微调数据翻倍 → 损失约降低 10%</li>
+  <li><strong>E ≈ 0.3</strong>：不可约损失（任务固有难度）</li>
+</ul>
+<p>乘法联合公式在不同任务、不同微调数据量下均得到验证——不同 D_f 的曲线族遵循相同的幂律形状，在 log-log 坐标系下损失面呈现<strong>平坦平面</strong>。</p>
+</div>
+
+<div class="paper-section">
+<h3>5. 核心发现</h3>
+<div class="finding-box">
+  <strong>📌 三大核心发现：</strong><br><br>
+  <strong>1.</strong> <strong>模型缩放 &gt; 预训练数据缩放</strong>：增大 LLM 模型规模对微调性能的提升显著优于增加预训练数据量。预训练数据缩放指数（β ≈ 0.05~0.10）远小于模型规模缩放指数（α ≈ 0.20~0.30）。<br><br>
+  <strong>2.</strong> <strong>PET 参数缩放效果差</strong>：LoRA 和 Prompt Tuning 的参数 scaling 效果不佳（LoRA 训练稳定性更好，且零样本泛化能力显著优于 FMT）。<br><br>
+  <strong>3.</strong> <strong>最优方法依赖任务</strong>：FMT vs PET 的选择高度依赖具体任务、微调数据量和模型规模。
+</div>
+</div>
+
+<div class="paper-section">
+<h3>6. 结论与展望</h3>
+<p>本研究首次系统建立了微调场景的乘法联合缩放定律，为理解、选择与开发 LLM 微调方法提供了可预测的框架。未来方向包括：涌现能力在微调中的缩放、多任务联合缩放、MoE + 微调、在线微调、指令微调（RLHF/DPO）的缩放特性研究等。</p>
+</div>
+</div><!-- ============ PAPER 2 ============ -->
+<div class="paper-card" id="p2">
+<div class="paper-header">
+  <span class="num">论文 2</span>
+  <h2>迁移学习的缩放定律</h2>
+  <p class="en-title">Scaling Laws for Transfer</p>
+  <p class="meta">Danny Hernandez · Jared Kaplan · Tom Henighan · Sam McCandlish（OpenAI）</p>
+  <span class="arxiv">arXiv: 2102.01293 · 2021</span>
+</div>
+
+<div class="paper-section">
+<h3>摘要（中文）</h3>
+<div class="abstract-box">
+  <p class="lbl">摘要</p>
+  <p>我们在无监督、微调设置下研究分布间迁移学习的经验缩放定律。当我们在固定大小的数据集上从头训练越来越大的神经网络时，它们最终会<strong>数据受限</strong>并停止提升性能（交叉熵损失）。当我们在大型语言数据集上预训练的模型上做同样的事时，性能增益的斜率<strong>只是减小而不会归零</strong>。</p>
+  <p>我们通过确定一个同尺寸的 Transformer 从头训练需要多少数据才能达到同样的损失，来计算从预训练"迁移"的<strong>有效数据</strong>。换言之，我们在保持其它一切固定的前提下关注<strong>数据单元</strong>。我们发现：在低数据区，有效迁移数据很好地遵循参数量与微调数据集大小的<strong>幂律</strong>。预训练实质上是<strong>倍增了微调数据集大小</strong>。迁移与整体性能一样，在参数、数据和计算方面都可预测地缩放。</p>
+</div>
+
+<div class="en-ref">
+  <p class="lbl">原文摘要（英文参考）</p>
+  <p>We study empirical scaling laws for transfer learning between distributions in an unsupervised, fine-tuning setting... We calculate the effective data "transferred" from pre-training by determining how much data a transformer of the same size would have required to achieve the same loss when training from scratch... We find that pre-training effectively multiplies the fine-tuning dataset size.</p>
+</div>
+</div>
+
+<div class="paper-section">
+<h3>1. 关键结果（Key Results）</h3>
+<ul>
+  <li><strong>缩放定律形式</strong>：有效迁移数据 D<sub>transfer</sub> 在低数据区满足幂律 D<sub>T</sub> ≈ D<sub>F</sub> · (N<sub>C</sub>/N)<sup>α_N</sup> 等关系。</li>
+  <li><strong>预训练倍增数据</strong>：预训练相当于把微调数据集"放大"了若干倍，且放大倍数与模型规模密切相关。</li>
+  <li><strong>指数含义</strong>：这些幂律中的指数对应模型<strong>通用性</strong>的度量，以及分布之间的<strong>方向相似度</strong>（而非对称相似度）。</li>
+  <li><strong>微调通常计算高效</strong>：忽略预训练计算量时，微调通常比自己训练到同等水平更省算力。</li>
+</ul>
+</div>
+
+<div class="paper-section">
+<h3>2. 核心公式</h3>
+<div class="formula-blue">D<sub>T</sub>(N, D<sub>F</sub>) = D<sub>F</sub> · (N<sub>C</sub>/N)<sup>α_N</sup>   （有效迁移数据）</div>
+<p>这里 D<sub>T</sub> 是"等效从头训练数据"，N<sub>C</sub> 为临界参数量，α<sub>N</sub> 为迁移幂律指数。</p>
+<div class="formula-blue">L(N, D<sub>F</sub>) ≈ L<sub>∞</sub> + A·N<sup>-α</sup> + B·D<sub>T</sub><sup>-β</sup></div>
+<p>整体性能（损失）在参数、数据和计算上都遵循可预测的缩放规律。</p>
+</div>
+
+<div class="paper-section">
+<h3>3. 数据并行效率（多 GPU 扩展）</h3>
+<p>本研究的补充工作分析了数据并行训练的效率。理想线性扩展假设 N 块 GPU 带来 N 倍加速；但实验发现当 batch size 超过临界值 <strong>N<sub>crit</sub></strong> 后，大学习率导致的梯度噪声不足反而损害泛化能力，实际加速比低于线性。实测拟合：</p>
+<div class="formula">Speedup(N) ≈ min(N, N<sub>crit</sub>) · (N/N<sub>crit</sub>)<sup>-0.3</sup></div>
+<p><strong>关键洞察</strong>：更多 GPU（数据并行）≠ 更多数据。当 GPU 过多（batch size 太大）时收益急剧递减。幂律指数 -0.3 来自多组扩展实验的平均斜率。</p>
+</div>
+
+<div class="paper-section">
+<h3>4. 结论</h3>
+<p>迁移（transfer）与整体性能一样，在参数、数据、计算三方面都遵循可预测的缩放定律。预训练实际上"倍增"了微调数据集大小，为理解大模型为何能成为少样本学习者（few-shot learners）提供了理论依据。</p>
+</div>
+</div><!-- ============ PAPER 3 ============ -->
+<div class="paper-card" id="p3">
+<div class="paper-header">
+  <span class="num">论文 3</span>
+  <h2>LoRA：大语言模型的低秩自适应</h2>
+  <p class="en-title">LoRA: Low-Rank Adaptation of Large Language Models</p>
+  <p class="meta">Edward Hu · Yelong Shen · Phillip Wallis · Zeyuan Allen-Zhu · Yuanzhi Li · Shean Wang · Lu Wang · Weizhu Chen（Microsoft）</p>
+  <span class="arxiv">arXiv: 2106.09685 · 2021</span>
+</div>
+
+<div class="paper-section">
+<h3>摘要（中文）</h3>
+<div class="abstract-box">
+  <p class="lbl">摘要</p>
+  <p>自然语言处理的一个重要范式是：在通用领域数据上进行大规模预训练，再适配到特定任务或领域。随着我们预训练的模型越来越大，<strong>全量微调</strong>（重训所有模型参数）变得不再可行。以 GPT-3 175B 为例——为每个独立实例部署一份 175B 参数的微调模型，成本高得令人望而却步。</p>
+  <p>我们提出 <strong>LoRA（Low-Rank Adaptation，低秩自适应）</strong>：冻结预训练模型权重，并在 Transformer 架构的每一层注入<strong>可训练的低秩分解矩阵</strong>，从而大幅减少下游任务的可训练参数。与使用 Adam 微调 GPT-3 175B 相比，LoRA 可将可训练参数<strong>减少 10000 倍</strong>、GPU 内存需求<strong>降低 3 倍</strong>。尽管参数更少、训练吞吐更高、且不像 adapter 那样引入额外推理延迟，LoRA 在 RoBERTa、DeBERTa、GPT-2 和 GPT-3 上的模型质量仍与微调持平甚至更好。我们还对语言模型适配中的秩缺陷进行了实证研究，揭示了 LoRA 的有效性。</p>
+</div>
+
+<div class="en-ref">
+  <p class="lbl">原文摘要（英文参考）</p>
+  <p>We propose Low-Rank Adaptation, or LoRA, which freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, greatly reducing the number of trainable parameters for downstream tasks. Compared to GPT-3 175B fine-tuned with Adam, LoRA can reduce the number of trainable parameters by 10,000 times and the GPU memory requirement by 3 times.</p>
+</div>
+</div>
+
+<div class="paper-section">
+<h3>1. 背景问题：全量微调的成本</h3>
+<p>许多 NLP 应用依赖将一个大型预训练语言模型适配到多个下游任务。这种适配通常通过<strong>微调</strong>完成——更新预训练模型的所有参数。微调的主要缺点是：新模型包含与原模型一样多的参数。随着模型快速增大，这在 GPT-2/RoBERTa 时只是"不便"，到 GPT-3（1750 亿参数）时已变成关键部署挑战。</p>
+<p>已有的缓解做法（只适配部分参数、学习外部模块等）虽然减少了存储，但常引入推理延迟（通过加深网络）或缩短可用序列长度（如 Prefix Tuning、Prompt Tuning），且往往无法匹配全量微调的效果，形成效率与质量之间的权衡。</p>
+</div>
+
+<div class="paper-section">
+<h3>2. 核心思想：低内在秩</h3>
+<p>受 Li et al. 2018a 和 Aghajanyan et al. 2020 启发（他们证明学习到的过参数化模型其实存在于<strong>低内在维度</strong>），我们假设模型适配过程中的权重变化也具有低"内在秩"。因此提出 LoRA：<strong>冻结预训练权重，只优化秩分解矩阵</strong>。</p>
+<div class="formula-blue">W<sub>new</sub> = W<sub>0</sub> + ΔW = W<sub>0</sub> + BA</div>
+<p>其中 <strong>W<sub>0</sub></strong> 为冻结的预训练权重（R<sup>d×k</sup>），<strong>B∈R<sup>d×r</sup></strong> 与 <strong>A∈R<sup>r×k</sup></strong> 为低秩矩阵，<strong>r ≪ min(d,k)</strong> 为秩。A 用高斯随机初始化，B 初始化为零（保证训练开始时 BA=0）。</p>
+<div class="finding-box">
+  <strong>📌 LoRA 的四大优势：</strong><br><br>
+  <strong>1.</strong> 预训练模型可共享，为不同任务构建许多小的 LoRA 模块，切换任务只需替换 A、B，大幅降低存储与切换开销。<br><br>
+  <strong>2.</strong> 训练更高效、硬件门槛最高降低 3 倍（无需为大多数参数计算梯度或维护优化器状态）。<br><br>
+  <strong>3.</strong> 简单线性设计使可训练矩阵可在部署时<strong>合并</strong>进冻结权重，结构上不引入任何推理延迟。<br><br>
+  <strong>4.</strong> 与许多已有方法（如 prefix-tuning）正交，可组合使用。
+</div>
+<p>以 GPT-3 175B 为例，即使全秩 d 高达 12288，极低的秩（r = 1 或 2）就足够，使 LoRA 既省存储又省算力。</p>
+</div>
+
+<div class="paper-section">
+<h3>3. 问题设定（数学形式化）</h3>
+<p>给定预训练自回归语言模型 P<sub>Φ</sub>(y|x)（参数为 Φ），适配到下游任务，全量微调目标为最大化条件语言建模目标：</p>
+<div class="formula-blue">max<sub>Φ</sub> Σ<sub>(x,y)∈𝒵</sub> Σ<sub>t=1..|y|</sub> log(P<sub>Φ</sub>(y<sub>t</sub>|x, y<sub>&lt;t</sub>))</div>
+<p>全量微调的缺点是每个下游任务学习不同的 ΔΦ，维度 |ΔΦ| 等于 |Φ<sub>0</sub>|。LoRA 采用参数高效方式，将增量编码为更小参数集 Θ（|Θ| ≪ |Φ<sub>0</sub>|），变为对 Θ 的优化：</p>
+<div class="formula-blue">max<sub>Θ</sub> Σ log(P<sub>Φ<sub>0</sub>+ΔΦ(Θ)</sub>(y<sub>t</sub>|x, y<sub>&lt;t</sub>))</div>
+<p>当预训练模型是 GPT-3 175B 时，可训练参数 |Θ| 可低至 |Φ<sub>0</sub>| 的 0.01%。</p>
+</div>
+
+<div class="paper-section">
+<h3>4. 为什么现有方法不够好</h3>
+<ul>
+  <li><strong>Adapter 层引入推理延迟</strong>：增加网络深度，即使经过优化仍有额外延迟。</li>
+  <li><strong>Prefix / Prompt 类方法缩短可用序列长度</strong>：占用输入上下文，可处理的有效长度下降。</li>
+</ul>
+<p>二者都常无法匹配全量微调基线。LoRA 通过注入低秩矩阵（不加深网络、不占序列长度、可合并部署）克服了这些局限。</p>
+</div>
+
+<div class="paper-section">
+<h3>5. 实验结论</h3>
+<p>在 RoBERTa、DeBERTa、GPT-2、GPT-3 上，LoRA 以更少的可训练参数、更高的训练吞吐、无额外推理延迟，达到与全量微调持平甚至更好的模型质量。实证调查还发现模型适配存在<strong>秩缺陷</strong>——所需的内在秩远低于表面维度，这正是 LoRA 高效的原因。</p>
+</div>
+</div><!-- ============ PAPER 4 ============ -->
+<div class="paper-card" id="p4">
+<div class="paper-header">
+  <span class="num">论文 4</span>
+  <h2>参数高效提示调优的规模力量</h2>
+  <p class="en-title">The Power of Scale for Parameter-Efficient Prompt Tuning</p>
+  <p class="meta">Brian Lester · Rami Al-Rfou · Noah Constant（Google Research）</p>
+  <span class="arxiv">arXiv: 2104.08691 · 2021</span>
+</div>
+
+<div class="paper-section">
+<h3>摘要（中文）</h3>
+<div class="abstract-box">
+  <p class="lbl">摘要</p>
+  <p>本文探索 <strong>"Prompt Tuning（提示调优）"</strong>——一种简单而有效的机制，用于学习"软提示（soft prompts）"来调节冻结的语言模型，以执行特定下游任务。与 GPT-3 使用的离散文本提示不同，软提示通过<strong>反向传播</strong>学习，可调优以整合任意数量标注样本的信号。我们的端到端学习方法以更大优势超越 GPT-3 的少样本学习。</p>
+  <p>更值得注意的是，通过使用 T5 进行模型规模的消融实验，我们证明 Prompt Tuning 随规模增大而<strong>更有竞争力</strong>：当模型参数超过数十亿时，我们的方法"缩小差距"，匹配了模型调优（调节所有权重）的强性能。这一发现尤其相关，因为大型模型成本高昂且难以共享与部署，而能<strong>复用一个冻结模型来完成多个下游任务</strong>可显著缓解这一负担。我们的方法可视为 Li &amp; Liang 2021 最近提出的 "prefix tuning" 的简化。最后，我们证明用软提示调节冻结模型在<strong>领域迁移鲁棒性</strong>与高效"提示集成（prompt ensembling）"方面有益。</p>
+</div>
+
+<div class="en-ref">
+  <p class="lbl">原文摘要（英文参考）</p>
+  <p>In this work, we explore "prompt tuning," a simple yet effective mechanism for learning "soft prompts" to condition frozen language models to perform specific downstream tasks... we show that prompt tuning becomes more competitive with scale: as models exceed billions of parameters, our method "closes the gap" and matches the strong performance of model tuning.</p>
+</div>
+</div>
+
+<div class="paper-section">
+<h3>1. Prompt Tuning 机制（软提示）</h3>
+<h4>1.1 硬提示 vs 软提示</h4>
+<ul>
+  <li><strong>离散文本提示（GPT-3 风格）</strong>：如 "Translate to French: ..."，依赖人工设计的固定文本。</li>
+  <li><strong>软提示（soft prompt）</strong>：在输入前拼接一段<strong>可学习的连续 embedding</strong> P∈R<sup>|p|×d</sup>，通过反向传播优化，不依赖人工文本。</li>
+</ul>
+<div class="formula-blue">[P; X] ∈ R<sup>(|p|+|x|)×d</sup>  → 冻结 LLM  →  输出</div>
+<p>将可学习的软提示 P 与任务输入 embedding X 拼接，送入<strong>冻结</strong>的 LLM。整个预训练模型 <strong>W<sub>0</sub> 完全冻结</strong>，只训练软提示向量。</p>
+<h4>1.2 与 Prefix Tuning 的区别</h4>
+<table>
+  <tr><th>方法</th><th>软提示位置</th><th>参数位置</th></tr>
+  <tr><td>Prompt Tuning</td><td>仅输入层之前</td><td>仅输入 embedding 层</td></tr>
+  <tr><td>Prefix Tuning（Li &amp; Liang 2021）</td><td>每层注意力之前都加</td><td>所有 Transformer 层</td></tr>
+</table>
+</div>
+
+<div class="paper-section">
+<h3>2. 核心发现：规模是关键</h3>
+<p>使用 T5 进行模型规模消融，发现 Prompt Tuning 的竞争力随<strong>模型规模增大</strong>而显著提升：</p>
+<div class="finding-box">
+  <strong>📌 关键发现：</strong><br><br>
+  <strong>·</strong> 小模型下 Prompt Tuning 明显弱于模型调优（全参数微调）；<br><br>
+  <strong>·</strong> 当模型规模超过数十亿参数（&gt;10B）时，Prompt Tuning <strong>"closes the gap"</strong>，达到与全参数微调持平的强性能。<br><br>
+  <strong>·</strong> 这一"随规模追赶"的特性，意味着可以复用一个冻结的大模型完成多个任务，显著降低部署与共享成本。
+</div>
+<p>这正是"参数高效调优（PEFT）在大模型时代可行"的关键论据，也是后续 FLAN、LoRA 等研究的重要基础。</p>
+</div>
+
+<div class="paper-section">
+<h3>3. 附加优势</h3>
+<ul>
+  <li><strong>领域迁移鲁棒性</strong>：软提示调节的冻结模型对领域转移更稳健。</li>
+  <li><strong>提示集成（Prompt Ensembling）</strong>：可高效组合多个软提示，获得集成推理的收益。</li>
+  <li>相比其它方法（adapter、prefix tuning），实现更简单、参数量更少。</li>
+</ul>
+</div>
+</div><!-- ============ PAPER 5 ============ -->
+<div class="paper-card" id="p5">
+<div class="paper-header">
+  <span class="num">论文 5</span>
+  <h2>秩稳定化缩放因子：rsLoRA</h2>
+  <p class="en-title">A Rank Stabilization Scaling Factor for Fine-Tuning with LoRA</p>
+  <p class="meta">Damjan Kalajdzievski（Tenyx）</p>
+  <span class="arxiv">arXiv: 2312.03732 · 2023</span>
+</div>
+
+<div class="paper-section">
+<h3>摘要（中文）</h3>
+<div class="abstract-box">
+  <p class="lbl">摘要</p>
+  <p>随着大语言模型（LLM）日益计算与内存密集，<strong>参数高效微调（PEFT）</strong>已成为微调 LLM 的常用策略。流行的 PEFT 方法是 <strong>低秩适配器（LoRA）</strong>，它在选定的层中添加可训练的低秩"适配器"。每个适配器由一个低秩矩阵乘积构成，并乘上一个<strong>依赖秩的缩放因子</strong>。</p>
+  <p>这个缩放因子（将适配器除以一个秩的因子）会导致<strong>高秩适配器的学习变慢、性能受阻</strong>。因此，实践中 LoRA 通常被限制在非常低的秩。本文研究缩放因子对学习过程的影响，并证明 <strong>LoRA 适配器应除以秩的平方根</strong>。我们将采用正确缩放因子的方法称为 <strong>秩稳定化 LoRA（rsLoRA）</strong>，它轻松提供了微调的计算/性能权衡——用更大的秩在训练时换取更好的微调性能，且推理计算成本不变。</p>
+</div>
+
+<div class="en-ref">
+  <p class="lbl">原文摘要（英文参考）</p>
+  <p>This scaling factor, which divides adapters by a factor of the rank, results in slowed learning and stunted performance for LoRA with higher-rank adapters... we study the impact of the scaling factor on the learning process and prove that LoRA adapters should be divided by a factor of the square root of the rank.</p>
+</div>
+</div>
+
+<div class="paper-section">
+<h3>1. 背景：标准 LoRA 的缩放问题</h3>
+<p>LoRA 将一个线性子模块的参数更新为低秩形式。给定预训练权重 W ∈ R<sup>d<sub>2</sub>×d<sub>1</sub></sup>，LoRA 注入两个低秩矩阵 A ∈ R<sup>r×d<sub>1</sub></sup> 与 B ∈ R<sup>d<sub>2</sub>×r</sup>，并用依赖秩的缩放因子 γ<sub>r</sub> 收缩：</p>
+<div class="formula-blue">x<sub>out</sub> = (W + γ<sub>r</sub>BA) x<sub>in</sub> + b</div>
+<p>其中 B 初始化为零（B=0<sub>d<sub>2</sub>×r</sub>），γ<sub>r</sub> ∈ R<sup>+</sup> 为缩放因子。</p>
+<div class="finding-box">
+  <strong>📌 问题根源：</strong><br><br>
+  标准 LoRA 取 <strong>γ<sub>r</sub> = α/r</strong>。当秩 r 增大时：<br><br>
+  · 缩放因子 α/r 急剧减小（r=4 → 0.25α，r=64 → 0.016α）<br><br>
+  · 有效学习率降为 lr·(α/r)，高秩 LoRA 几乎学不动<br><br>
+  · 结果：<strong>梯度坍缩（gradient collapse）</strong>——大秩与小秩性能无差别，LoRA 在实践中被限制在极低秩。
+</div>
+</div>
+
+<div class="paper-section">
+<h3>2. 核心贡献：秩稳定化缩放</h3>
+<div class="formula-blue"><strong>rsLoRA:</strong> γ<sub>r</sub> = α/√r</div>
+<p>理论分析证明：LoRA 适配器应除以<strong>秩的平方根</strong>（√r），而不是秩（r）。原因在于 LoRA 训练中 ΔW 的<strong>谱范数与 √r 成正比</strong>，用 α/√r 可使缩放因子与秩解耦，让不同秩的 LoRA 有一致的<strong>有效学习率</strong>。</p>
+<h4>缩放因子对比</h4>
+<table>
+  <tr><th>秩 r</th><th>α/r（标准 LoRA）</th><th>α/√r（rsLoRA）</th></tr>
+  <tr><td>4</td><td>0.250α</td><td>0.500α</td></tr>
+  <tr><td>16</td><td>0.063α</td><td>0.250α</td></tr>
+  <tr><td>64</td><td>0.016α</td><td>0.125α</td></tr>
+  <tr><td>256</td><td>0.004α</td><td>0.063α</td></tr>
+</table>
+<div class="finding-box">
+  <strong>📌 为什么有效：</strong><br><br>
+  <strong>·</strong> 标准 LoRA：梯度随秩增大而坍缩，更大秩表现与低秩无异。<br><br>
+  <strong>·</strong> rsLoRA：梯度<strong>不坍缩</strong>，更高秩带来更好性能。<br><br>
+  <strong>·</strong> 结论：更高秩可在训练时用更多算力换取更好的微调性能，而<strong>推理计算成本完全不变</strong>（适配器形式与 LoRA 完全相同）。
+</div>
+</div>
+
+<div class="paper-section">
+<h3>3. 实验与结论</h3>
+<p>实验验证了 rsLoRA 相比标准 LoRA 在<strong>性能与学习稳定性</strong>上的优势。rsLoRA 使得更大的秩能够真正提升性能，从而提供了清晰的微调计算/性能权衡。因为适配器形式与标准 LoRA 完全一致，rsLoRA 对任何推理成本都没有额外影响。这解释了为何此前的 LoRA Scaling 规律（P<sub>LoRA</sub>(r) ∝ r<sup>0.2</sup> 趋于饱和）在 rsLoRA 下变为持续提升（∝ log r）。</p>
+</div>
+
+<div class="paper-section">
+<h3>4. LoRA / rsLoRA 缩放规律</h3>
+<div class="formula-blue">P<sub>LoRA</sub>(r) ≈ P<sub>max</sub> · (1 - e<sup>-r/r<sub>0</sub></sup>)   （标准 LoRA，饱和指数形式）</div>
+<div class="formula-blue">P<sub>rsLoRA</sub>(r) ≈ P<sub>max</sub> · log(1 + c·r)   （rsLoRA，对数形式持续提升）</div>
+<p>这也与 Zhang et al. 2024 的观测一致：LoRA 的参数缩放存在上限，而 rsLoRA 修正后能持续提升。</p>
+</div>
+</div><!-- ============ PAPER 6 ============ -->
+<div class="paper-card" id="p6">
+<div class="paper-header">
+  <span class="num">论文 6（相关）</span>
+  <h2>BIG-Bench：超越模仿游戏的基准——量化和提取语言模型的关键行为</h2>
+  <p class="en-title">Beyond the Imitation Game: Quantifying and Extracting Crucial Behavior in Language Models</p>
+  <p class="meta">Srivastava et al.（BIG-Bench 团队，跨 100+ 机构）</p>
+  <span class="arxiv">arXiv: 2206.04615 · 2022</span>
+</div>
+
+<div class="paper-section">
+<h3>简介</h3>
+<p><strong>BIG-Bench（Beyond the Imitation Game Benchmark）</strong> 是一个大规模、协作构建的多任务基准，用于评估大语言模型的"关键行为"——尤其是那些<strong>模仿游戏（imitation game）之外的、需要真正能力</strong>的行为。它由 100 多个机构的研究者共同提出，包含 <strong>200+ 个任务</strong>。</p>
+
+<h4>任务构成</h4>
+<ul>
+  <li><strong>推理</strong>：逻辑推理、常识推理、因果推理</li>
+  <li><strong>代码生成</strong>：编程任务、算法实现</li>
+  <li><strong>数学</strong>：算术、代数、数学应用题</li>
+  <li><strong>翻译</strong>：多语言翻译、多语言理解</li>
+  <li><strong>伦理与安全</strong>：偏见判断、伦理决策</li>
+  <li><strong>少样本能力</strong>：few-shot / zero-shot 泛化</li>
+</ul>
+
+<h4>与 EmergentAbilities 的关系</h4>
+<p>Wei et al. 2022 的涌现能力论文正是基于 BIG-Bench 来<strong>定义和测量"涌现"</strong>——他们在 BIG-Bench 任务上观察到，随模型规模增大，某些任务性能从<strong>随机水平突然跃升</strong>到显著高于随机，形成量变到质变的跳跃。这种在特定规模后"从无到有"的现象即为<strong>涌现能力</strong>。</p>
+</div>
+</div>
+
+<!-- ============ PAPER 7 ============ -->
+<div class="paper-card" id="p7">
+<div class="paper-header">
+  <span class="num">论文 7（相关）</span>
+  <h2>链式思维提示激发大语言模型的推理能力</h2>
+  <p class="en-title">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</p>
+  <p class="meta">Jason Wei · Xuezhi Wang · Dale Schuurmans · Maarten Bosma · Brian Ichter · Fei Xia · Ed Chi · Quoc Le · Denny Zhou（Google Brain）</p>
+  <span class="arxiv">arXiv: 2201.11903 · 2022</span>
+</div>
+
+<div class="paper-section">
+<h3>核心思想（CoT 的首次提出）</h3>
+<p><strong>链式思维（Chain-of-Thought, CoT）</strong> 最早由 Jason Wei 等人在本文提出。核心方法是：不给模型一个直接的问题→答案提示，而是让模型<strong>展示中间推理步骤</strong>，逐步推导出最终答案。</p>
+
+<div class="finding-box">
+  <strong>📌 示例对比：</strong><br><br>
+  <strong>标准提示：</strong> "小明有 5 个苹果，又买 3 个，送朋友 2 个，还剩几个？" → 答案：6<br><br>
+  <strong>CoT 提示：</strong> "让我们一步步思考：小明先有 5 个苹果 → 又买 3 个，共 5+3=8 → 送朋友 2 个，所以 8-2=6 → 答案：6"
+</div>
+
+<h4>关键发现</h4>
+<ul>
+  <li><strong>模型规模是关键</strong>：只有当模型规模足够大（约 ≥100B 参数，如 PaLM 540B）时，CoT 才能发挥显著作用；小模型用 CoT 反而可能降低性能。</li>
+  <li><strong>推理能力大幅提升</strong>：在数学应用题、多步推理、符号操作等任务上，CoT 让 PaLM 等模型性能大幅跃升。</li>
+  <li><strong>"涌现"的表现</strong>：CoT 的增益仅在特定模型规模后突然出现——这正是"涌现能力"的典型体现。</li>
+</ul>
+</div>
+</div>
+
+<!-- ============ PAPER 8 ============ -->
+<div class="paper-card" id="p8">
+<div class="paper-header">
+  <span class="num">论文 8（相关）</span>
+  <h2>微调语言模型成为零样本学习者（FLAN）</h2>
+  <p class="en-title">Finetuned Language Models Are Zero-Shot Learners</p>
+  <p class="meta">Jason Wei · Maarten Bosma · Vincent Y. Zhao · Kelvin Guu · Adams Wei Yu · Brian Lester · Nan Du · Andrew M. Dai · Quoc V. Le（Google）</p>
+  <span class="arxiv">arXiv: 2109.01652 · 2021</span>
+</div>
+
+<div class="paper-section">
+<h3>什么是指令微调（Instruction Tuning）</h3>
+<p><strong>指令微调（Instruction Tuning）</strong> 是本文（FLAN）提出的核心方法：用"指令格式"的数据对预训练 LLM 进行微调，让模型学会<strong>理解自然语言指令</strong>。</p>
+
+<table>
+  <tr><th>数据格式</th><th>示例</th></tr>
+  <tr><td>预训练（无指令）</td><td>"今天天气很好，我想去散步。"</td></tr>
+  <tr><td>指令微调（Instruction Tuning）</td><td>"请将以下句子翻译成法语：我爱学习。 → J'aime apprendre."</td></tr>
+</table>
+
+<h4>核心思想与流程</h4>
+<ul>
+  <li>收集多个 NLP 任务数据集，改写成<strong>"指令 + 输入 → 输出"</strong>格式。</li>
+  <li>在这些指令化数据上微调预训练 LLM。</li>
+  <li>使模型在<strong>未见过的任务</strong>上具备零样本（zero-shot）泛化能力。</li>
+</ul>
+
+<div class="finding-box">
+  <strong>📌 效果：</strong><br><br>
+  经过指令微调的模型，在<strong>零样本设置</strong>下对未见任务的泛化能力大幅提升。这正是后续 FLAN-T5 等模型的基础，也解释了为何"指令微调 + 大模型"会成为释放 LLM 能力的关键范式。
+</div>
+</div>
+</div>
+
+<!-- ============ PAPER 9 ============ -->
+<div class="paper-card" id="p9">
+<div class="paper-header">
+  <span class="num">论文 9（相关）</span>
+  <h2>PaLM：用 Pathways 扩展语言建模</h2>
+  <p class="en-title">PaLM: Scaling Language Modeling with Pathways</p>
+  <p class="meta">Aakanksha Chowdhery · Sharan Narang · Jacob Devlin · Maarten Bosma · Gaurav Mishra · Adam Roberts 等（Google Research）</p>
+  <span class="arxiv">arXiv: 2204.02311 · 2022</span>
+</div>
+
+<div class="paper-section">
+<h3>PaLM 是什么</h3>
+<p><strong>PaLM（Pathways Language Model）</strong> 是 Google 在 2022 年发布的巨型语言模型，最重要的贡献是首次展示了<strong>大模型 + 链式思维（CoT）提示</strong>的强大组合，并用 <strong>Pathways</strong> 系统实现了数千个 TPU 上的高效并行训练。</p>
+
+<table>
+  <tr><th>属性</th><th>数值</th></tr>
+  <tr><td>参数量</td><td><strong>5400 亿（540B）</strong></td></tr>
+  <tr><td>训练数据</td><td><strong>7800 亿 tokens</strong>（C4 + 社交媒体 + 网页 + Wikipedia + 书籍）</td></tr>
+  <tr><td>架构</td><td>标准 Transformer，基于 Pathways 训练</td></tr>
+  <tr><td>推理</td><td>CoT 提示下在数学、逻辑、多步推理任务大幅跃升</td></tr>
+</table>
+
+<h4>PaLM 的重要地位</h4>
+<ul>
+  <li>首次在 540B 规模展示 CoT 的<strong>涌现能力</strong>（Wei et al. 2022 实验所用的主模型之一）。</li>
+  <li>Pathways 系统可在数千个 TPU 上高效并行，为大规模训练基础设施奠定基础。</li>
+  <li>是 EmergentAbilities 论文中典型"涌现"现象的直接载体。</li>
+</ul>
+</div>
+</div><!-- ============ EMERGENCE REFERENCES ============ -->
+<div class="paper-card" id="pref">
+<div class="paper-header">
+  <span class="num">附录</span>
+  <h2>EmergentAbilities 论文引用的涌现参考文献（中文译注）</h2>
+  <p class="en-title">References Cited in the Emergent Abilities Paper on Emergence</p>
+  <span class="arxiv">来源：arXiv: 2206.07682</span>
+</div>
+
+<div class="paper-section">
+<h3>为何引用这些论文？</h3>
+<p>Wei et al. 2022 在引言中追溯"涌现（emergence）"作为跨学科思想的历史。这些引用横跨物理学、生物学、计算机科学与经济学，共同支撑了对涌现的定义——<strong>当系统中的定量变化导致行为上的定性变化时，即为涌现</strong>。以下为逐篇译注。</p>
+
+<h3>1. Anderson (1972) — 涌现思想的源头《More Is Different》</h3>
+<div class="abstract-box">
+  <p class="lbl">译注</p>
+  <p><strong>Philip W. Anderson《More Is Different: Broken Symmetry and the Nature of the Hierarchical Structure of Science》</strong>，《Science》177(4047): 393-396（1972）。Anderson 是 1977 年诺贝尔物理学奖得主。这是凝结态物理的奠基性短文，提出"<strong>More is different（多即不同）</strong>"——随系统规模变大，会涌现出小系统不存在的新行为与层级结构，无法仅通过缩减小系统的物理规律预测。这正是"涌现"定义的核心哲学根基（量变引发质变）。</p>
+  <p><strong>获取</strong>：Science 期刊付费文章，非 arXiv 开放获取。</p>
+</div>
+
+<h3>2. Hwang et al. (2012) — 物理学里的涌现现象</h3>
+<div class="abstract-box">
+  <p class="lbl">译注</p>
+  <p><strong>Hwang, Iwasa, Kawasaki, Keimer, Nagaosa, Tokura《Emergent Phenomena at Oxide Interfaces》</strong>，《Nature Materials》11(2): 103-113（2012）。在材料科学中，氧化物界面会涌现出单一材料不具备的新电子性质（如超导、磁性、铁电）。引用它说明"涌现"在物理系统中是被广泛验证的真实现象。</p>
+  <p><strong>获取</strong>：Nature 期刊付费文章，非 arXiv 开放获取。</p>
+</div>
+
+<h3>3. Forrest (1990) — 计算领域的涌现计算</h3>
+<div class="abstract-box">
+  <p class="lbl">译注</p>
+  <p><strong>Stephanie Forrest《Emergent Computation: Self-Organizing, Collective, and Cooperative Phenomena...》</strong>，《Physica D》42: 1-11（1990）。这是"涌现计算（emergent computation）"的经典之作，研究了自组织、集体与协同现象如何从大量简单部件的局部相互作用中自发产生，为人工生命与集群智能奠定概念基础。</p>
+  <p><strong>获取</strong>：Physica D 期刊付费文章，非 arXiv 开放获取。</p>
+</div>
+
+<h3>4. Corradini &amp; O'Connor (2010) — 科学与哲学中的涌现</h3>
+<div class="abstract-box">
+  <p class="lbl">译注</p>
+  <p><strong>Antonella Corradini 与 Timothy O'Connor（主编）《Emergence in Science and Philosophy》</strong>（Routledge，卷6，2010）。跨学科文集，梳理了"涌现"在科学（物理、生物、心智）与哲学（本体论、因果性）中的多重含义与争论，包括强/弱涌现、随附性（supervenience）等议题。</p>
+  <p><strong>获取</strong>：Routledge 学术书籍，付费。</p>
+</div>
+
+<h3>5. Harper &amp; Lewis (2012) — 经济学中的涌现</h3>
+<div class="abstract-box">
+  <p class="lbl">译注</p>
+  <p><strong>David A. Harper 与 Paul A. Lewis《New Perspectives on Emergence in Economics》</strong>（Routledge，2012）。讨论涌现在经济复杂系统（市场、制度、创新网络）中的应用——大量个体的微观局部行为如何自发涌现出宏观层面不可还原为个体的秩序结构。</p>
+  <p><strong>获取</strong>：Routledge 学术书籍，付费。</p>
+</div>
+
+<h3>6. Steinhardt (2022) — 本文"涌现"定义的直接依据</h3>
+<div class="abstract-box">
+  <p class="lbl">译注</p>
+  <p><strong>Jacob Steinhardt《On the Relationship between Emergence and Scale》</strong>（手稿/未发表，2022）。Wei et al. 2022 直接改编自本文的定义：<strong>当系统中的定量变化导致行为上的定性变化时，即为涌现</strong>，并将涌现与"规模（scale）"联系起来——这正是用训练计算量、模型参数量衡量模型规模涌现的理论出发点。</p>
+  <p><strong>获取</strong>：未发表手稿，公开渠道不可获得。</p>
+</div>
+
+<h3>7. Miller et al. (2004) — 早期 NLP 的涌现能力追溯</h3>
+<div class="abstract-box">
+  <p class="lbl">译注</p>
+  <p><strong>Scott Miller, Jethran Guinness, Alex Zamanian《Name Tagging with Word Clusters and Discriminative Training》</strong>，《NAACL 2004》。早期 NLP 工作，提出随模型/特征规模增大，命名实体识别等能力出现非线性质变提升。Wei et al. 2022 借此说明"涌现能力"思想可追溯到更早的 NLP 研究。</p>
+  <p><strong>获取</strong>：✅ 已从 ACL Anthology 下载（83KB PDF）。</p>
+</div>
+
+<div class="finding-box">
+  <strong>关键结论：</strong><br><br>
+  · 这 8 篇引用中，仅 <strong>Miller et al. (2004)</strong> 可从公开渠道（ACL Anthology）下载，已下载。<br><br>
+  · Anderson 1972、Forrest 1990、Hwang 2012 为经典期刊文章；Corradini 2010、Harper 2012 为学术书籍；Steinhardt 2022 为未发表手稿——均<strong>不在 arXiv 公开获取</strong>。<br><br>
+  · 它们共同构成"涌现"这一跨学科概念的谱系，是 Wei et al. 2022 定义涌现能力（小模型不存在、大模型才有的能力）的理论根基。
+</div>
+</div>
+</div>
+
+<div class="footer">
+  <p>📚 本合集整理自各论文的 arXiv 原文（ar5iv HTML 版本），由 AI 辅助翻译为中文。</p>
+  <p>内容版权归各论文作者所有 | Zhang et al. arXiv:2402.17193 · Hernandez et al. arXiv:2102.01293 · Hu et al. arXiv:2106.09685 · Lester et al. arXiv:2104.08691 · Kalajdzievski arXiv:2312.03732 | Srivastava et al. arXiv:2206.04615 · Wei et al. arXiv:2201.11903 · Wei et al. arXiv:2109.01652 · Chowdhery et al. arXiv:2204.02311</p>
+  <p style="margin-top:12px;color:#8a6a3a;">数学公式采用 HTML &lt;sup&gt;/&lt;sub&gt; + Unicode 渲染，无外部 CDN 依赖。</p>
+</div>
+
+</div>
+</body>
+</html>

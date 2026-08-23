@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rsLoRA：秩稳定化缩放因子（中文翻译）</title>
+<style>
+body{font-family:'Noto Serif SC','SimSun','Songti SC',serif;background:#fef9f0;color:#2a2520;line-height:1.9;max-width:900px;margin:0 auto;padding:24px 42px;}
+h1{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;font-size:1.8em;color:#5a3a1a;text-align:center;border-bottom:2px solid #c9a47a;padding-bottom:14px;}
+h2{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;font-size:1.35em;color:#5a3a1a;border-left:4px solid #c9873a;padding-left:12px;margin-top:1.6em;}
+h3{font-size:1.1em;color:#7a4f24;margin-top:1.3em;}
+.abstract{background:#fdf3e1;border-left:4px solid #c9a47a;padding:18px 24px;margin:20px 0;border-radius:4px;}
+.en-ref{background:#f5f0e6;border:1px dashed #c9a47a;padding:14px 20px;margin:14px 0;border-radius:6px;color:#5a4a3a;font-size:0.92em;}
+.formula{background:#eef4fb;border-left:4px solid #4a7ab8;padding:16px 22px;margin:16px 0;border-radius:0 8px 8px 0;font-family:'Cambria Math',serif;font-size:1.05em;overflow-x:auto;}
+.finding{background:linear-gradient(135deg,#f7f0e2,#f3e8d2);border-left:4px solid #e9b464;padding:16px 22px;margin:18px 0;border-radius:0 12px 12px 0;}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.92em;}
+th,td{border:1px solid #d8c8a8;padding:9px 13px;text-align:center;}
+th{background:#5a3a1a;color:#fff;}
+p{margin-bottom:13px;text-align:justify;}
+</style>
+</head>
+<body>
+<h1>秩稳定化缩放因子：rsLoRA</h1>
+<p style="text-align:center;color:#4a3a2a;"><em>A Rank Stabilization Scaling Factor for Fine-Tuning with LoRA</em></p>
+<p style="text-align:center;color:#888;">Damjan Kalajdzievski（Tenyx）· arXiv: 2312.03732 · 2023</p>
+
+<h2>摘要（中文）</h2>
+<div class="abstract">
+<p>随着大语言模型日益计算与内存密集，<strong>参数高效微调（PEFT）</strong>已成为微调 LLM 的常用策略。流行的 PEFT 方法是 <strong>低秩适配器（LoRA）</strong>，它在选定的层添加可训练的低秩"适配器"。每个适配器由一个低秩矩阵乘积构成，并乘上一个<strong>依赖秩的缩放因子</strong>。</p>
+<p>该缩放因子（将适配器除以一个秩的因子）会导致<strong>高秩适配器的学习变慢、性能受阻</strong>，因此实践中 LoRA 通常被限制在非常低的秩。本文研究缩放因子对学习过程的影响，并证明 <strong>LoRA 适配器应除以秩的平方根</strong>。我们称采用正确缩放因子的方法为<strong>秩稳定化 LoRA（rsLoRA）</strong>，它轻松提供了微调的计算/性能权衡——用更大的秩在训练时换取更好的微调性能，且推理计算成本不变。</p>
+</div>
+<div class="en-ref"><strong>English Abstract:</strong> This scaling factor, which divides adapters by a factor of the rank, results in slowed learning and stunted performance for LoRA with higher-rank adapters... we prove that LoRA adapters should be divided by a factor of the square root of the rank.</div>
+
+<h2>1. 引言</h2>
+<p>大语言模型在 NLP 领域日益强大，成功应用于机器翻译、疾病预测、机器人控制策略代码生成、聊天助手等。虽然其固有的泛化能力惊人，但下游任务性能往往需要微调，而这会带来巨大的计算资源需求。</p>
+<p>为应对这些问题，业界近期提出了大量计算高效的微调方法，旨在优化一组缩减的参数并达到与全模型微调相当的性能。其中最相关的是 <strong>低秩适配器（LoRA）</strong>——在预训练模型的部分参数矩阵上添加由"低秩矩阵乘积 × 缩放因子"构成的适配器，在微调时优化。</p>
+<p>本文分析 LoRA 适配器的缩放因子。我们的分析证明：<strong>LoRA 适配器应除以秩的平方根</strong>，而非传统 LoRA 实现中除以秩。我们通过实验验证 rsLoRA 相比标准 LoRA 在性能与学习稳定性上的优势。</p>
+
+<h2>2. 背景：LoRA 回顾</h2>
+<p>LoRA 将预训练网络的一个线性子模块（参数 W∈R<sup>d<sub>2</sub>×d<sub>1</sub></sup>, b∈R<sup>d<sub>2</sub></sup>，映射 x<sub>out</sub>=Wx<sub>in</sub>+b）用适配器增强为：</p>
+<div class="formula">x<sub>out</sub> = (W + γ<sub>r</sub>BA)·x<sub>in</sub> + b</div>
+<p>其中 <strong>A∈R<sup>r×d<sub>1</sub></sup></strong>，<strong>B∈R<sup>d<sub>2</sub>×r</sup></strong>，γ<sub>r</sub>∈R<sup>+</sup> 为缩放因子。微调后，单一矩阵 (W+γ<sub>r</sub>BA) 被存储并替换 W 使用，因此<strong>推理时没有额外计算成本</strong>。适配器 γ<sub>r</sub>BA 的秩被约束为至多 r（通常远小于 d<sub>1</sub>,d<sub>2</sub>）。B 初始化为零（B=0<sub>d<sub>2</sub>×r</sub>），A 的条目独立同分布、均值 0。传统 LoRA 设：</p>
+<div class="formula">γ<sub>r</sub> = α/r（标准 LoRA）</div>
+<p>后续方法 <strong>AdaLoRA</strong>（Zhang et al. 2023）根据可用计算预算在训练中动态分配秩。因 AdaLoRA 使用与 LoRA 相同的 γ<sub>r</sub>，本文提出的缩放因子优化也能改进 AdaLoRA。</p>
+<p>我们将证明：LoRA 中 γ<sub>r</sub>=α/r 的设定过于激进，导致<strong>梯度坍缩（gradient collapse）</strong>——大秩与小秩的性能无差别。这或许误导了原作者得出"极低秩（4,8,16）即可"的结论。</p>
+
+<h2>3. rsLoRA：秩稳定化适配器</h2>
+<p>为推导最优缩放因子，我们沿用 Yang &amp; Hu 2022 的扩散-初始化-更新（scaling-initialization-update）框架分析。需要确保 γ<sub>r</sub> 的选择是"正确"的，使矩阵 γ<sub>r</sub>BA 在训练全过程对所有秩都稳定，同时 γ<sub>r</sub> 又不过于激进以致梯度坍缩或学习变慢。</p>
+<div class="finding"><strong>📌 秩稳定化定义（Definition 3.1）：</strong> 一个适配器 γ<sub>r</sub>BA 是<strong>秩稳定化</strong>的，若满足：<br><br>
+<strong>1.</strong> 若适配器输入独立同分布且第 m 阶矩为 Θ<sub>r</sub>(1)，则适配器输出的第 m 阶矩也为 Θ<sub>r</sub>(1)；<br><br>
+<strong>2.</strong> 若损失对适配器输出的梯度为 Θ<sub>r</sub>(1)，则损失对适配器输入的梯度也为 Θ<sub>r</sub>(1)。</div>
+<p>利用极限 r→∞ 的分析，我们证明：唯一（模一个加法常数）产生秩稳定化适配器的 γ<sub>r</sub> 设定是：</p>
+<div class="formula"><strong>γ<sub>r</sub> = α/√r（rsLoRA）</strong></div>
+<div class="finding"><strong>📌 Theorem 3.2：</strong> 考虑形式为 γ<sub>r</sub>BA 的 LoRA 适配器（B 初始化为 0<sub>d<sub>2</sub>×r</sub>，A 的条目独立同分布、均值 0）。在初始化期望意义上，所有适配器都秩稳定化<strong>当且仅当</strong> γ<sub>r</sub> ∈ Θ<sub>r</sub>(1/√r)。</div>
+<p>这解释了为什么 α/√r 正确：LoRA 训练中 ΔW 的谱范数与 √r 成正比，用 α/√r 可使缩放因子与秩解耦，让不同秩的适配器有一致的有效学习率（即"秩稳定化"）。</p>
+
+<h2>4. 缩放因子对比</h2>
+<table>
+<tr><th>秩 r</th><th>α/r（标准 LoRA）</th><th>α/√r（rsLoRA）</th></tr>
+<tr><td>4</td><td>0.250α</td><td>0.500α</td></tr>
+<tr><td>16</td><td>0.063α</td><td>0.250α</td></tr>
+<tr><td>64</td><td>0.016α</td><td>0.125α</td></tr>
+<tr><td>256</td><td>0.004α</td><td>0.063α</td></tr>
+</table>
+<div class="finding"><strong>📌 为什么有效：</strong><br><br>
+· <strong>标准 LoRA</strong>：梯度随秩增大而坍缩，更大秩表现与低秩无异。<br><br>
+· <strong>rsLoRA</strong>：梯度不坍缩，更高秩带来更好性能。<br><br>
+· <strong>结论</strong>：更高秩可在训练时用更多算力换取更好的微调性能，而<strong>推理计算成本完全不变</strong>（适配器形式与 LoRA 完全相同）。</div>
+
+<h2>5. 结论</h2>
+<p>本文证明 LoRA 适配器应除以<strong>秩的平方根</strong>（α/√r）而非秩（α/r）。我们的 <strong>rsLoRA</strong> 方法通过秩稳定化缩放因子，让更大秩真正提升性能，提供了清晰的微调计算/性能权衡。因为适配器形式与标准 LoRA 完全一致，rsLoRA 对任何推理成本都没有额外影响。这也解释了为何此前 LoRA 缩放规律（P<sub>LoRA</sub>(r) ∝ r<sup>0.2</sup> 趋于饱和）在 rsLoRA 下变为持续提升（∝ log r）。</p>
+
+<p style="text-align:center;color:#999;margin-top:40px;border-top:1px solid #e6d2a8;padding-top:20px;">📚 本文由 ar5iv 原文翻译为中文，数学公式采用 HTML 上下标 + Unicode 渲染</p>
+</body>
+</html>

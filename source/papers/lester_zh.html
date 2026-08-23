@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>参数高效提示调优的规模力量（中文翻译）</title>
+<style>
+body{font-family:'Noto Serif SC','SimSun','Songti SC',serif;background:#fef9f0;color:#2a2520;line-height:1.9;max-width:900px;margin:0 auto;padding:24px 42px;}
+h1{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;font-size:1.8em;color:#5a3a1a;text-align:center;border-bottom:2px solid #c9a47a;padding-bottom:14px;}
+h2{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;font-size:1.35em;color:#5a3a1a;border-left:4px solid #c9873a;padding-left:12px;margin-top:1.6em;}
+h3{font-size:1.1em;color:#7a4f24;margin-top:1.3em;}
+.abstract{background:#fdf3e1;border-left:4px solid #c9a47a;padding:18px 24px;margin:20px 0;border-radius:4px;}
+.en-ref{background:#f5f0e6;border:1px dashed #c9a47a;padding:14px 20px;margin:14px 0;border-radius:6px;color:#5a4a3a;font-size:0.92em;}
+.formula{background:#eef4fb;border-left:4px solid #4a7ab8;padding:16px 22px;margin:16px 0;border-radius:0 8px 8px 0;font-family:'Cambria Math',serif;font-size:1.05em;overflow-x:auto;}
+.finding{background:linear-gradient(135deg,#f7f0e2,#f3e8d2);border-left:4px solid #e9b464;padding:16px 22px;margin:18px 0;border-radius:0 12px 12px 0;}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.92em;}
+th,td{border:1px solid #d8c8a8;padding:9px 13px;text-align:center;}
+th{background:#5a3a1a;color:#fff;}
+p{margin-bottom:13px;text-align:justify;}
+</style>
+</head>
+<body>
+<h1>参数高效提示调优的规模力量</h1>
+<p style="text-align:center;color:#4a3a2a;"><em>The Power of Scale for Parameter-Efficient Prompt Tuning</em></p>
+<p style="text-align:center;color:#888;">Brian Lester · Rami Al-Rfou · Noah Constant（Google Research）· arXiv: 2104.08691 · 2021</p>
+
+<h2>摘要（中文）</h2>
+<div class="abstract">
+<p>本文探索 <strong>"Prompt Tuning（提示调优）"</strong>——一种简单而有效的机制，用于学习"软提示（soft prompts）"来调节<strong>冻结的</strong>语言模型执行特定下游任务。与 GPT-3 使用的离散文本提示不同，软提示通过<strong>反向传播</strong>学习，可调优以整合任意数量标注样本的信号。我们的端到端学习方法以更大优势超越 GPT-3 的少样本学习。</p>
+<p>更值得注意的是，通过 T5 的模型规模消融实验，我们证明 Prompt Tuning 随规模增大而<strong>更有竞争力</strong>：当模型参数超过数十亿时，我们的方法"缩小差距"，匹配模型调优（调节所有权重）的强性能。这一发现尤其相关，因为大型模型成本高昂且难以共享与部署，而能<strong>复用一个冻结模型完成多个下游任务</strong>可显著缓解这一负担。我们的方法可视为 Li &amp; Liang 2021 "prefix tuning" 的简化。最后，我们证明用软提示调节冻结模型在<strong>领域迁移鲁棒性</strong>与高效"提示集成（prompt ensembling）"方面有益。</p>
+</div>
+<div class="en-ref"><strong>English Abstract:</strong> In this work, we explore "prompt tuning," a simple yet effective mechanism for learning "soft prompts" to condition frozen language models to perform specific downstream tasks... we show that prompt tuning becomes more competitive with scale: as models exceed billions of parameters, our method "closes the gap" and matches the strong performance of model tuning.</div>
+
+<h2>1. 引言与研究动机</h2>
+<p>随着预训练大语言模型的广泛应用，出现了多种将这些通用模型适配到下游任务的技术。Brown et al. 2020 展示提示设计（"priming"）能通过文本提示惊人地调节冻结 GPT-3 的行为。但基于提示的适配有几个关键缺点：任务描述易出错、需要人工参与，且提示的有效性受限。</p>
+<p>已有研究尝试自动化提示设计（Shin et al. 2020 在离散词空间搜索），但本文采用一条不同的路线。Li &amp; Liang 2021 提出的 "prefix tuning" 冻结模型参数、微调时反向传播错误。本文提出的 <strong>Prompt Tuning</strong> 是其进一步的简化：</p>
+<div class="finding"><strong>📌 核心贡献：</strong><br><br>
+<strong>1.</strong> 提出 Prompt Tuning，并证明其在大模型规模下与模型调优（model tuning）竞争力相当。<br><br>
+<strong>2.</strong> 消融多种设计选择，证明质量与鲁棒性随规模提升。<br><br>
+<strong>3.</strong> 证明 Prompt Tuning 在域偏移（domain shift）问题上优于模型调优。<br><br>
+<strong>4.</strong> 提出"提示集成（prompt ensembling）"并证明其有效性。</div>
+
+<h2>2. Prompt Tuning 机制（软提示）</h2>
+<p>沿用 T5 的"text-to-text"方法，我们将所有任务转化为文本生成。提示（prompting）是在模型生成 Y 时添加额外信息供其条件化的方式。给定 n 个 token {x<sub>1</sub>,...,x<sub>n</sub>}，T5 首先嵌入 token 形成矩阵 X<sub>e</sub>∈R<sup>n×e</sup>。</p>
+
+<h3>2.1 软提示的定义</h3>
+<p>Prompt Tuning 在输入嵌入前拼接一个<strong>可学习的连续嵌入</strong>（软提示）P：</p>
+<div class="formula">[P; X<sub>e</sub>] ∈ R<sup>(k+n)×e</sup>  →  冻结 LLM  →  输出</div>
+<p>其中 <strong>P∈R<sup>k×e</sup></strong> 为 k 个可学习的软提示 token 嵌入，<strong>k</strong> 为提示长度，整个预训练模型权重<strong>完全冻结</strong>。</p>
+
+<h3>2.2 软提示的初始化</h3>
+<p>软提示有多种初始化方式：最简单是<strong>随机初始化从头训练</strong>；更精细的做法是用任务相关的词汇嵌入（如"分类/翻译"等类别的嵌入）初始化提示，或结合上下文学习初始化。本文消融表明：在足够大的模型上，简单的随机初始化也能取得强劲结果。</p>
+
+<h2>3. 核心发现：规模是关键</h2>
+<p>使用 T5 进行模型规模消融，发现 Prompt Tuning 的竞争力随<strong>模型规模增大</strong>而显著提升：</p>
+<div class="finding"><strong>📌 关键发现：</strong><br><br>
+· <strong>小模型下</strong>：Prompt Tuning 明显弱于模型调优（全参数微调）。<br><br>
+· <strong>模型超过数十亿参数（&gt;10B）时</strong>：Prompt Tuning <strong>"closes the gap"</strong>，达到与全参数微调持平的强性能。<br><br>
+· <strong>深层意义</strong>：可复用一个冻结的大模型完成多个任务，显著降低部署与共享成本。</div>
+<p>这与本文标题呼应——<strong>"Scale 的力量"</strong>：正是模型规模使得参数高效调优变得可行，这是后续 FLAN、LoRA 等研究的重要基础。</p>
+
+<h2>4. 与其它方法的比较</h2>
+<table>
+<tr><th>方法</th><th>软提示/参数位置</th><th>冻结模型？</th><th>说明</th></tr>
+<tr><td>Prompt Tuning</td><td>仅输入层之前</td><td>是</td><td>最简化，实现简单</td></tr>
+<tr><td>Prefix Tuning（Li &amp; Liang 2021）</td><td>每层注意力前都加</td><td>是</td><td>更复杂，生成任务强</td></tr>
+<tr><td>模型调优（Model Tuning）</td><td>更新所有权重</td><td>否</td><td>最强但最贵</td></tr>
+</table>
+<p>Prompt Tuning 可视为 prefix tuning 的<strong>简化</strong>：只在输入层加软提示，即可在大型模型上匹配全参数微调的性能。</p>
+
+<h2>5. 附加优势</h2>
+<ul>
+<li><strong>领域迁移鲁棒性</strong>：软提示调节的冻结模型对域偏移（domain shift）更稳健——在域改变的测试集上，Prompt Tuning 的表现优于模型调优。</li>
+<li><strong>提示集成（Prompt Ensembling）</strong>：可高效组合多个软提示获得集成推理收益，比训练多个完整模型廉价得多。</li>
+<li>实现简单、参数量少，契合复用一个基础模型的场景。</li>
+</ul>
+
+<p style="text-align:center;color:#999;margin-top:40px;border-top:1px solid #e6d2a8;padding-top:20px;">📚 本文由 ar5iv 原文翻译为中文，数学公式采用 HTML 上下标 + Unicode 渲染</p>
+</body>
+</html>

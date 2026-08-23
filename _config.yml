@@ -30,6 +30,7 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+  - papers/**
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -69,6 +70,7 @@ index_generator:
 default_category: uncategorized
 category_map:
 tag_map:
+  拉斯冯提尔: lars-von-trier
 
 # Metadata elements
 ## https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
@@ -129,6 +131,7 @@ theme_config:
       萧红: /tags/萧红/
       林棹: /tags/林棹/
       邱妙津: /tags/邱妙津/
+      拉斯冯提尔: /tags/lars-von-trier/
     其他: /tags/其他/
 
 # Deployment
@@ -137,3 +140,41 @@ deploy:
   type: git
   repo: https://github.com/shikunpneg/my-blog.git
   branch: main
+
+# Custom scripts (LaTeX pipeline: server-side KaTeX render + KaTeX CSS inject)
+scripts:
+  - scripts/inject-katex.js
+
+# Markdown engine: markdown-it (replaces hexo-renderer-marked)
+# Native LaTeX support via markdown-it-texmath -> KaTeX at build time.
+# Rendering happens during markdown parsing, so $...$ / $$...$$ survive
+# inside tables, lists, blockquotes, and code blocks are correctly skipped.
+markdown:
+  preset: 'default'
+  render:
+    html: true
+    xhtmlOut: false
+    breaks: false
+    linkify: true
+    typographer: true
+    quotes: '“”‘’'
+  plugins:
+    - name: 'markdown-it-texmath'
+      options:
+        engine: 'katex'
+        # Support BOTH $...$ / $$...$$ (dollars) AND \(...\) / \[...\] (brackets)
+        # because existing posts use both syntaxes (Lora paper uses brackets).
+        delimiters: ['dollars', 'brackets', 'beg_end']
+        katexOptions:
+          throwOnError: false
+          errorColor: '#cc0000'
+          macros:
+            '\\R': '\\mathbb{R}'
+  anchors:
+    level: 1
+    collisionSuffix: ''
+    permalink: false
+    permalinkClass: 'header-anchor'
+    permalinkSide: 'left'
+    case: 0
+    separator: '-'
