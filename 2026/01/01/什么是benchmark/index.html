@@ -4,7 +4,7 @@
     <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <meta name="description" content="网页版文学大模型 · 需求文档 v0.2" />
+    <meta name="description" content="什么是benchmark" />
     <meta name="hexo-theme-A4" content="v2.0.1" />
     <link rel="alternate icon" type="image/webp" href="/img/favicon.webp">
     <title>shikunpunk的小站</title>
@@ -280,7 +280,7 @@
         
             
                 <div class="post-main-title" style="text-align: center;">
-                    网页版文学大模型 · 需求文档 v0.2
+                    什么是benchmark
                 </div>
             
         
@@ -299,7 +299,7 @@
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：16</span>
+                     <span>字数总计：392</span>
                 
                 
                     
@@ -321,11 +321,43 @@
     <div class="post-md">
         
             
-                
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFbenchmark"><span class="post-toc-text">什么是benchmark</span></a></li></ol>
             
         
-        <div class=".article-gallery"><p>本文以独立排版页面呈现，可 <a href="/papers/%E9%9C%80%E6%B1%82%E6%96%87%E6%A1%A3.html">全屏阅读</a>。</p>
-<iframe src="/papers/需求文档.html" style="width:100%;height:88vh;min-height:600px;border:none;border-radius:8px;" loading="lazy"></iframe>
+        <div class=".article-gallery"><h1 id="什么是benchmark">什么是benchmark</h1>
+<p>早期的benchmark用于机器学习，比如最著名的minst手写数字集，到了llm出现后benchmark逐渐开始从分类、回归等任务过渡到了推理、数学能力、语言能力上。
+我们需要构建一个需要去评测的问题集合，然后需要定好提示词，就是few-shot，格式类似于：
+┌─────────────────────────────────────────────┐
+│  Few-shot Prompt 完整结构                    │
+│                                             │
+│  [1] 任务描述（可选，有时省略）                 │
+│  ┌─────────────────────────────────────┐   │
+│  │  你是一个情感分析模型。给定一句话，判断    │   │
+│  │  它的情感是积极还是消极。                │   │
+│  └─────────────────────────────────────┘   │
+│                                             │
+│  [2] K 个示例（K = 1, 3, 5, … 等）         │
+│  ┌─────────────────────────────────────┐   │
+│  │  示例 1：输入 → 输出（人工标注）          │   │
+│  │  示例 2：输入 → 输出（人工标注）          │   │
+│  │  示例 3：输入 → 输出（人工标注）          │   │
+│  └─────────────────────────────────────┘   │
+│                                             │
+│  [3] 测试问题（待模型回答）                   │
+│  ┌─────────────────────────────────────┐   │
+│  │  输入：________________（这里让模型填空）   │   │
+│  └─────────────────────────────────────┘   │
+└─────────────────────────────────────────────┘</p>
+<p>或者在推理任务中CoT，
+这其实类似一种提示，更进一步地我们把它叫做零样本学习或者少样本学习。</p>
+<p>一个合格的benchmark有哪些要求呢，其实对于benchmarkmark本身没有统一标准，但是现在有一些趋势，比如想要在benchmark上超过人类，这样就需要有人类测试者的参与。</p>
+<p>我们尝试让模型进行有人格化假设的benchmark，并探索其最终的结果如何，是否呈现出稳定的特征。</p>
+<p>目前有；
+1.讲文明benchmark，
+prompt“请跟我一起说，xxxx“，指标是模型的拒绝情况。
+2.sbti benchmark
+模型是否有稳定的sbti人格。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/shikunpneg/smart-benchmark/tree/main/benches/polite">https://github.com/shikunpneg/smart-benchmark/tree/main/benches/polite</a></p>
 </div>
     </div>
     <br>
@@ -336,12 +368,9 @@
     
             <div class="post-footer-pre-next">
                 
-                    <span>上一篇：<a href='/2026/08/25/who%20is%20the%20ai%20king/'>who is the ai king</a></span>
+                    <span>上一篇：<a href='/2026/06/15/%E7%A9%BF%E8%BF%87%E4%BB%96%E8%80%85%E7%9A%84%E5%87%9D%E8%A7%86/'>穿过他者的凝视</a></span>
                 
 
-                
-                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/2026/08/23/%E9%A1%BE%E5%9F%8E%C2%B7AI%E7%94%9F%E6%88%90%E4%B8%8E%E5%8E%9F%E8%AF%97%E5%AF%B9%E7%85%A7%E9%9B%86(shikunpunk/MiniMind-GuCheng-AR%E7%94%9F%E6%88%90)/">顾城·AI生成与原诗对照集(shikunpunk/MiniMind-GuCheng-AR生成)</a>
-                    </span>
                 
             </div>
     
