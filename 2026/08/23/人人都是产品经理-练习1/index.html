@@ -293,19 +293,19 @@
             <div class="post-head-meta-center">
         
                 
-                    <span>最近更新：2026-08-26</span> 
+                    <span>最近更新：2026-08-28</span> 
                 
                 
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：1.3k</span>
+                     <span>字数总计：1.8k</span>
                 
                 
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：4分钟</span>
+                    <span>阅读估时：6分钟</span>
                 
                 
                     
@@ -336,15 +336,27 @@
 现在还没有一家全球性的主营大模型业务的公司，一般来说大模型分布在这些国家。
 主要来说人工智能属于新兴的科技行业，不同国家对于其政策都不太相同这是宏观的环境。总的来说，可以将其分为所属国家以人工智能作为重点发展的国家与相反的国家。前者包括：中国、美国，韩国等 后者：
 2.
-模型在权威benchmark上的排名</p>
+模型在benchmark上的排名
+参考这个检索网站
+<a target="_blank" rel="noopener" href="https://benchlm.ai/">https://benchlm.ai/</a>
+<a target="_blank" rel="noopener" href="https://artificialanalysis.ai/">https://artificialanalysis.ai/</a>
+它汇总不同领域的多数benchmark，并通过benchalign综合校准体系进行估分。
+我们现在思考下benchamark对于一个产品来说意味着什么它意味着一种清晰化透明化的比较，相对来说模型强的其他的benchmark也会强。在这种模型通用能力重要的现实中，如果有那个模型在某一领域超越了综合第一，这就变成了它的卖点。比如glm 5.3在cyber上的结果，kimi k3在前端上的结果。
+实际上benchmark做不到绝对的公平，它是他确实影响着用户对于模型的选择。</p>
 <ol start="3">
 <li></li>
 </ol>
 <p>模型的用户数量
+怎么样得知日活数和用户数量呢，除了相信公司发布的数字有没有一些其他的方式去间接地故事用户数量和调用量呢，我们在这里考虑一个最低活跃量，比如在openrouter上公开的调用api的记录。
+在同一价位，模型的用户数量决定了一定程度上体现出模型好用程度。
+而且用户数量是最能反应公司的发展的，通过在时间尺度上的对比我们能够得知一个公司发展得是不是健康。
 4.
 模型的参数大小
-5.
-模型的结构
+根据目前的趋势我们将模型分为两类：总参数超过1T的模型和总参数没有超过1T的模型，这里我们暂时不考虑像qwen 2.5 3b这样的小参数大模型。
+模型的参数决定了它的成本以及技术路线。
+具体的模型参数变化可以参照</p>
+<p>5.模型的结构
+大部分模型的结构都是基于transform来构建，其中又分为only-decoder、only-encoder、编码器和解码器都有的，典型的有gpt、bert。除此之外还有一些像rwkv这样的新型结构。
 6.模型的公司战略
 一般来说公司的战略不会直接公之于众，我们需要通过他们首页来判断。下面我总结了几种：
 1.以探索科技前沿作为公司定位
@@ -357,7 +369,7 @@
 2代表的公司有openai、
 3代表的公司有火山引擎、科大讯飞
 4代表公司有Googledeepmind
-<a target="_blank" rel="noopener" href="http://xn--5mitral-1b5kn2qklhb02d7x5e.ai">5代表公司有mitral.ai</a></p>
+<a target="_blank" rel="noopener" href="http://xn--5mistral-ep1ml3s6whr97dbx8e.ai">5代表公司有mistral.ai</a></p>
 <p>从行业的依赖角度来说，人工智能的故事能够继续的讲下去离不开以探索作为定位的公司，所以那些把llm作为产品的公司是依赖于前者的，这就是llm以产品为目标客户的产品。</p>
 <h2 id="agent的不同赛道">agent的不同赛道</h2>
 <p>agnet是直接跟用户的需求紧紧联系在一起的，现在市面上常见的agent大致分为两类：
