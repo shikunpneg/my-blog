@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>对于湖北各地级市宠物医院分布的调查和研究</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, "Source Han Serif SC", "Noto Serif CJK SC", "Microsoft YaHei", serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><strong>对于湖北省各地级市宠物医院的分布调查和研究</strong></p>
+<p>扬子宠物调查组</p>
+<p><strong>摘要</strong></p>
+<p>本研究利用高德地图api实时抓取定位数据和查询统计年鉴对于湖北省各种宠物医院参数的调查统计，利用区域经济发展理论进行在省级尺度，地级市尺度两种尺度进行理论解释，通过核函数密度估计，KD--tree算法，维诺图算法，以宠物医院区位熵，竞争密度作为参数进行图形上市场的划分。本研究以湖北省宠物医院这一区域经济类型作为区域经济发展理论的实例，利用皮尔逊独立性检验和相关性分析量化理论的符合度，并结合实际情况对理论进行修正，针对实际情况为荆州发展提供可行的建议。</p>
+<p>从全省尺度上来看，湖北省的地级市宠物医院呈单极分布集中在主要城区，宠物医院数量向个县区逐渐递减</p>
+<p>在人口密度足够充沛的城市，宠物医院的分布受到经济密度和交通成本的影响。经济密度主要决定大范围的宠物医院聚集，交通成本影响局部的分布。而且当经济密度划分的市场的交界处竞争密度最小，宠物医院的分布会有一个从密度低到密度高地方的聚集现象，当竞争足够激烈，聚集就会存在一定的分布规律。例如在荆州的沙市区就形成了沿着道路对称分布的规律且符合霍尔顿模型。</p>
+<p>对于荆州市，有高于全国宠物医院数量平均值的宠物医院数量，和湖北省较多的猫咖数量丰富的动物科学高校背景，说明了这里有很好的宠物经济客群，具有发展潜力。可以通过打造宠物经济产业园的方式进一步发展宠物经济</p>
+<h1 class="TOC-Heading" id="目录">目录</h1>
+<ol>
+<li><p>项目背景</p></li>
+</ol>
+<p>1.宠物经济背景</p>
+<p>2．研究区域经济学的意义</p>
+<p>3. 调研目的及意义</p>
+<p>二． 理论基础与文献综述</p>
+<p>1.核的生成与区域发展模型</p>
+<p>1.核的生成模型</p>
+<p>1.自生型</p>
+<p>2.区位型</p>
+<p>2.<a
+href="https://zhida.zhihu.com/search?content_id=252254201&amp;content_type=Article&amp;match_order=1&amp;q=%E9%9B%B7%E5%88%A9%E6%B3%95%E5%88%99&amp;zhida_source=entity">雷利法则</a></p>
+<p>3.霍林顿模型</p>
+<p>4.核心与边缘理论</p>
+<p>5.KD树算法原理</p>
+<p>6.核密度估计图原理</p>
+<p>7. Voronoi Diagram (维诺图) 的概念</p>
+<p>三．数据收集</p>
+<p>1.宠物医院的定位数据<br />
+2.人口数据，交通数据的收集</p>
+<p>3.荆州市各种不同类型的宠物经济数据</p>
+<p>四．数据分析</p>
+<p>1．全省尺度分析</p>
+<p>1.湖北省各地级市竞争密度热力图分析</p>
+<p>2.湖北省各地级市距离热力图分析</p>
+<p>3．维诺图分析</p>
+<p>2地级市尺度的分析</p>
+<p>3荆州的宠物经济</p>
+<p>4对荆州宠物经济发展的建议</p>
+<p><strong>一．项目背景</strong></p>
+<p><strong>1．宠物经济背景</strong>：</p>
+<p>宠物经济行业，也被称为“它经济”，是指围绕宠物形成的完整产业链，涵盖了宠物养殖交易、宠物食品、宠物用品、宠物医疗以及宠物服务消费等多个方面。这个行业与宠物的全生命周期紧密相关，从宠物的养殖、食品供应、日常用品需求，到宠物的医疗保健以及各类服务，都构成了宠物经济的主要内容。</p>
+<p>近年来，随着人们经济水平的提高、思想观念的转变以及人口老龄化和单身、丁克群体的增长，饲养宠物成为人们的一种情感寄托，宠物经济由此快速发展。越来越多的家庭开始饲养宠物，将宠物视为家庭成员，对宠物的投入和关注也在不断增加。这使得宠物经济行业呈现出迅猛的发展势头。</p>
+<p>2024年城镇(犬猫)消费市场规模增长7.5%，达到3002亿元。其中，犬消费市场规模达到1557亿元，小幅增长4.6%；猫消费市场规模达到1445亿元，增长10.7%，2024年，宠物数量为12411万只，较2023年增长2.1%。其中，宠物犬数量为5258万只，较2023年增长1.6%，宠物猫数量为7153万只，较2023年增长2.5%，单只宠物犬年均消费2961元，较2023年上升3.0%。单只宠物猫年均消费2020元，较2023年上升4.9%，这些都说明宠物经济在蓬勃发展。</p>
+<p><strong>2．研究区域经济学的意义：</strong></p>
+<p>空间性是地理学区别于其他科学的本质特征
+之一。点、线、面等不同形态的自然和人文要素在地
+理空间中的位置、分布形式和相互关系构成了地理 学的空间结构[1]。
+区域经济的各种空间形态在一定 地域范围内的组合及其空间分异称之为区域经济
+空间结构。 区域经济空间结构是区域生产要素、经
+济发展水平、产业结构类型、经济控制力等在一定 地域空间上的综合反映，
+在国内外有关文献中，通 常说的区域空间结构就是指区域经济空间结构[2]。
+区域经济空间结构既是区域空间结构的主体和发
+展变化最频繁的部分，又是对区域经济发展影响最
+大、与区域发展关系最密切的区域空间结构。 探讨
+区域经济空间结构及其演化规律，既最为人们所重 视，又具有重要意义[3]</p>
+<p><strong>3.调研目的及意义：</strong></p>
+<p>有利于了解宠物医院的分布特点，给新的宠物医院提供选址建议。宠物经济的宏观情况对宠物经济市场做预估。</p>
+<p><strong>二．理论基础与文献综述</strong></p>
+<p>区域” 就是指研究人员获准进行研究的地区 。“核”
+指区域的空间发生点。在核内，物质、信息与要素之间的联系高度集中，它作为客观存在的物质实体，占有一定的地域空间；在核与周围环境的交界地带，物质、信息与要素之间相互联系的密度及类型在空间分布上表现出较大的不连续性。核是区域的政治、经济、文化中心，它具有在空间上与时间上的发展演化、生长发育和起源的历史进程。我国现有的聚落（也即核）多数是解放前旧聚落基础上发展起来的，同时新的增长核也在不断地产生与发展。因此，认识核的生成类型及过程是研究区域发展的起点。核的生成与发育使得与周围环境之间发生了越来越广泛的社会、经济联系，带动了作为衫领的区域发展。从外界看，区域的发展动态来自供给与需求的矛盾运动，而内部机制是增长乘数，可认为是区域增长的
+“酶” 或
+“酵母”，可通过对区域的投入产出分析来考查区域的增长。根据比较利益原则，区域的增长和空间范围的增大，与其它区域不可避免地发生接触，区际之间物质的合理交换可以避免造成资源浪费的短腿平衡和经济效益很差、代价又很昂贵的长脚平衡。通过资源合理流动，调剂资源余缺，取天下之长，补自己之短，取得资源优化配置，求得国民经济平衡，获得高效率的有效益的区域及区际的协调与平衡</p>
+<p><strong>1.核的生成与区域发展模型</strong></p>
+<p>“区域”就是指研究人员获准进行研究的地区。“核”指区域的空间发生点。在核内，物质、信息与要素之间的联系高度集中，它作为客观存在的物质实体，占有一定的地域空间；在核与周围环境的交界地带，物质、信息与要素之间相互联系的密度及类型在空间分布上表现出较大的不连续性。核是区域的政治、经济、文化中心，它具有在空间上与时间上的发展演化、生长发育和起源的历史进程。我国现有的聚落（也即核）多数是解放前旧聚落基础上发展起来的[2]，同时新的增长核也在不断地产生与发展]。因此，认识核的生成类型及过程是研究区域发展的起点。核的生成与发育使得与周围环境之间发生了越来越广泛的社会、经济联系，带动了作为衫领的区域发展。从外界看，区域的发展动态来自供给与需求的矛盾运动，而内部机制是增长乘数，可认为是区域增长的“酶”或“酵母”，可通过对区域的投入产出分析来考查区域的增长。根据比较利益原则，区域的增长和空间范围的增大，与其它区域不可避免地发生接触，区际之间物质的合理交换可以避免造成资源浪费的短腿平衡和经济效益很差、代价又很昂贵的长脚平衡。通过资源合理流动，调剂资源余缺，取天下之长，补自己之短，取得资源优化配置，求得国民经济平衡，获得高效率的有效益的区域及区际的协调与平衡。</p>
+<p>1.核的生成模型</p>
+<p>1. 自生型</p>
+<p>这类核产生于与当时社会、经济状况相适应的自然地理环境中[7]，是地形、水源、动植物、气候、土壤等自然地理要素综合作用的产物。给出各要素对于聚落生成的最佳状态、对于聚落生存的阈值，利用综合评判方法[8]和GIS技术（将各要素分别数值化后输入计算机，建立空间拓扑文件和属性文件，使各要素属性与空间位置以数据库与图形显示系统形式相联系），在全国范围内选择出最有利于聚落起源的若干靶区，设共m个（见图2.1），区域$\Omega$内的各点记作P，则靶区在Omega内的分布函数可用<img
+src="hbpet_media/media/image1.png"
+style="width:5.76806in;height:0.52153in" /></p>
+<p><img src="hbpet_media/media/image2.png"
+style="width:5.37575in;height:0.61467in" /></p>
+<p>由于自然选择和某些随机因素，这个可能发生点中只有n个（n &lt;
+m）真正产生了聚落，发展了文明[7,
+10]。m个点中出现了n个的概率为n/m，这n个文明点在$m$个点中定位于现在的位置的概率为$1/C_{m}^{n}$，因此自生型核的空间分布可表示为</p>
+<p><img src="hbpet_media/media/image3.png"
+style="width:4.55272in;height:2.06279in" /></p>
+<p>2.区位型<br />
+由于核群的空间结构位置造成的服务方便度与门槛人口（Threshold
+Population）之的矛盾运动，造成若干核向高级发展，并有若干低级核的产生
+。这种中心式的核群结构，可见于汉朝中原地区在畜力、短途、步行条件下所产生贸易中心分布结
+、现代城市商业服务网点和一些地区的城镇体系。</p>
+<p> <img src="hbpet_media/media/image4.png"
+style="width:1.41031in;height:1.2in" /></p>
+<p>图2.1 自生型核的可能起源点o与实际起源点.</p>
+<p>自生型核一旦生成以后，其单体增长一般可用Logistic方程描述：</p>
+<p>u为核的状态变量，N(t)为区域的资源状态容量，亦可广义地看作市场。r为核的自增长乘数，是核的组成物质、结构及运动的属性参量，也可当作控</p>
+<p><img src="hbpet_media/media/image5.png"
+style="width:2.18707in;height:1.97831in" /></p>
+<p>实际上，由于社会需求本能的趋动，生产力发展，科技进步，人们对自然界的认识与改造不断加深，一般区域容量都是增加的（见图2.3）。据此修正后的Logistic方程曲线如图，单核以此形式发育生长直至与其他核发生接触为止。</p>
+<p>图2.3 区域容量的含义</p>
+<p>Fig. 2.3 The meaning of regional capacity</p>
+<p><img src="hbpet_media/media/image6.png"
+style="width:2.57509in;height:2.19802in" /></p>
+<p>图2.4 修正后的Logistic方程曲线</p>
+<p>Fig. 2.4 Modified curve of logistic equation</p>
+<p><img src="hbpet_media/media/image7.png"
+style="width:1.87394in;height:1.59456in" /></p>
+<p><strong>1，雷利法则</strong></p>
+<p><a
+href="https://zhida.zhihu.com/search?content_id=252254201&amp;content_type=Article&amp;match_order=1&amp;q=%E9%9B%B7%E5%88%A9%E6%B3%95%E5%88%99&amp;zhida_source=entity">雷利法则</a>，也称为<a
+href="https://zhida.zhihu.com/search?content_id=252254201&amp;content_type=Article&amp;match_order=1&amp;q=%E9%9B%B6%E5%94%AE%E5%BC%95%E5%8A%9B%E6%B3%95%E5%88%99&amp;zhida_source=entity">零售引力法则</a>，是由美国学者<a
+href="https://zhida.zhihu.com/search?content_id=252254201&amp;content_type=Article&amp;match_order=1&amp;q=%E5%A8%81%E5%BB%89%C2%B7%E9%9B%B7%E5%88%A9&amp;zhida_source=entity">威廉·雷利</a>（William
+Reilly）在1929年提出的。该法则主要用于分析和预测两个具有零售功能的城镇之间，各自吸引顾客的能力。雷利法则可以帮助决策者在开发地区信息不足时，迅速高效地判断出最佳的店铺选址。</p>
+<ul>
+<li><p>店铺的吸引力与人口的数量成</p></li>
+<li><p>正比。</p></li>
+<li><p>店铺的吸引力与客户和店铺之间的距离的平方成反比<img
+src="hbpet_media/media/image8.png"
+style="width:3.26111in;height:0.76042in" /></p></li>
+</ul>
+<p><strong>2.霍林顿模型</strong></p>
+<p><img src="hbpet_media/media/image9.png"
+style="width:3.01111in;height:0.96875in" /></p>
+<p>Hotelling模型是指一种用于解释企业选址和定价行为的模型，最初由经济学家哈罗德·霍特林（Harold
+Hotelling）在1929年提出。该模型主要用于描述在地理空间上分布的商家如何竞争消费者，并且商家倾向于在空间上集中，以便更好地吸引顾客，形成所谓的“最小差异化”现象。具体来说，Hotelling模型假设在一个线性城市中，消费者均匀分布，而商家则位于这条线上的不同位置。商家通过调整价格来吸引顾客，顾客会选择距离自己最近且价格相对较低的商家。这样，商家的最优策略是尽可能靠近竞争对手，以减少顾客的出行成本，从而争夺更多的市场份额。</p>
+<p><strong>3.核心与边缘理论</strong></p>
+<p>核心与边缘理论是1966年由弗里德曼(J.R.Fridemna)在他的学术著作《区域发展政策》(Regional
+development
+policy)一书中，正式提出的。1969年他在《极化发展理论》中，又进一步将“核心一边缘”这个具有鲜明特色的空间极化发展思想归纳为一种普遍适用的主要用于解释区际或城乡之间非均衡发展过程的理论模式。弗里德曼认为，任何空间经济系统均可分解为不同属性的核心区和外围区。该理论试图解释一个区域如何由互不关联、孤立发展，变成彼此联系、发展不平衡，又由极不平衡发展变为相互关联的平衡发展的区域系统。</p>
+<p><strong>4.KD树算法原理</strong></p>
+<p>KD树是一种用于多维空间划分的高效数据结构，主要用于快速查询最近邻点等问题。它通过递归地将数据集划分为更小的部分来构建一棵二叉树。</p>
+<p>构建过程</p>
+<p>在构建过程中，KD树会选择一个维度作为当前节点的分割轴，并选取该维度上的中位数作为分裂点。这样可以确保每次分割都能大致平均地分配数据点到左右子树中。通常情况下，会按照各维度轮流选择分割轴的方式进行操作</p>
+<p><img src="hbpet_media/media/image10.png"
+style="width:2.50992in;height:1.30953in" /></p>
+<p><strong>5.核密度估计图原理：</strong></p>
+<p>核密度图本质上是根据有限的数据样本，运用<a
+href="https://zhida.zhihu.com/search?content_id=231051313&amp;content_type=Article&amp;match_order=1&amp;q=%E6%A0%B8%E5%AF%86%E5%BA%A6%E5%87%BD%E6%95%B0&amp;zhida_source=entity">核密度函数</a>，对整体数据的密度进行估计；即已知有限的数据样本和一个核函数，输出整体数据的概率密度，并通过图形展示出结果</p>
+<p><img src="hbpet_media/media/image11.png"
+style="width:2.84444in;height:0.5625in" /></p>
+<p>其中</p>
+<p>x是属于整体数据中的任一变量</p>
+<p>n是样本数据中数据点的个数</p>
+<p>h是平滑带宽，控制平滑量，h值越大，数据越平滑；且h&gt;0</p>
+<p>K是核密度函数</p>
+<p>si是样本数据中的一个数据点</p>
+<p><strong>6. Voronoi Diagram (维诺图) 的概念</strong></p>
+<p>Voronoi Diagram
+是一种几何结构，用于划分空间中的区域。具体来说，在二维平面上给定一组离散点（称为站点），每个站点对应一个区域，这个区域内所有的点距离该站点的距离小于等于其他任何站点的距离<em>2</em>。</p>
+<p>这种划分方式具有广泛的应用场景，例如地理信息系统、计算机图形学以及网络优化等领域。它能够帮助解决最近邻查询等问题，并提供关于空间分布的有效信息。</p>
+<p><img src="hbpet_media/media/image12.png"
+style="width:1.74133in;height:1.54971in" /></p>
+<p><strong>变量解释</strong>：</p>
+<p>经济密度：这里指单位面积的gdp值（往往用区县的数据）</p>
+<p>人口密度：这里指单位面积的人口数量</p>
+<p>竞争密度：指单位面积的宠物经济数量</p>
+<p><strong>四．数据收集</strong></p>
+<p><strong>1.宠物医院的定位数据<br />
+</strong>该调查利用高德，百度地图的实时pos技术，从宏观上捕获宠物医院的经纬度，名称等数据。</p>
+<p><img src="hbpet_media/media/image13.png"
+style="width:2.08153in;height:2.54816in" /><img
+src="hbpet_media/media/image14.png"
+style="width:2.48078in;height:1.37209in" /></p>
+<p>作为国内的头部定位公司，高德的pol服务的精度非常高。这给我们做宏观区域经济分析提供了很大的帮助。</p>
+<p><strong>2.人口数据，交通数据的收集</strong></p>
+<p>包括各个区县地级市的2022年的人均gdp和总gdp</p>
+<p><img src="hbpet_media/media/image15.png"
+style="width:1.5663in;height:1.97674in" /><img
+src="hbpet_media/media/image16.png"
+style="width:1.55814in;height:2.10368in" /><img
+src="hbpet_media/media/image17.png"
+style="width:1.90667in;height:2.32466in" /></p>
+<p>这部分数据通过查询国家统计年鉴，湖北省统计年鉴可以找到。</p>
+<p><strong>3.荆州市各种不同类型的宠物经济数据</strong></p>
+<p>包括商户种类，产品定价，人流量等。这部分数据采用线下实地调研。</p>
+<p><strong>五．数据分析</strong></p>
+<p><strong>一．全省尺度分析</strong></p>
+<p>1.湖北省各地级市竞争密度热力图分析</p>
+<p>我们采用了spacy库里的热力图估计的方法直观地表示各个地级市的宠物医院竞争情况，竞争密度用宠物医院数量的密度来表征。</p>
+<p><img src="hbpet_media/media/image18.png"
+style="width:2.72414in;height:3.52778in" /><img
+src="hbpet_media/media/image19.png"
+style="width:2.98776in;height:2.81034in" /></p>
+<p>各个地级市的竞争最激烈的地域在市区，呈现单核分布，只有十堰，黄石有双核分布的倾向。黄石是因为它的地形上有一个贯穿市区的湖泊，所以导致这种形状的分布。而十堰市的另外一个竞争热核在安康市有18家宠物医院，十堰有34家宠物医院，</p>
+<p>单核分布解释了宠物医院的在宏观尺度上的分布趋向市区，并有市区沿着地形向周围县区扩散。</p>
+<p>2.湖北省各地级市距离热力图分析</p>
+<p><img src="hbpet_media/media/image20.png"
+style="width:1.40969in;height:0.64357in" /><img
+src="hbpet_media/media/image21.png"
+style="width:1.00394in;height:0.61387in" /><img
+src="hbpet_media/media/image22.png"
+style="width:1.27644in;height:0.56147in" /></p>
+<p><img src="hbpet_media/media/image23.png"
+style="width:1.32673in;height:0.5103in" /><img
+src="hbpet_media/media/image24.png"
+style="width:1.09598in;height:0.48515in" /><img
+src="hbpet_media/media/image25.png"
+style="width:0.73845in;height:0.60396in" /></p>
+<p><img src="hbpet_media/media/image26.png"
+style="width:1.35249in;height:2.0396in" /></p>
+<p>我们这里对距离的测算使用的是欧式距离，颜色越深表明距离越远。<img
+src="hbpet_media/media/image27.png"
+style="width:6.80058in;height:6.18105in" /></p>
+<p>武汉市是这些地级市中浅色面积最大的，说明武汉市在这些地级市中竞争密度最大。</p>
+<p><img src="hbpet_media/media/image28.png"
+style="width:6.48881in;height:6.08838in" /></p>
+<p>深色面积最大的是咸宁市，这说明它的竞争密度最小。</p>
+<p>为了跟详细地了解这些地级市的竞争水平，我们统计了浅色（竞争最激烈）的面积比，统计结果如下图：</p>
+<p><img src="hbpet_media/media/image29.png"
+style="width:2.05464in;height:1.91438in" /></p>
+<p>同时也进行了各地级市平均区位熵的统计，如下图</p>
+<p><img src="hbpet_media/media/image30.png"
+style="width:1.38194in;height:1.91218in" /></p>
+<p>为了得到更准确的分析，利用MATLAB进行傅里叶拟和分析，发现均值周期变化的中线为1.3到1.4左右非常接近。这说明区位熵的分析和竞争密度的分析是高度吻合的，也就是说单位面积的宠物医院的数量和单位面积的经济指数有很强的关联。</p>
+<p><img src="hbpet_media/media/image31.png"
+style="width:2.33476in;height:2.5481in" /><img
+src="hbpet_media/media/image32.png"
+style="width:2.12451in;height:2.66347in" /></p>
+<p><img src="hbpet_media/media/image33.png"
+style="width:1.96512in;height:2.38529in" /><img
+src="hbpet_media/media/image34.png"
+style="width:2.16141in;height:2.30233in"
+alt="图形用户界面, 应用程序 AI 生成的内容可能不正确。" /></p>
+<p><img src="hbpet_media/media/image35.png"
+style="width:2.7033in;height:2.08654in" /><img
+src="hbpet_media/media/image36.png"
+style="width:2.40825in;height:2.13513in" /></p>
+<p>湖北省各地级市区位熵的变异系数为41.88%,标准差只有0.77</p>
+<p>说明这组数据分布的很均匀，变异系数较大是因为不同地区的经济水平不同会导致平均的区位熵不同。这个可以结合上图，区位熵拟和的结果。</p>
+<p>湖北省各地级市竞争密度占比的变异系数为28.01%，标准差有9.820</p>
+<p>剔除离群值后，标准差为2.919，变异系数7.75%，结果表明不同地区的竞争密度大致相同。原因可能有这几个方面：1.统计口径的问题，我们的以相对距离作为衡量是否有集群的标准，但是由于不只有离得比较近的区，还有离得比较远的县城。2.宠物医院的选择存在排斥现象，我们可以设想当你选择开设宠物医院的地方，社区很多，人口充足，我们一定会开在和其他宠物医院有一定距离的地方，做差异化的人群竞争。这是因为当地的宠物医院数量不多，竞争力度不大导致的。3.我们换一种思路想，如果最极端的情况下，全部都是一家挨着一家（这里指一个社区隔着另外一个社区），实际上这种距离是非常近的，很容易被其他的比较大的值拉平（这是欧里几得距离的缺陷）</p>
+<p><img src="hbpet_media/media/image37.png"
+style="width:0.3656in;height:1.48676in" /></p>
+<p>对区位熵的最大值进行比对，发现除了襄阳，宜昌，黄石超过了2，其余均接近1。区位熵接近1代表该地区宠物医院的数量是平均的，具体来看襄阳的宠物医院主要集中在汉江以北的樊城区（26家），这是因为襄城区（11家）以旅游业为主商场规模并不大这和荆州的荆州区和沙市区非常相似。而且襄城区的宠物医院有集群现象，集中分布在在水一方小区的周围，这可能是因为人口密度分布不均导致的。另外发现，荆州区有宠物医院19家，沙市区有25家，有过渡的现象。这差别不是很大，襄阳还有地理因素，汉江之隔的影响。</p>
+<p><img src="hbpet_media/media/image38.png"
+style="width:2.19276in;height:2.35717in" /></p>
+<p>Figure 1一个依照社区分布的例子</p>
+<p><img src="hbpet_media/media/image39.png"
+style="width:2.81965in;height:2.23504in" /><img
+src="hbpet_media/media/image40.png"
+style="width:2.09827in;height:1.76061in" /></p>
+<p>这是襄阳的地理分布（汉江阻隔）和经济类型不同（襄城区以旅游业为主）造成的但是荆州区和沙市区没有天然的地理阻隔，呈逐渐过度的状态。</p>
+<p>其实我们可以看出，地理因素只是影响人口和经济因素的外生变量。</p>
+<p><img src="hbpet_media/media/image41.png"
+style="width:3.8368in;height:6.27811in" /></p>
+<p>宜昌市的地形狭长，宠物医院各自以区为中心分布</p>
+<p><img src="hbpet_media/media/image42.png"
+style="width:2.98238in;height:2.69307in" /></p>
+<p>这是伍家岗区，宠物医院以商场为中心沿着四周的小区向两边分布。</p>
+<p><img src="hbpet_media/media/image43.png"
+style="width:4.71733in;height:3.70688in" /></p>
+<p>这是点军区，宠物医院分布较为分散，宠物医院多的原因是面积大，人数多。</p>
+<p><img src="hbpet_media/media/image44.png"
+style="width:5.76806in;height:3.11458in" /></p>
+<p>这是黄石的宠物医院集中在湖西边，在黄州区外有一处地方是值得注意的，就花鸟宠物市场。花鸟宠物市场的传统起源于人们对花鸟鱼虫的喜爱和市场需求。在中国，早在唐宋时期，就已经出现了花鸟市场，当时的人们开始将花卉、鸟类等作为观赏和交易的对象。到了明清时期，花鸟市场的规模达到了巅峰，尤其是在晚清，京城的一些八旗子弟提笼架鸟、看戏斗蛐蛐，成为一种时尚和雅趣。</p>
+<p>以老上海为例，清代中叶时，花卉与其他农业副产品一样，由花农提篮挑担上市销售，少量香花由小贩加工成各类花饰沿街叫卖。后来逐渐形成了花树集市。19世纪末，上海县城已经有20多处私营园艺农场和花店。1917年，上海花树公所在东台路附近建了聚花楼花园，并在1930年正式定名为上海市花树市场。各地的花鸟鱼虫宠物市场并不是政府的政策引导，而是一种逐渐在衰落的传统。笔者认为花鸟鱼虫宠物市场旁边的宠物医院也许是之前就有过宠物诊所的开设后面慢慢现代化了（传统）</p>
+<p><strong>4．维诺图分析</strong></p>
+<p><img src="hbpet_media/media/image45.png"
+style="width:1.69231in;height:1.28111in" /><img
+src="hbpet_media/media/image46.png"
+style="width:2.57829in;height:1.20272in" /></p>
+<p><img src="hbpet_media/media/image47.png"
+style="width:1.89888in;height:2.51538in" /><img
+src="hbpet_media/media/image48.png"
+style="width:2.95823in;height:2.47616in" /></p>
+<p><img src="hbpet_media/media/image49.jpeg"
+style="width:2.45271in;height:2.51163in" /><img
+src="hbpet_media/media/image50.png"
+style="width:3.07612in;height:2.41825in" /></p>
+<p>以武汉和宜昌的维诺图为例，武汉的十三个行政区正好对应了维诺图的13个区</p>
+<p>宜昌市的13个县区也是正好对应着维诺图的13个区，其他的随州和鄂州更是如此。</p>
+<p>这两幅维诺图的中心区域恰好对应着武汉市和宜昌市的市中心区域。从13个地级市的维诺图中我们看出，市区的市场面积距离近，面积小成片状。这代表市中心市场聚集状况显著，这和区位理论和区域发展理论中，可以解释为：市中心的核是最先形成的，其次向周围的区域辐射，等到中心的核竞争足够激烈就开开始在原有的基础上分化，分裂成更集中的市场。这就解释了为什么湖北各地级市会呈现中心分裂，外围面积差不多大的原因。从区位的角度来看，行政区更容易形成市场是因为行政区的经济社会文化环境有比较稳固的基础，这是客观条件</p>
+<p><strong>本章小结：</strong></p>
+<p>宠物医院的开设首要条件是要有人口资源，其次就是交通条件。这是符合消费者的需求的。有些宠物医院会在同一个地区聚集但是规模不会很大（2—3），有些特殊的现象比如说花鸟鱼虫宠物市场旁边。</p>
+<p>最为重要的是宠物医院作为一种刚需品，人们的需求很大，很容易存活。</p>
+<p>下面以荆州的猫咖分布与其做一个对比，来看看为什么宠物医院的分布能够证明它是刚需品。</p>
+<p><img src="hbpet_media/media/image51.png"
+style="width:5.66932in;height:1.61389in" /><img
+src="hbpet_media/media/image52.png"
+style="width:5.76806in;height:1.41875in" /></p>
+<p>在荆州城区有8家猫咖，有五家都开在离荆州职业技术学院和长江大学不足1km的地方。</p>
+<p>猫咖的分布因为需要喜欢猫的年轻群体所以开在了商场，学校附近。</p>
+<p>这和荆州的宠物医院的分散分布是有比较大的差别的。</p>
+<p><strong>二．地级市尺度的分析</strong></p>
+<p>我们接着以荆州为例，详细探讨宠物医院的选址问题。</p>
+<p><img src="hbpet_media/media/image53.jpeg"
+style="width:5.69275in;height:3.20792in" /></p>
+<p><img src="hbpet_media/media/image54.jpeg"
+style="width:4.06943in;height:4.06943in" /></p>
+<p>从这两幅图可以看出北江宠物医院位于荆州宠物医院的最中间部分，竞争力度最小。</p>
+<p><img src="hbpet_media/media/image55.png"
+style="width:2.12834in;height:1.673in" /></p>
+<p>我们通过经纬度坐标到实际距离的转化计算，得到北江宠物医疗诊（112.233688,30.334904）到酷特（112.260678,30.345633）和宠医森（112.23987,30.352857）的距离分别为，2008.6km和2912.5km,利用引力公式（假设两地的人口密度为平均密度）得到
+，<img src="hbpet_media/media/image56.png"
+style="width:5.76806in;height:0.49097in" /></p>
+<p>0.856280784 和上图距离之比0.81395几乎保持一致。</p>
+<p>我们又通过维诺图求荆州区到沙市区两种子点的中点值（112.23,30.328315）和北江宠物医疗诊所的真实坐标相等（相对误差10-3），维诺图的交界点代表两种市场都不接近。这恰恰应证了我们通过宠物医院之间真实距离算出北江是竞争力最小的宠物医院。</p>
+<p>我们把这种像北江宠物诊所的宠物医院称作两个市场的过渡点。</p>
+<p>竞争密度沿着过渡点向沙市区增加。</p>
+<p>。</p>
+<p><img src="hbpet_media/media/image57.png"
+style="width:2.65685in;height:2.6511in" /></p>
+<p><img src="hbpet_media/media/image58.png"
+style="width:1.77876in;height:1.19944in" /><img
+src="hbpet_media/media/image59.png"
+style="width:1.24282in;height:1.75269in" /><img
+src="hbpet_media/media/image60.png"
+style="width:1.91223in;height:1.54167in" /><img
+src="hbpet_media/media/image61.png"
+style="width:0.88904in;height:2.04583in" /><img
+src="hbpet_media/media/image62.png"
+style="width:2.28324in;height:1.07222in" /></p>
+<p>集群中的对称现象</p>
+<p>把地图缩小到500m/cm的比例尺的情况下我们发现了在沙市区几乎所有的宠物医院是聚集分布的而且这种分布规模小，往往沿着道路对称。我们发现这和霍林顿模型的前提假设非常接近：</p>
+<ol type="1">
+<li><p>宠物医院的服务和收费是相同的</p></li>
+<li><p>每段聚集道路最多有四家医院（这一点和霍林顿模型双店模型是不同的，但是也可以用博弈论的思想解释）</p></li>
+</ol>
+<p>下面是对一号江津中路的四家对称分布宠物医院分布分析，</p>
+<p>首先有两家医院已经占据了江津中路做合适的位置（道路的首段和末端）这就相当于其他的宠物医院提供了选择的边界，接下来选择的宠物医院为了占据更好的资源又不跟前两家相冲突，最好的位置就是道路中间（这里指中间的那段路），然而在更小范围的路上两家店仍然分布在路的两端。（霍林顿模型当先确定定价后选址的情况下，分布在两端是，成本最小，利润最大的选择）</p>
+<p><img src="hbpet_media/media/image63.png"
+style="width:1.47222in;height:3.10318in" /></p>
+<p>从另外一个四家宠物医院对称的格局也可以看到相似的结果。</p>
+<p>看到其他路上也有三家对称分布的宠物医院，用霍林顿模型解释就是，向中间聚集。</p>
+<p>接着我们分析北京中路附近的三家对称聚集的宠物医院，这三家宠物医院并不是严格意义上沿着道路分布的，但是这块区域是一块人口密度极大的区域</p>
+<p><img src="hbpet_media/media/image64.png"
+style="width:1.59028in;height:1.59028in" /><img
+src="hbpet_media/media/image65.png"
+style="width:2.17361in;height:1.42116in" /></p>
+<p><strong>结论：</strong>在人口密度足够充沛的城市，宠物医院的分布受到经济密度和交通成本的影响。经济密度主要决定大范围的宠物医院聚集，交通成本影响局部的分布。而且当经济密度划分的市场的交界处竞争密度最小，宠物医院的分布会有一个从密度低到密度高地方的聚集现象，当竞争足够激烈，聚集就会存在一定的分布规律。</p>
+<p><strong>2.荆州的宠物经济</strong></p>
+<p>荆州的宠物经济市场除了宠物医院这种可商业类型之外，还有像宠物服务，猫咖这样的宠物经济，荆州宠物经济的组成分布情况如下：</p>
+<ol type="1">
+<li><p>荆州市的宠物经济市场包括如下几个部分</p></li>
+</ol>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 6%" />
+<col style="width: 45%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>业态类型</strong></th>
+<th><strong>数量</strong></th>
+<th><strong>代表店铺</strong></th>
+<th><strong>特色服务</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>专业宠物医院</strong></td>
+<td>8</td>
+<td>科道动物医院、福心宠物医疗中心</td>
+<td>急诊/专科/中西医结合</td>
+</tr>
+<tr class="even">
+<td><strong>综合诊所</strong></td>
+<td>5</td>
+<td>荆农宠物门诊、阿猫阿狗宠物门诊</td>
+<td>基础医疗+洗护美容</td>
+</tr>
+<tr class="odd">
+<td><strong>猫咖复合业态</strong></td>
+<td>11</td>
+<td>猫峡谷猫咖、宠宝宠物超市猫咖</td>
+<td>撸猫+饮品/零售/娱乐</td>
+</tr>
+<tr class="even">
+<td><strong>洗护美容中心</strong></td>
+<td>9</td>
+<td>兜有猫宠物、渃霏宠物</td>
+<td>精细化洗护分级定价</td>
+</tr>
+<tr class="odd">
+<td><strong>活体交易机构</strong></td>
+<td>6</td>
+<td>米米呀猫舍、雨晗猫屋</td>
+<td>品种猫繁育/借配</td>
+</tr>
+<tr class="even">
+<td><strong>用品供应链</strong></td>
+<td>5</td>
+<td>猫狗鸽杂粮、多恩宠物用品</td>
+<td>批发零售/同城配送</td>
+</tr>
+</tbody>
+</table>
+<ol start="2" type="1">
+<li><p>荆州宠物经济的宏观分析</p></li>
+</ol>
+<h4
+id="湖北省内对比分析这里的猫咖数量和宠物医院数量是通过百度地图搜索的数量作为估计的">. 湖北省内对比分析（这里的猫咖数量和宠物医院数量是通过百度地图搜索的数量作为估计的）</h4>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 25%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>城市</strong></th>
+<th><strong>人均GDP(万元)</strong></th>
+<th><strong>猫咖数量</strong></th>
+<th><strong>宠物医院</strong></th>
+<th><strong>宠物商户</strong></th>
+<th><strong>特殊因素</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>武汉</td>
+<td>15.33</td>
+<td>80</td>
+<td>552</td>
+<td>2728</td>
+<td>省会集聚效应</td>
+</tr>
+<tr class="even">
+<td>襄阳</td>
+<td>11.56</td>
+<td>8</td>
+<td>101</td>
+<td>383</td>
+<td>区域副中心</td>
+</tr>
+<tr class="odd">
+<td>宜昌</td>
+<td>15.79</td>
+<td>10</td>
+<td>73</td>
+<td>356</td>
+<td>旅游城市</td>
+</tr>
+<tr class="even">
+<td><strong>荆州</strong></td>
+<td><strong>6.82</strong></td>
+<td><strong>9</strong></td>
+<td><strong>66</strong></td>
+<td><strong>286</strong></td>
+<td>农业大市</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p><strong>宠物医疗超配</strong>：荆州宠物医院数量是襄阳的65%，但GDP仅为襄阳的59%</p></li>
+<li><p><strong>猫咖滞后</strong>：猫咖数量与GDP排名不匹配（GDP第11，猫咖第3）</p></li>
+</ul>
+<h4 id="形成机制分析"> 形成机制分析</h4>
+<p><strong>3.1 产业结构驱动</strong></p>
+<ul>
+<li><p>荆州作为<strong>江汉平原农业中心</strong>：</p>
+<ul>
+<li><p>畜牧养殖业发达→催生宠物疫苗等基础医疗服务需求</p></li>
+<li><p>2023年全市畜禽出栏量占全省12.3%</p></li>
+<li><p>存在大量乡镇兽医站转型的宠物诊所</p></li>
+</ul></li>
+</ul>
+<h4 id="荆州的全国定位">5. 荆州的全国定位</h4>
+<ul>
+<li><p><strong>宠物医院密度</strong>：1.15家/万人（接近苏州1.2家/万人）</p></li>
+<li><p><strong>猫咖发展指数</strong>：0.16<img
+src="hbpet_media/media/image66.png"
+style="width:5.76806in;height:2.88403in" />（仅为全国均值0.35的45.7%）</p></li>
+</ul>
+<p><img src="hbpet_media/media/image67.png"
+style="width:5.76806in;height:2.88403in" /></p>
+<p><strong>对荆州宠物经济发展的建议</strong></p>
+<ol type="1">
+<li><p>由于荆州拥有超过全国平均水平的宠物经济水平，我们建议荆州可以形成自己独特的宠物经济产业园，培养多元宠物经济</p></li>
+<li><p>荆州应该利用自己的高校资源，让周边动物科学，动物医学专业的学生留在荆州</p></li>
+<li><p>高于全国宠物医院数量平均值的宠物医院数量，和湖北省较多的猫咖数量，说明了这里有很好的宠物经济客群，具有发展潜力。</p></li>
+</ol>
+</body>
+</html>
