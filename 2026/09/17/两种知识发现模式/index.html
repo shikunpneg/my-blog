@@ -305,7 +305,7 @@
                     
                         &nbsp; | &nbsp;
                     
-                    <span>阅读估时：6分钟</span>
+                    <span>阅读估时：7分钟</span>
                 
                 
                     
@@ -325,8 +325,8 @@
             
         
         <div class=".article-gallery"><h1 id="基于问题驱动的知识发现系统">基于问题驱动的知识发现系统</h1>
-<p>经过调研，知识发现系统有各种各样的解释，广义上来说从专家系统（符号主义）到机器学习（联结主义）都算是知识发现。</p>
-<p>比如最早的专家系统，DENDRAL、MYCIN 等通过启发式规则的方式去尝试发现知识；由数据驱动的机器学习，可以实现分类、预测、数据挖掘等任务，也被认为具有知识发现的能力。如果你在浏览器上搜索，甚至对于知识的检索也被称为知识发现系统，如图 1 所示。</p>
+<p>经过调研，知识发现系统有各种各样的解释，广义上来说从专家系统（符号主义）到统计学习、神经网络（联结主义）都算是知识发现。</p>
+<p>比如最早的专家系统，DENDRAL等通过启发式规则的方式去尝试发现知识；由数据驱动的机器学习，可以实现分类、预测、数据挖掘等任务，也被认为具有知识发现的能力。如果你在浏览器上搜索，甚至对于知识的检索也被称为知识发现系统，如图 1 所示。</p>
 <p><a href="/images/%E6%B5%8F%E8%A7%88%E5%99%A81.png" title="图 1：在浏览器中检索“知识发现系统”，检索类工具同样被归入“知识发现系统”之列" class="gallery-item" style="box-shadow: none;"> <img src="/images/%E6%B5%8F%E8%A7%88%E5%99%A81.png" alt="图 1：在浏览器中检索“知识发现系统”，检索类工具同样被归入“知识发现系统”之列"></a></p>
 <p>为了避免歧义，我们把这里所讨论的知识发现系统的定义缩小到：能够产生和发现新知识的系统。以这样的目的设计的系统，又可以分为以下两类：</p>
 <ol>
@@ -337,8 +337,8 @@
 <p>这个模型之所以有效，是因为它利用了科学文献的一个根本特征：知识的碎片化。同一个中间概念（B），可能在“A 类文献”和“C 类文献”中各自出现，但两边的研究者彼此不读对方的论文，因此 A–C 的直接联系从未被任何人明确提出。</p>
 <p>在 Swanson 的基础上，后来发展出了 Arrowsmith、LION LBD、SemRep 等系统，在医学领域有许多贡献：其中 Arrowsmith 是 Swanson 与 Smalheiser 提出的互补文献交互式检索系统[2]；LBD 的后续方向（包括负共识、半影等概念）在 Smalheiser 的系统回顾中有专门讨论[3]；在人文数据库中也出现过以类比发现为目标的早期 LBD 工作[8]；而那些出现频率极低、因而容易被忽略的术语与结论（即所谓“半影”问题），也可能蕴含着发现的价值[9]。</p>
 <p>实际上，DENDRAL 这类专家系统通过推理来进行启发式地探索，也属于基于结论驱动。它们在做一件事情，就是尝试去在已有的结论基础上去发散、推理并尝试进行解释，从而发现新的知识。</p>
-<p>这里可以看到有机物被用结构化、逻辑化（Lisp）的语言表述了出来，便于推理。</p>
-<p><a href="/images/%E8%AE%BA%E6%96%87.png" title="图 2：CONGEN/DENDRAL 的结构生成输出，有机物以 Lisp 式的命令与约束表述，便于推理" class="gallery-item" style="box-shadow: none;"> <img src="/images/%E8%AE%BA%E6%96%87.png" alt="图 2：CONGEN/DENDRAL 的结构生成输出，有机物以 Lisp 式的命令与约束表述，便于推理"></a></p>
+<p>这里可以看到有机物被用结构化、逻辑化的语言表述了出来，便于推理。</p>
+<p><a href="/images/%E8%AE%BA%E6%96%87.png" title="图 2：CONGEN/DENDRAL 的结构生成输出，有机物结构化逻辑化的形式呈现，便于推理" class="gallery-item" style="box-shadow: none;"> <img src="/images/%E8%AE%BA%E6%96%87.png" alt="图 2：CONGEN/DENDRAL 的结构生成输出，有机物结构化逻辑化的形式呈现，便于推理"></a></p>
 <p>除了这样以结论作为驱动的知识发现模型，还有譬如：</p>
 <ul>
 <li><strong>Gaps（研究空白）</strong>：“为什么这个主题组合几乎没人研究？这里是不是缺了一块？”、“这个空白是合理的，还是被忽视的？”系统分析领域内主题的共现模式，识别那些低概率共现的主题对。</li>
@@ -349,21 +349,21 @@
 <p>对于以问题作为驱动的知识发现模式，我们把它称作：<strong>开放式的发现模式</strong>，因为它不是在已知中找缺口，而是在未知中找缺口。</p>
 <p>再次回到我们对知识发现的假设，能够产生和发现新知识的系统。什么样的知识算新呢？对于个人，还是对于某个特定的数据库，还是说对于全人类都是新的。不同程度的新，决定了我们采取哪一种模式。</p>
 <p>回到 Swanson 的 LBD，它有个有名的例子就是鱼油与雷诺氏病的发现，这样的发现是领域（医学）内的新发现，是一种被忽略的知识；这个假设后来也得到了双盲对照临床试验的验证[5]。我们可以用基于结论驱动的发现系统，去在这个封闭的空间内，找是否还有类似的被忽略的结论、知识。</p>
-<p>然而对于爱因斯坦对光的假设，和牛顿对万有引力的假设，上述方法是否还有效呢？爱因斯坦提出相对论的时候大家是反对的，因为它不在已有的知识内，大家无法辨认这是真的科学知识。对于这样的、对全人类来说都比较新的知识，只能通过开放式的知识发现模式实现，因为这里空间是未知的，并且埋藏着我们无法理解的问题。</p>
+<p>然而对于爱因斯坦的光量子假设，和牛顿的万有引力定律，上述方法是否还有效呢？爱因斯坦提出光量子假设和广义相对论时，主流学界是迟疑甚至抵制的，因为它们不在已有的知识内，大家无法辨认这是真的科学知识。对于这样的、对全人类来说都比较新的知识，只能通过开放式的知识发现模式实现，因为这里空间是未知的，并且埋藏着我们无法理解的问题。</p>
 <p>为什么我们需要问题？我想问题是科学的开始，是起点，即使答案会被不断地修正，但是问题将会持续存在，引导着人们思考和发现。</p>
-<p>关于什么样的知识才算新知识，一些哲学家对此提出质疑，认为这个问题本身就是不成立的。波普尔说，科学知识是猜测与反驳[6]。库恩说，知识在范式内积累，范式转换时旧知识被重新理解[7]。也许像他们说的那样，“新”是相对的——相对于某个旧范式，或者只是人类某个远古的知识被现在重新提起等等。这对我们的启示是：无论机器怎样地去发现、制造问题，最终还是需要落到人类来判断和选择哪些新问题是值得留下来的，因为科学属于人类。</p>
+<p>关于什么样的知识才算新知识，一些哲学家对此提出质疑，认为“新”只有在相对于某个范式或背景知识时才有意义。波普尔说，科学知识是猜测与反驳[6]。库恩说，知识在范式内积累，范式转换时旧知识被重新理解[7]。也许像他们说的那样，“新”是相对的——相对于某个旧范式，或者只是人类某个远古的知识被现在重新提起等等。这对我们的启示是：无论机器怎样地去发现、制造问题，最终还是需要落到人类来判断和选择哪些新问题是值得留下来的，因为科学属于人类。</p>
 <h2 id="参考文献">参考文献</h2>
 <ol>
 <li>Swanson, D. R. (1986). Undiscovered public knowledge. <em>Library Quarterly</em>, 56(2), 103–118. LBD 的奠基性论文。</li>
 <li>Swanson, D. R., &amp; Smalheiser, N. R. (1997). An interactive system for finding complementary literatures: A stimulus to scientific discovery. <em>Artificial Intelligence</em>, 91(2), 183–203. Arrowsmith 系统的设计论文。</li>
 <li>Smalheiser, N. R. (2017). Rediscovering Don Swanson: The past, present and future of literature-based discovery. <em>Journal of Data and Information Science</em>, 2(4), 43–64. 对 LBD 未来方向的系统回顾，包含负共识、半影等概念。</li>
-<li>Smalheiser, N. R., &amp; Gomes, O. L. (2014). Mammalian Argonaute-DNA binding? <em>Biology Direct</em>, 9, 27. 负共识概念的来源论文。</li>
+<li>Smalheiser, N. R., &amp; Gomes, O. L. A. (2014). Mammalian Argonaute-DNA binding? <em>Biology Direct</em>, 9, 27. <a target="_blank" rel="noopener" href="https://doi.org/10.1186/s13062-014-0027-4">https://doi.org/10.1186/s13062-014-0027-4</a> 负共识概念的来源论文。</li>
 <li>DiGiacomo, R. A., Kremer, J. M., &amp; Shah, D. M. (1989). Fish-oil dietary supplementation in patients with Raynaud’s phenomenon: A double-blind, controlled, prospective study. <em>American Journal of Medicine</em>, 86(2), 158–164. Swanson 假设的临床验证。</li>
 <li>Popper, K. R. (1963). <em>Conjectures and Refutations: The Growth of Scientific Knowledge</em>. Routledge. 猜测与反驳的哲学基础。</li>
 <li>Kuhn, T. S. (1962). <em>The Structure of Scientific Revolutions</em>. University of Chicago Press. 范式理论的来源。</li>
-<li>Cory, K. A. (1999). Discovering hidden analogies in an online humanities database. <em>Computers and the Humanities</em>, 31, 1–12. 类比发现的 LBD 早期工作。</li>
-<li>Kostoff, R. N., et al. (2009). Literature-related discovery and innovation: Chronic obstructive pulmonary disease. <em>Technological Forecasting and Social Change</em>. 半影/低频术语发现价值的文献之一。</li>
-<li>Agarwal, S., Yu, H., &amp; Kohane, I. (2011). BioNLP: A database of negated biomedical sentences. 负共识陈述的数据库资源。</li>
+<li>Cory, K. A. (1997). Discovering hidden analogies in an online humanities database. <em>Computers and the Humanities</em>, 31(1), 1–12. 类比发现的 LBD 早期工作。</li>
+<li>Kostoff, R. N., Block, J. A., Solka, J. L., et al. (2009). Literature-related discovery. <em>Annual Review of Information Science and Technology</em>, 43, 1–71. 主张处于&quot;半影&quot;中的低频术语同样具有发现价值的代表文献之一。</li>
+<li>Agarwal, S., Yu, H., &amp; Kohane, I. (2011). BioNOT: A searchable database of biomedical negated sentences. <em>BMC Bioinformatics</em>, 12, 420. <a target="_blank" rel="noopener" href="https://doi.org/10.1186/1471-2105-12-420">https://doi.org/10.1186/1471-2105-12-420</a> 负共识陈述的数据库资源。</li>
 </ol>
 </div>
     </div>
