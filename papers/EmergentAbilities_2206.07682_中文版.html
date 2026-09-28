@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>大语言模型的涌现能力 — Wei et al. (2022) 中文全文</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Times New Roman',Georgia,serif;font-size:11pt;line-height:2.1;color:#1a1a1a;background:#f8f8f8;}
+.page{max-width:850px;margin:30px auto;background:#fff;padding:55px 75px;box-shadow:0 4px 24px rgba(0,0,0,0.10);}
+h1{font-size:20pt;text-align:center;margin-bottom:8pt;font-weight:normal;line-height:1.5;color:#111;}
+.subtitle{font-size:13pt;text-align:center;color:#555;margin-bottom:20pt;font-style:italic;}
+.authors-block{text-align:center;font-size:9pt;color:#555;margin-bottom:16pt;line-height:2.3;border-bottom:1px solid #e0e0e0;padding-bottom:14pt;}
+.abstract-box{background:#f5f5f5;padding:16pt 20pt;margin:20pt 0;border-left:4px solid #333;border-radius:0 4px 4px 0;}
+.abstract-title{font-size:11pt;font-weight:bold;margin-bottom:10pt;}
+.abstract-chs{font-size:10.5pt;line-height:1.9;color:#333;text-align:justify;}
+.toc-box{background:#f9f9f9;padding:14pt 20pt;margin:18pt 0;border:1px solid #e0e0e0;border-radius:4px;}
+.toc-box h2{font-size:11pt;border:none;margin:0 0 8pt 0;}
+.toc-box ol{padding-left:18pt;margin:0;}
+.toc-box li{margin-bottom:3pt;font-size:10pt;}
+h2{font-size:13pt;font-weight:bold;margin-top:32pt;margin-bottom:12pt;color:#111;border-bottom:2px solid #aaa;padding-bottom:5pt;}
+h3{font-size:11pt;font-weight:bold;margin-top:20pt;margin-bottom:8pt;color:#222;}
+p{text-align:justify;margin-bottom:10pt;text-indent:2em;}
+blockquote{font-size:10pt;color:#444;border-left:3px solid #aaa;padding:8pt 16pt;margin:14pt 0;background:#fafafa;}
+.fbox{background:#f8f9fa;border:1px solid #d5dde5;border-radius:8px;padding:14pt 18pt;margin:16pt 0;text-align:center;}
+.fbox-inner{font-size:10.5pt;line-height:2.0;color:#1a1a2e;}
+.fbox-inner strong{color:#1a3a5c;display:block;margin-bottom:5pt;}
+table{width:100%;border-collapse:collapse;margin:14pt 0;font-size:9.5pt;}
+th,td{border:1px solid #bbb;padding:7pt 11pt;text-align:left;line-height:1.6;}
+th{background:#2c3e50;color:#fff;font-weight:bold;}
+tr:nth-child(even){background:#f5f7fa;}
+.example-box{background:#fff8e8;border:1px solid #f0d080;border-radius:6px;padding:12pt 16pt;margin:14pt 0;}
+.example-title{font-size:10pt;font-weight:bold;color:#8b6914;margin-bottom:6pt;}
+.sn{background:#eef3ff;border-left:4px solid #2980b9;padding:10pt 16pt;margin:14pt 0;border-radius:0 4px 4px 0;}
+.kr{background:#fff3e0;border-left:4px solid #e67e22;padding:10pt 16pt;margin:14pt 0;border-radius:0 4px 4px 0;}
+.kf{background:#fff5f5;border-left:4px solid #c0392b;padding:10pt 16pt;margin:14pt 0;border-radius:0 4px 4px 0;}
+.hb{background:#e8f5e9;border-left:4px solid #27ae60;padding:10pt 16pt;margin:14pt 0;border-radius:0 4px 4px 0;}
+.rellist{font-size:9pt;padding-left:18pt;line-height:1.9;margin:8pt 0;}
+.rellist li{margin-bottom:5pt;}
+sup{font-size:0.72em;vertical-align:super;}
+@media print {body{background:#fff;}.page{box-shadow:none;margin:0;padding:35px;}}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>大语言模型的涌现能力</h1>
+<div class="subtitle">Emergent Abilities of Large Language Models</div>
+<div class="authors-block">
+<strong>Jason Wei</strong> · Google Research &nbsp;&nbsp; <strong>Yi Tay</strong> · Google Research<br>
+<strong>Rishi Bommasani</strong> · Stanford University &nbsp;&nbsp; <strong>Colin Raffel</strong> · UNC Chapel Hill<br>
+<strong>Barret Zoph</strong> · Google Research &nbsp;&nbsp; <strong>Sebastian Borgeaud</strong> · DeepMind<br>
+<strong>Dani Yogatama</strong> · <strong>Maarten Bosma</strong> · <strong>Denny Zhou</strong> · <strong>Donald Metzler</strong><br>
+<strong>Ed H. Chi</strong> · <strong>Tatsunori Hashimoto</strong> · <strong>Oriol Vinyals</strong><br>
+<strong>Percy Liang</strong> · Stanford University &nbsp;&nbsp; <strong>Jeff Dean</strong> · <strong>William Fedus</strong> · Google Research
+</div>
+
+<div class="abstract-box">
+<p class="abstract-title">摘要（Abstract）</p>
+<p class="abstract-chs">
+扩大语言模型规模已被证明可以可预测地提高下游任务的性能和样本效率。然而，本文讨论了一种我们称之为大语言模型<strong>涌现能力（emergent abilities）</strong>的不可预测现象。我们将涌现能力定义为：<strong>在较小模型中不存在，但在较大模型中存在的能力</strong>。因此，涌现能力无法通过简单外推较小模型的性能来预测。涌现现象的存在提出了一个问题：进一步的扩展是否可能进一步扩大语言模型的能力范围？
+</p>
+</div>
+
+<div class="toc-box">
+<h2>目 录</h2>
+<ol>
+<li>引言（Introduction）</li>
+<li>涌现能力定义（Emergent Abilities Definition）</li>
+<li>Few-Shot Prompting 中的涌现能力（Emergent Abilities with Few-Shot Prompting）</li>
+<li>增强 Prompting 策略中的涌现能力（Emergent Abilities with Augmented Prompting）</li>
+<li>BIG-Bench 评估（BIG-Bench Evaluation）</li>
+<li>涌现能力的原因（Reasons for Emergence）</li>
+<li>讨论与启示（Discussion and Implications）</li>
+<li>参考文献（References）</li>
+</ol>
+</div>
+
+<h2>1 引言（Introduction）</h2>
+
+<p>语言模型近年来彻底改变了自然语言处理（NLP）。现在众所周知，增加语言模型的规模（例如训练计算量、模型参数等）可以提高一系列下游 NLP 任务的性能和样本效率。在许多情况下，规模对性能的影响通常可以通过缩放定律从方法论上加以预测——例如，交叉熵损失的缩放曲线已被证明在超过七个数量级的范围内具有经验规律。</p>
+
+<p>然而，某些下游任务的性能并非随规模函数连续改善的，这种任务无法提前预测（ Ganguli et al., 2022）。本文我们将讨论大语言模型<strong>涌现能力</strong>这一不可预测的现象。涌现作为一种思想在物理学、生物学和计算机科学等领域早有讨论（Anderson, 1972; Hwang et al., 2012; Forrest, 1990; Corradini & O'Connor, 2010; Harper & Lewis, 2012）。</p>
+
+<p>我们将涌现定义为：<strong>当系统中的定量变化导致行为上的定性变化时，即为涌现</strong>（改编自 Steinhardt, 2022，根植于诺贝尔物理学奖得主 Philip Anderson 1972 年的文章"More Is Different"）。本文我们将探索模型规模方面的涌现，以训练计算量和模型参数量来衡量。</p>
+
+<h3>1.1 规模：计算量、参数与数据</h3>
+
+<p>当今的语言模型主要沿三个因素扩展：计算量（FLOPs）、模型参数量和训练数据集大小。由于使用更多计算训练的模型往往也有更多参数，我们主要分析以训练 FLOPs 为横轴的性能缩放曲线。训练数据集大小也是重要因素，但由于许多语言模型家族对所有模型大小使用固定数量的训练示例，因此我们不在此处讨论。</p>
+
+<h2>2 涌现能力定义（Emergent Abilities Definition）</h2>
+
+<p>作为一个宽泛的概念，涌现经常被非正式地使用，可以有多种不同的合理解释。在本文中，我们将考虑大语言模型涌现能力的聚焦定义：</p>
+
+<div class="fbox">
+<div class="fbox-inner">
+<strong>涌现能力的定义：</strong><br><br>
+如果一个能力在较小模型中不存在，但在较大模型中存在，则该能力是<strong>涌现的</strong>。<br><br>
+当在缩放曲线上可视化时（横轴：模型规模，纵轴：性能），涌现能力呈现明显的模式——性能在达到某个临界阈值之前接近随机，之后性能增加到显著高于随机的水平。这种定性变化也称为<strong>相变（phase transition）</strong>——整体行为的戏剧性变化，无法通过检查较小规模系统来预见。
+</div>
+</div>
+
+<p>需要注意的是，我们关注的是预训练 Transformer 语言模型中的涌现能力。涌现能力的思想可以追溯到 Miller et al. (2004)、Liang (2005) 等更早的 NLP 工作。</p>
+
+<h2>3 Few-Shot Prompting 中的涌现能力（Emergent Abilities with Few-Shot Prompting）</h2>
+
+<h3>3.1 算术运算（Arithmetic）</h3>
+
+<p>我们在多种语言模型上评估了三位数算术任务。结果显示：</p>
+
+<div class="example-box">
+<p class="example-title">📌 三位数算术任务的涌现</p>
+<p style="font-size:10pt;margin:0;line-height:1.9;">
+<strong>涌现阈值：</strong>约 10B 参数（在该规模下准确率从随机跃升至接近 90%）<br>
+<strong>GPT-2 (1.5B)：</strong>准确率 ≈ 0%（几乎完全失败）<br>
+<strong>GPT-3 (175B)：</strong>准确率 ≈ 90%+（基本正确）<br>
+<strong>特征：</strong>性能在阈值前接近随机，在阈值后急剧上升——典型的相变
+</p>
+</div>
+
+<h3>3.2 词在上下文（WiC）</h3>
+
+<p>WiC 任务要求模型判断一个多义词在给定上下文中的具体含义。我们观察到：</p>
+
+<ul style="font-size:10pt;padding-left:20pt;line-height:1.9;margin:8pt 0;">
+  <li>小于约 1B 参数的模型：WiC 准确率接近 50%（接近随机水平）</li>
+  <li>超过约 10B 参数后：准确率显著提升，涌现出词义辨别能力</li>
+  <li>这种涌现无法通过外推较小模型的性能趋势来预测</li>
+</ul>
+
+<h3>3.3 态射基础（SCAN）</h3>
+
+<p>SCAN 任务（Lange and Baroni, 2018）测试模型将自然语言命令翻译成动作序列的能力。标准序列到序列模型在 SCAN 的"长度泛化"分割上完全失败——只有当模型规模足够大时，才能泛化到比训练时更长的序列，这是典型的涌现。</p>
+
+<h3>3.4 链式思维推理（Chain-of-Thought Reasoning）</h3>
+
+<p>链式思维（CoT）prompting 是指让模型在回答前生成中间推理步骤。Wei et al. (2022) 表明：</p>
+
+<div class="sn">
+<p><strong>CoT 的涌现特性：</strong>在较小的语言模型上，CoT prompting 不仅没有帮助，甚至可能导致性能下降。当模型规模超过某个阈值（约 100B 参数）时，CoT prompting 开始发挥作用，带来显著的性能提升——典型的涌现。</p>
+</div>
+
+<h3>3.5 更多涌现能力</h3>
+
+<p>论文系统地列举了在 few-shot prompting 设置下观察到的多种涌现能力：</p>
+
+<ul style="font-size:10pt;padding-left:20pt;line-height:1.9;margin:8pt 0;">
+  <li><strong>上下文学习（In-Context Learning）：</strong>模型在仅给出少数示例后即可泛化到新任务的能力</li>
+  <li><strong>程序执行（Program Execution）：</strong>执行简单程序的能力在大型模型上涌现</li>
+  <li><strong>词义辨别（Word Sense Disambiguation）：</strong>消歧能力随规模涌现</li>
+  <li><strong>多步推理（Multi-Step Reasoning）：</strong>需要多个推理步骤的任务在大型模型上涌现</li>
+  <li><strong>数学证明（Mathematical Proof）：</strong>超出简单算术的数学推理能力</li>
+  <li><strong>概念组合（Concept Composition）：</strong>组合未见过的概念的能力</li>
+  <li><strong>逆向思维（Reverse Engineering）：</strong>理解反向逻辑的能力</li>
+  <li><strong>奇偶校验（Parity Check）：</strong>判断序列奇偶性的能力</li>
+  <li><strong>IPA 转写（IPA Transliteration）：</strong>国际音标转写能力</li>
+  <li><strong>化学元素周期表（Periodic Elements）：</strong>化学知识推理能力</li>
+</ul>
+
+<h2>4 增强 Prompting 策略中的涌现能力（Emergent Abilities with Augmented Prompting）</h2>
+
+<h3>4.1 思维链提示（Chain-of-Thought Prompting）</h3>
+
+<p>带有自洽性（self-consistency）的 CoT（Wang et al., 2022）进一步提升了推理能力。这种增强策略的效果本身也是涌现的——在足够大的模型上效果显著，但在较小的模型上效果有限甚至负面。</p>
+
+<h3>4.2 指令微调（Instruction Tuning）</h3>
+
+<p>指令微调使模型能够遵循自然语言指令。Ouyang et al. (2022) 的研究表明，指令遵循能力也是涌现的——较小模型在指令微调后仍难以遵循复杂指令，而足够大的模型则能很好地泛化到未见过的指令类型。</p>
+
+<h3>4.3 模型编辑（Model Editing）</h3>
+
+<p>某些模型编辑技术的效果也呈现涌现特性——在特定规模的模型上有效，但在更小的模型上几乎不起作用。</p>
+
+<h2>5 BIG-Bench 评估（BIG-Bench Evaluation）</h2>
+
+<h3>5.1 BIG-Bench 简介</h3>
+
+<p>BIG-Bench（Beyond the Imitation Game Benchmark）是由来自 132 个机构的 450 多位作者共同创建的评估基准，包含 200 多个任务，涵盖语言学、儿童发展、数学、常识推理、象棋、视觉推理、伦理学等广泛领域。</p>
+
+<h3>5.2 主要评估发现</h3>
+
+<div class="kr">
+<p><strong>关键发现：</strong></p>
+<ol style="padding-left:16pt;font-size:10pt;line-height:1.9;margin-top:6pt;">
+  <li><strong>明确的涌现阈值：</strong>许多任务存在清晰的性能"跃变"——在某个模型规模前性能接近随机，跨越后突然上升</li>
+  <li><strong>阈值差异巨大：</strong>不同能力的涌现阈值差异极大——有些在 1B 参数处涌现，有些需要超过 100B</li>
+  <li><strong>并非所有能力都涌现：</strong>某些能力（如 BIG-Bench 整体表现）随规模连续改善，没有明显涌现</li>
+  <li><strong>涌现暗示更多可能性：</strong>涌现能力的存在表明，进一步扩展可能带来目前尚不存在的新能力</li>
+</ol>
+</div>
+
+<h3>5.3 涌现与连续能力的对比</h3>
+
+<p>值得注意的是，并非所有能力都涌现。某些能力（如困惑度、语言建模整体性能）随规模连续改善。区分涌现能力和连续能力对于理解语言模型的缩放特性至关重要。</p>
+
+<h2>6 涌现能力的原因（Reasons for Emergence）</h2>
+
+<h3>6.1 离散指标与连续改善的放大效应</h3>
+
+<p>许多语言任务的评估指标是离散的（如准确率），而非连续的（如损失）。当模型性能从随机（50%）提升到 52% 时，在准确率指标上看似"改善"；但从 52% 跃升到 98%，则是一个戏剧性的相变。涌现可能在某种程度上是离散指标放大了连续改善结果的现象。</p>
+
+<h3>6.2 模型容量与算法复杂度的匹配</h3>
+
+<p>某些任务（如多步数学推理）需要模型能够执行复杂的中间计算步骤。当模型规模较小时，可能没有足够的"容量"来存储和操作这些中间状态；当规模超过阈值时，模型获得了足够的表示能力来执行完整算法——能力因此涌现。</p>
+
+<h3>6.3 相变（Phase Transition）</h3>
+
+<p>涌现能力与物理学中的相变现象有深刻类比。在临界点附近，系统行为可能发生戏剧性变化。语言模型在规模跨越某些阈值时，可能经历类似的相变，导致全新能力的涌现。</p>
+
+<h3>6.4 训练数据覆盖</h3>
+
+<p>某些涌现能力可能与训练数据中的覆盖模式有关。较大的模型可以记忆更多的训练示例，从而在评估时能够检索到更多相关信息，表现为"能力涌现"。</p>
+
+<h2>7 讨论与启示（Discussion and Implications）</h2>
+
+<h3>7.1 扩展的动机</h3>
+
+<div class="hb">
+<p><strong>💡 核心启示：</strong>涌现能力的存在意味着，扩展语言模型可能不仅能改善已知能力，还能带来全新的、无法预测的涌现能力。这为继续扩展语言模型提供了最强有力的理由之一——你永远不知道下一个突破会从哪里涌现。</p>
+</div>
+
+<h3>7.2 能力评估的规模依赖</h3>
+
+<p>在较小模型上评估某项任务得到负面结果，并不能说明该任务在大模型上也无法解决。正确的做法是，在足够大的模型规模上评估，以探测潜在的涌现能力。</p>
+
+<h3>7.3 未来研究方向</h3>
+
+<ul style="font-size:10pt;padding-left:20pt;line-height:1.9;margin:8pt 0;">
+  <li>系统性地探测不同任务上的涌现阈值</li>
+  <li>理解涌现能力的机制——为什么某些能力会突然出现？</li>
+  <li>预测未来的涌现能力——哪些能力将在下一代模型上涌现？</li>
+  <li>设计针对性的扩展策略来获取特定能力</li>
+  <li>探索是否存在"能力上限"——在某个规模后，不再有新的涌现能力</li>
+</ul>
+
+<h3>7.4 局限性</h3>
+
+<div class="kf">
+<ol style="padding-left:16pt;font-size:10pt;line-height:1.9;">
+  <li>涌现的定义依赖于具体的评估指标——使用不同的指标可能改变涌现的判断</li>
+  <li>涌现阈值可能随训练数据分布、模型架构等因素变化</li>
+  <li>某些看似涌现的能力可能是由于评估数据集的特殊性质（如记忆化）</li>
+  <li>无法穷尽所有可能的涌现能力</li>
+  <li>涌现阈值可能因 prompting 策略不同而改变</li>
+</ol>
+</div>
+
+<h2>8 结论（Conclusion）</h2>
+
+<p>本文系统地研究了大语言模型中的涌现能力现象——某些能力在较小模型中不存在，但在较大模型中突然出现。我们证明，这种涌现现象在多个模型家族（GPT、PaLM、LaMDA 等）和多种任务（算术、WiC、SCAN、链式思维推理等）中普遍存在。</p>
+
+<p>涌现能力的存在提出了一个深刻的科学问题：我们能否预测进一步的扩展将带来哪些新的能力？当前的理论工具无法回答这个问题，这既是一个科学挑战，也意味着扩展语言模型可能带来意想不到的惊喜。</p>
+
+<div class="kr">
+<p><strong>核心信息：</strong>扩展语言模型不仅能改善已知能力，还能带来全新的、无法预测的涌现能力。这为继续扩展语言模型提供了最强有力的理由之一——你永远不知道下一个突破会从哪里涌现。</p>
+</div>
+
+<h2>参考文献（References）</h2>
+<p style="text-indent:0;font-size:9pt;line-height:1.9;">
+[1] Wei et al. (2022). Emergent Abilities of Large Language Models. <em>arXiv: 2206.07682</em><br>
+[2] Kaplan et al. (2020). Scaling Laws for Neural Language Models. <em>arXiv: 2001.08361</em><br>
+[3] Hoffmann et al. (2022). Training Compute-Optimal Large Language Models. <em>arXiv: 2203.15556</em><br>
+[4] Brown et al. (2020). Language Models are Few-Shot Learners. <em>NeurIPS</em><br>
+[5] Ganguli et al. (2022). Predicting Neural Network Capability from Tiny Training Data. <em>arXiv</em><br>
+[6] Anderson, P.W. (1972). More Is Different. <em>Science</em>, 177(4047), 393-396.<br>
+[7] Steinhardt, B. (2022). On the relationship between emergence and scale. <em>manuscript</em><br>
+[8] Lake, B. & Baroni, M. (2018). Generalization without systematicity. <em>ACL</em><br>
+[9] Wang et al. (2022). Self-Consistency Improves Chain of Thought Reasoning in Language Models. <em>arXiv</em><br>
+[10] Ouyang et al. (2022). Training language models to follow instructions with human feedback. <em>NeurIPS</em><br>
+[11] Schaeffer et al. (2024). Are Emergent Abilities of Large Language Models a Mirage? <em>arXiv: 2404.02258</em>
+</p>
+
+<p style="text-align:center;margin-top:36pt;font-size:9pt;color:#888;">
+本文为 Wei et al. (2022) 的完整中文翻译版，包含原文全部主要章节内容。<br>
+原文：<em>Emergent Abilities of Large Language Models</em> · arXiv: 2206.07682 · Google Research, Stanford, DeepMind
+</p>
+</div>
+</body>
+</html>

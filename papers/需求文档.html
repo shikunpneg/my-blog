@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网页版文学大模型 · 需求文档 v0.2</title>
+<style>
+  :root {
+    --paper: #f7f3ea;
+    --paper-deep: #efe8d8;
+    --ink: #2b2620;
+    --ink-soft: #5b5247;
+    --accent: #8a3324;      /* 朱砂 */
+    --accent-2: #3d5a43;    /* 墨绿 */
+    --line: #d9cfba;
+    --tag-bg: #f0e7d3;
+    --shadow: 0 2px 10px rgba(60,50,30,.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.8;
+  }
+
+  /* ---------- 侧边目录 ---------- */
+  .toc {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 250px;
+    background: var(--paper-deep);
+    border-right: 1px solid var(--line);
+    padding: 28px 16px;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .toc h4 { font-size: 15px; letter-spacing: 2px; color: var(--accent); margin-bottom: 14px; }
+  .toc a {
+    display: block; text-decoration: none; color: var(--ink-soft);
+    font-size: 13.5px; padding: 6px 10px; border-radius: 6px;
+    border-left: 2px solid transparent; transition: all .15s;
+  }
+  .toc a:hover { color: var(--ink); background: #e9dfc9; }
+  .toc a.active { color: var(--accent); border-left-color: var(--accent); background: var(--tag-bg); }
+  .toc .l2 { padding-left: 24px; font-size: 12.5px; }
+
+  /* ---------- 主内容 ---------- */
+  .main { margin-left: 250px; padding: 0 56px 80px; max-width: 1080px; }
+
+  /* ---------- 页头 ---------- */
+  .hero {
+    padding: 64px 0 36px;
+    border-bottom: 3px double var(--accent);
+    margin-bottom: 44px;
+  }
+  .hero .kicker {
+    display: inline-block; font-size: 13px; letter-spacing: 4px;
+    color: var(--accent-2); border: 1px solid var(--accent-2);
+    padding: 3px 14px; border-radius: 999px; margin-bottom: 20px;
+  }
+  .hero h1 { font-size: 44px; letter-spacing: 6px; margin-bottom: 14px; }
+  .hero .sub { font-size: 17px; color: var(--ink-soft); max-width: 720px; }
+  .meta {
+    margin-top: 26px; display: flex; flex-wrap: wrap; gap: 12px;
+  }
+  .meta span {
+    font-size: 13px; background: var(--tag-bg); border: 1px solid var(--line);
+    padding: 5px 14px; border-radius: 999px; color: var(--ink-soft);
+  }
+
+  /* ---------- 章节 ---------- */
+  section { margin-bottom: 56px; }
+  h2 {
+    font-size: 26px; letter-spacing: 3px; padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 22px; color: var(--ink);
+  }
+  h2 .no {
+    color: var(--accent); font-size: 18px; vertical-align: super; margin-right: 6px;
+  }
+  h3 { font-size: 19px; margin: 30px 0 12px; color: var(--ink); letter-spacing: 1px; }
+  h3::before { content: "❖ "; color: var(--accent); }
+  h4 { font-size: 15.5px; margin: 18px 0 8px; color: var(--ink); }
+  p { margin-bottom: 12px; color: var(--ink); }
+  ul, ol { margin: 8px 0 16px 26px; }
+  li { margin-bottom: 6px; }
+  strong { color: var(--ink); }
+  .muted { color: var(--ink-soft); font-size: 13.5px; }
+  code { background: var(--tag-bg); padding: 1px 6px; border-radius: 4px; font-size: 13px; }
+
+  blockquote {
+    border-left: 4px solid var(--accent);
+    background: var(--paper-deep);
+    padding: 12px 18px; margin: 14px 0; color: var(--ink-soft);
+    border-radius: 0 8px 8px 0;
+  }
+
+  /* ---------- 表格 ---------- */
+  table {
+    width: 100%; border-collapse: collapse; margin: 14px 0 22px;
+    font-size: 14px; background: #fffdf8;
+    box-shadow: var(--shadow); border-radius: 8px; overflow: hidden;
+  }
+  th {
+    background: var(--ink); color: var(--paper); text-align: left;
+    padding: 10px 14px; font-weight: 600; letter-spacing: 1px;
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:nth-child(even) td { background: #faf6ec; }
+  tr:last-child td { border-bottom: none; }
+
+  /* ---------- 卡片 ---------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 18px 0; }
+  .card {
+    background: #fffdf8; border: 1px solid var(--line); border-radius: 10px;
+    padding: 18px 20px; box-shadow: var(--shadow);
+  }
+  .card .num { font-size: 30px; font-weight: 700; color: var(--accent); line-height: 1.2; }
+  .card .label { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+
+  /* ---------- 标签 ---------- */
+  .tag { display: inline-block; font-size: 12px; padding: 2px 10px; border-radius: 999px; margin-right: 6px; }
+  .tag.red { background: #f5ddd6; color: var(--accent); }
+  .tag.green { background: #ddeade; color: var(--accent-2); }
+  .tag.gray { background: var(--tag-bg); color: var(--ink-soft); }
+
+  /* ---------- 状态条 ---------- */
+  .status {
+    display: flex; gap: 14px; align-items: center; margin: 10px 0;
+    font-size: 14px;
+  }
+  .status .bar {
+    flex: 1; height: 10px; background: var(--paper-deep); border-radius: 999px; overflow: hidden;
+  }
+  .status .fill { height: 100%; border-radius: 999px; }
+  .fill.red { background: var(--accent); }
+  .fill.green { background: var(--accent-2); }
+  .fill.gray { background: #b9ae97; }
+
+  /* ---------- 需求条目 ---------- */
+  .req {
+    border: 1px solid var(--line); border-radius: 10px; background: #fffdf8;
+    padding: 16px 20px; margin: 12px 0; box-shadow: var(--shadow);
+  }
+  .req .rid {
+    display: inline-block; font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 13px; background: var(--ink); color: var(--paper);
+    padding: 2px 12px; border-radius: 999px; margin-right: 10px; vertical-align: 2px;
+  }
+  .req .rname { font-size: 17px; font-weight: 700; }
+  .req .rbody { margin-top: 10px; font-size: 14px; color: var(--ink-soft); }
+  .req .rbody ul { margin: 6px 0 0 20px; }
+
+  .prio { float: right; font-size: 12px; }
+  .prio.P0 { color: var(--accent); border: 1px solid var(--accent); padding: 2px 10px; border-radius: 999px; }
+  .prio.P1 { color: #a0622a; border: 1px solid #a0622a; padding: 2px 10px; border-radius: 999px; }
+
+  /* ---------- 时间线 ---------- */
+  .timeline { margin: 18px 0 8px; border-left: 2px solid var(--accent); padding-left: 22px; }
+  .timeline .item { position: relative; margin-bottom: 20px; }
+  .timeline .item::before {
+    content: ""; position: absolute; left: -28px; top: 8px;
+    width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+  }
+  .timeline .phase { font-weight: 700; color: var(--accent); font-size: 15px; }
+  .timeline .desc { color: var(--ink-soft); font-size: 14px; }
+
+  /* ---------- 修订标注 ---------- */
+  .rev {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    background: #f5ddd6; color: var(--accent);
+    padding: 1px 8px; border-radius: 999px; margin-left: 6px; vertical-align: 2px;
+  }
+
+  /* ---------- 页脚 ---------- */
+  footer {
+    margin-left: 250px; padding: 30px 56px; border-top: 1px solid var(--line);
+    color: var(--ink-soft); font-size: 13px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+
+  @media (max-width: 860px) {
+    .toc { display: none; }
+    .main { margin-left: 0; padding: 0 20px 60px; }
+    footer { margin-left: 0; padding: 20px; }
+    .hero h1 { font-size: 32px; }
+  }
+  @media print {
+    .toc { display: none; }
+    .main { margin-left: 0; padding: 0; }
+    footer { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== 目录 ===================== -->
+<nav class="toc">
+  <h4>目 录</h4>
+  <a href="#s0" class="l1">0. 文档说明与产品关系</a>
+  <a href="#s1" class="l1">1. 项目背景与定位</a>
+  <a href="#s2" class="l1">2. 目标与验收标准</a>
+  <a href="#s3" class="l1">3. 市场压力与用户反馈</a>
+  <a href="#s31" class="l2">3.1 能力缺口</a>
+  <a href="#s32" class="l2">3.2 反馈数据分析（脱敏）</a>
+  <a href="#s33" class="l2">3.3 反馈 → 需求映射</a>
+  <a href="#s34" class="l2">3.4 竞品分析</a>
+  <a href="#s4" class="l1">4. 用户画像与专家团</a>
+  <a href="#s5" class="l1">5. 最小实现范围（MVP）</a>
+  <a href="#s6" class="l1">6. 功能需求</a>
+  <a href="#s61" class="l2">6.1 FR-1 生成能力</a>
+  <a href="#s62" class="l2">6.2 FR-2 创作过程透明化</a>
+  <a href="#s63" class="l2">6.3 FR-3 风格融合</a>
+  <a href="#s64" class="l2">6.4 FR-4 网页产品功能</a>
+  <a href="#s65" class="l2">6.5 需求优先级汇总</a>
+  <a href="#s7" class="l1">7. 非功能需求</a>
+  <a href="#s8" class="l1">8. 埋点与数据分析</a>
+  <a href="#s9" class="l1">9. 上线计划与商业模式</a>
+  <a href="#s10" class="l1">10. 依赖与风险</a>
+  <a href="#s11" class="l1">11. 附录 A</a>
+</nav>
+
+<!-- ===================== 正文 ===================== -->
+<div class="main">
+
+  <!-- 页头 -->
+  <header class="hero">
+    <span class="kicker">PRD · 产品需求文档</span>
+    <h1>网页版文学大模型</h1>
+    <p class="sub">解决现有 LLM 无法具备"人类共识文学生成能力"的问题，产出能通过图灵检测、并获得专家团一致性认可的作品。</p>
+    <div class="meta">
+      <span>版本 v0.2（评审稿）</span>
+      <span>日期 2026-08-23</span>
+      <span>作者 shikunpunk</span>
+      <span>状态：待评审</span>
+    </div>
+  </header>
+
+  <!-- ============ 0. 文档说明 ============ -->
+  <section id="s0">
+    <h2><span class="no">00</span>文档说明与产品关系</h2>
+
+    <h3>0.1 修订记录</h3>
+    <table>
+      <tr><th>版本</th><th>日期</th><th>主要修订</th></tr>
+      <tr><td>v0.1</td><td>2026-08-20</td><td>初稿</td></tr>
+      <tr><td>v0.2</td><td>2026-08-23</td><td>① 新增本文档说明与产品关系、修订记录；② 市场叙事改为"能力空白 + 早期实践者"，新增竞品分析（3.4）；③ 验收标准改为可测口径：AC-1 明确盲测形式与随机基线、AC-4 改为"会话累计成书"、AC-5 给出具体指标；④ MVP 阶段一前置风格评测体系并论证顺序（5.2）；⑤ FR-2 更名"创作过程透明化"并降级 P1，说明与社区反馈的冲突解法；⑥ 新增 FR-4 网页产品基础功能；⑦ 新增专家团定义（4.2）；⑧ 埋点补齐事件定义规范与隐私合规（8.0 / 8.5）；⑨ 明确开源范围与许可边界（9.1）；⑩ 风险表补齐"图灵检测失败兜底"与"在世作家版权"；⑪ 里程碑增加建议排期，新增商业模式（9.3）</td></tr>
+    </table>
+
+    <h3>0.2 与现有产品的关系</h3>
+    <p>本项目不是从零开始的新产品，而是现有 AI 创作生态中<strong>文学引擎能力 + 评测体系</strong>的部分。为保密需要，本节不涉及任何具体产品名称，仅以抽象层级描述关系：</p>
+    <table>
+      <tr><th>层级</th><th>定位</th><th>与本项目的关系</th></tr>
+      <tr><td><strong>平台层（现有 AI 创作平台）</strong></td><td>面向创作者的创作与内容分发平台，承载小说 / 诗歌 / 电影等创作引擎</td><td>本项目是其文学引擎的<strong>技术底座</strong>，研究成果直接注入平台</td></tr>
+      <tr><td><strong>产品层（独立商业化产品）</strong></td><td>面向特定创作场景的独立产品，<strong>闭源商业运营</strong></td><td>基于本项目引擎构建，产品源码<strong>不在开源范围</strong>（见 9.1）</td></tr>
+      <tr><td><strong>本项目（网页版文学大模型）</strong></td><td>模型能力 + 评测体系 + 开源生态（模型权重 / 代码 / 评测基准）</td><td>本文档定义其目标、范围、验收与交付物</td></tr>
+    </table>
+    <p class="muted">关系结构：平台层承载产品层，产品层基于本项目引擎构建，本项目引擎独立开源；三层解耦、各自演进。研究产出优先注入平台层，产品层以订阅 / API 方式商业化，本项目以开源方式回馈社区。</p>
+  </section>
+
+  <!-- ============ 1. 背景 ============ -->
+  <section id="s1">
+    <h2><span class="no">01</span>项目背景与定位</h2>
+    <p>当前大语言模型在 <strong>代码生成（AI for Coding）</strong> 与 <strong>数学推理（AI for Math）</strong> 领域已形成成熟能力与规模化产品；与之相比，<strong>文学创作是能力空白</strong>：现有模型生成的文本普遍带有"AI 味"，缺乏人类共识认可的文学生成能力，更无法产出通过图灵检测的作品。</p>
+    <p>我们不是这个空白市场的旁观者，而是<strong>早期实践者</strong>：自有 AI 创作平台已累计辅助创作 <strong>100 万+ 字</strong>，覆盖小说、诗歌、电影三大创作引擎，验证了需求的真实性；自研诗人风格模型家族（26 个开源模型）与"诗性"自动评测指标（与人类一致性 Kappa 0.9557）已沉淀为可复用资产。本项目在此基础上，集中攻坚<strong>文学创作能力的两个纵深</strong>：长文本 / 超长文本生成，与稳定风格生成。</p>
+    <p>项目定位：构建一个<strong>网页版文学大模型</strong>，以文学创作能力为核心竞争力，在文本生成长度、风格稳定性、人类共识认可度三个维度上突破现有上限，并将能力开源回馈社区。</p>
+    <blockquote>
+      核心命题：文学不只是语言表层拟合。它要求核心意象贯穿、风格分期锚定、叙事克制、时代细节真实，以及能引发人类共情的"思想闪光"——这正是本项目要攻克的技术纵深。
+    </blockquote>
+  </section>
+
+  <!-- ============ 2. 目标 ============ -->
+  <section id="s2">
+    <h2><span class="no">02</span>目标与验收标准</h2>
+
+    <h3>2.1 项目目标</h3>
+    <ul>
+      <li><strong>G1</strong>：解决现有 LLM 无法具有"人类共识的文学生成能力"这一根本问题；</li>
+      <li><strong>G2</strong>：生成能<strong>通过图灵检测</strong>的作品，并得到<strong>专家团的一致性认可</strong>；</li>
+      <li><strong>G3</strong>：以"网页版"形态交付，支持长文本 / 超长文本生成与风格化创作。</li>
+    </ul>
+
+    <h3>2.2 验收标准</h3>
+    <p class="muted">v0.2 起全部改为可测口径；标注"建议值"处待专家团与评审确认。</p>
+    <table>
+      <tr><th>编号</th><th>验收维度</th><th>验收标准</th><th>测量方式</th></tr>
+      <tr><td>AC-1</td><td>图灵检测 <span class="rev">v0.2 修正</span></td><td><strong>二选一</strong>双盲测：每篇作品与一篇人类作品配对，标注者判断"哪篇是人写的"。通过标准：判断正确率 ≤ 52%（随机基线 50%，须落在随机波动区间内且不可区分，双侧检验 p &gt; 0.05）</td><td>双盲 A/B 测试，样本 ≥ 200 篇，标注者非本项目成员</td></tr>
+      <tr><td>AC-2</td><td>专家团一致性 <span class="rev">v0.2 修正</span></td><td>专家团（≥ 9 人，构成见 4.2）独立评分：≥ 2/3 认为作品"具有文学价值且无明显 AI 味"；且专家间评分一致性 <strong>Kappa ≥ 0.6</strong></td><td>四维评分（意象 / 结构 / 语言 / 情感）+ 一致性检验</td></tr>
+      <tr><td>AC-3</td><td>长文本能力</td><td><strong>单次生成</strong> ≥ 5,000 字，主题、人物、核心意象贯穿不散架</td><td>自动连贯性指标 + 人工抽查</td></tr>
+      <tr><td>AC-4</td><td>超长文本能力 <span class="rev">v0.2 修正</span></td><td><strong>单会话累计生成 ≥ 30,000 字成书</strong>（大纲 → 分章 → 续写），章节结构完整，无死循环 / 重复生成；口径与 FR-1 一致，不要求"单次输出 3 万字"</td><td>端到端成书测试（大纲 + 分章 + 续写全链路）</td></tr>
+      <tr><td>AC-5</td><td>风格稳定度 <span class="rev">v0.2 修正</span></td><td>同风格多次生成，基于自研<strong>64 维特征库（37 维最优组合）</strong>的特征向量余弦相似度 ≥ 0.85（建议值）</td><td>离线评测，复用自研诗性评测特征体系</td></tr>
+      <tr><td>AC-6</td><td>异常率</td><td>截断率 &lt; 1%，循环思考 / 重复生成 &lt; 0.5%，异常 100% 可追溯</td><td>依赖第 8 章埋点系统上线后统计</td></tr>
+    </table>
+  </section>
+
+  <!-- ============ 3. 市场压力 ============ -->
+  <section id="s3">
+    <h2><span class="no">03</span>市场压力与用户反馈</h2>
+
+    <h3 id="s31">3.1 能力缺口</h3>
+    <p>市面已有成熟的 <strong>AI for Coding</strong>、<strong>AI for Math</strong> 产品，而<strong>文学创作仍无成熟能力</strong>：通用模型输出普遍"AI 味儿太浓"，缺乏专门面向文学的深度优化。这是<strong>能力缺口</strong>，也是我们的机会窗口——我们已是这一方向的早期实践者。</p>
+    <div class="grid">
+      <div class="card"><div class="num">Coding</div><div class="label">代码生成 · 已成熟</div></div>
+      <div class="card"><div class="num">Math</div><div class="label">数学推理 · 已成熟</div></div>
+      <div class="card"><div class="num">Literature</div><div class="label">文学创作 · 能力空白 · 我们在场</div></div>
+    </div>
+
+    <h3 id="s32">3.2 用户反馈数据分析（已脱敏）</h3>
+    <p>反馈数据来源于 <code>E:\用户反馈.txt</code>，样本构成：<strong>专家团评审 2 轮</strong>（余华风格仿写莫言《透明的红萝卜》）与<strong>社区评论约 40 条</strong>（海子诗歌生成 v1 / v2 评论区），均已去除用户名与个人身份信息后分析。</p>
+
+    <h4 style="color:var(--accent-2);margin-top:16px;">负面问题聚类（"AI 味"的具体病灶）</h4>
+    <table>
+      <tr><th>#</th><th>问题聚类</th><th>典型反馈摘录（脱敏）</th><th>影响环节</th></tr>
+      <tr><td>1</td><td>风格不分期锚定</td><td>"余华存在明显的创作分期……需先明确锚定模仿的是哪一阶段的余华"</td><td>风格控制</td></tr>
+      <tr><td>2</td><td>核心意象未贯穿</td><td>"透明的红萝卜更像一个标签，没有成为驱动叙事、承载感知的核心"</td><td>长文结构</td></tr>
+      <tr><td>3</td><td>文风混杂、调性割裂</td><td>"先锋式冷感和温情叙事交替出现，整体调性割裂"</td><td>风格稳定</td></tr>
+      <tr><td>4</td><td>叙事冗余、心理直给</td><td>"尽量少直接交代人物心理，多用动作、场景暗示情绪，减少直白抒情"</td><td>生成质量</td></tr>
+      <tr><td>5</td><td>时代性 / 物象细节错误</td><td>"绍兴黄酒"与"每日两碗白米饭"不符合时代语境，产生违和感</td><td>知识对齐</td></tr>
+      <tr><td>6</td><td>环境描写铺排失焦</td><td>"环境描写是铺排上去的，多但不详细，真实感降低，喧宾夺主"</td><td>生成质量</td></tr>
+      <tr><td>7</td><td>长篇架构破碎</td><td>"如果是全部的话，这个故事架构好像有点破碎"</td><td>超长文本</td></tr>
+      <tr><td>8</td><td>语言表层化</td><td>"句式过于白话、修辞极度简单，意象化、跳跃和含混的特征十分不足"</td><td>文学性</td></tr>
+      <tr><td>9</td><td>意象拼接、碎片化</td><td>"拼接高频词 / '海子尸块拼盘'，句式结构气质与本人无关"</td><td>文学性</td></tr>
+      <tr><td>10</td><td>平均化、可预测</td><td>"能知道它想写什么，算是一种平均化了的诗，不跳脱"</td><td>文学性</td></tr>
+      <tr><td>11</td><td>思维链僵硬</td><td>"人的诗是直接性的……思维链式考究是诗歌的反面"</td><td>产品设计</td></tr>
+      <tr><td>12</td><td>缺乏思想深度与共情</td><td>"很难挑出一两句让人眼前一亮从而内心感动的句子，难以引人共情"</td><td>文学性</td></tr>
+    </table>
+
+    <h4 style="color:var(--accent-2);margin-top:16px;">正面信号（方向验证）</h4>
+    <table>
+      <tr><th>#</th><th>正面信号</th><th>结论</th></tr>
+      <tr><td>1</td><td>"至少形是像了"；v2（27B+KTO）显著优于 v1（3B）</td><td>验证 <strong>模型规模 → 风格逼近</strong> 的路线可行</td></tr>
+      <tr><td>2</td><td>环境反衬手法被认可（"用环境描写反衬黑孩的真实处境"）</td><td>部分文学手法已达标</td></tr>
+      <tr><td>3</td><td>"把已写过的母题用另一种风格重写，可扩充人类文学"</td><td>验证 <strong>文学工业化</strong> 方向（重写母题而非替代人类）</td></tr>
+      <tr><td>4</td><td>"尽量挖掘已故文人，风格固定，可见性强"</td><td>对外风格对象建议聚焦<strong>已故作家</strong></td></tr>
+      <tr><td>5</td><td>"可用知网核心期刊论文喂 AI 总结理解风格"</td><td>风格学习可引入<strong>学术语料</strong></td></tr>
+    </table>
+
+    <h4 style="color:var(--accent-2);margin-top:16px;">反馈情绪分布 <span class="rev">v0.2 补样本量</span></h4>
+    <p class="muted">分母为社区评论 40 条（专家评审 2 轮不计入情绪统计），同一评论可同时归入多类。</p>
+    <div class="status"><span style="width:120px">负面反馈</span><div class="bar"><div class="fill red" style="width:65%"></div></div><span>26 条 · ≈ 65%</span></div>
+    <div class="status"><span style="width:120px">正面 / 中立</span><div class="bar"><div class="fill green" style="width:25%"></div></div><span>10 条 · ≈ 25%</span></div>
+    <div class="status"><span style="width:120px">建议类</span><div class="bar"><div class="fill gray" style="width:10%"></div></div><span>4 条 · ≈ 10%</span></div>
+    <p class="muted">结论：负面集中于<strong>文学性</strong>（意象、风格、思想深度），即"AI 味"的本质；这决定了下文 MVP 中"风格评测体系前置"的安排。</p>
+
+    <h3 id="s33">3.3 反馈 → 需求映射</h3>
+    <table>
+      <tr><th>反馈问题</th><th>映射需求</th></tr>
+      <tr><td>风格混杂、不分期、意象拼接</td><td>FR-3 风格融合（分期锚定 / 意象贯穿 / 风格指纹）</td></tr>
+      <tr><td>叙事冗余、心理直给、环境铺排</td><td>FR-1 生成能力（叙事克制、详略控制）</td></tr>
+      <tr><td>长篇架构破碎、时代细节错误</td><td>FR-1 长文本 / 超长文本生成 + 知识对齐</td></tr>
+      <tr><td>思维链僵硬</td><td>FR-2 创作过程透明化（草稿笔记，非强制推理）</td></tr>
+      <tr><td>平均化、缺闪光句</td><td>纳入 G2 验收与专家团盲测，作为长期研究课题</td></tr>
+    </table>
+
+    <h3 id="s34">3.4 竞品分析 <span class="rev">v0.2 新增 · 本次扩充</span></h3>
+    <p>按"通用大模型写作 / 写作辅助 / 小说生成 / 诗歌生成 / 网文工具"五类梳理竞品：</p>
+    <table>
+      <tr><th>类别</th><th>代表</th><th>现状</th><th>我们的差异</th></tr>
+      <tr><td>通用大模型写作</td><td>Claude / GPT / DeepSeek / 豆包 / 文心</td><td>文学是附带能力，非优化重点；长文易散、风格混杂、意象拼接，普遍"AI 味"</td><td>专注文学单一场景；自研诗人 / 小说家风格模型 + 长文成书链路</td></tr>
+      <tr><td>AI 写作辅助工具</td><td>Sudowrite、阅文"妙笔"等国内平台</td><td>偏英文创作（Sudowrite）；或为营销文案 / 公文模板生成，不涉严肃文学</td><td>以"文学共识认可"为 KPI（图灵检测 + 专家团盲测），而非模板产出</td></tr>
+      <tr><td>AI 小说生成平台</td><td>NovelAI 等</td><td>偏设定 / 插画增强，长文本叙事连贯性一般</td><td>超长文本成书（≥3 万字会话）+ 可视化剪辑工作台</td></tr>
+      <tr><td>诗歌生成工具</td><td>古诗 / 词牌 / 现代诗小程序</td><td>格律模板拼接，无语义深度与风格内核</td><td>风格微调模型 + 诗性自动评测 + Hard 难样本集</td></tr>
+      <tr><td>网文类型化写作工具</td><td>起点系写作插件 / 大纲工具</td><td>大纲 / 查重 / 灵感，不生成"有作者风格"的正文</td><td>多 Agent 创作集群 + 稳定风格指纹 + 母题重写能力</td></tr>
+    </table>
+    <p class="muted">结论：竞品普遍在"风格稳定性"与"专家认可的文学性"两个维度缺位，这正是本项目的核心壁垒与差异化所在。</p>
+  </section>
+
+  <!-- ============ 4. 用户画像 ============ -->
+  <section id="s4">
+    <h2><span class="no">04</span>用户画像与专家团</h2>
+
+    <h3>4.1 用户画像</h3>
+    <table>
+      <tr><th>用户画像</th><th>特征</th><th>典型使用场景</th><th>核心诉求</th></tr>
+      <tr>
+        <td><strong>AI Builder</strong></td>
+        <td>算法 / 工程背景的技术人员</td>
+        <td>评测模型文学能力边界、参与开源迭代、跑基准测试</td>
+        <td>可复现、可评测、创作过程可视化</td>
+      </tr>
+      <tr>
+        <td><strong>Writer（创作者）</strong></td>
+        <td>文学写作者、风格研究者</td>
+        <td>风格化仿写、已故作家母题重写、长篇小说辅助创作</td>
+        <td>稳定风格、长文连贯、可续写可编辑</td>
+      </tr>
+      <tr>
+        <td><strong>Reader（文学读者）</strong></td>
+        <td>文学爱好者</td>
+        <td>阅读 AI 文学作品、给出反馈</td>
+        <td>作品可读性、无 AI 味、价值认可</td>
+      </tr>
+      <tr>
+        <td><strong>评审专家（专家团成员）</strong></td>
+        <td>文学教授 / 作家 / 资深编辑</td>
+        <td>盲测、四维评分、风格评审</td>
+        <td>流程规范、可追溯、有署名与激励</td>
+      </tr>
+    </table>
+
+    <h3>4.2 专家团定义 <span class="rev">v0.2 新增</span></h3>
+    <table>
+      <tr><th>维度</th><th>定义（建议值）</th></tr>
+      <tr><td>人数</td><td>≥ 9 人（奇数，便于表决），常态 9–12 人</td></tr>
+      <tr><td>构成</td><td>高校文学专业教授 / 副教授 ≥ 3；在职作家 / 诗人 ≥ 3；资深编辑 / 文学评论人 ≥ 3</td></tr>
+      <tr><td>招募渠道</td><td>自有创作平台社区创作者、高校文学系合作、文学期刊与出版社编辑网络</td></tr>
+      <tr><td>激励</td><td>评审署名鸣谢、按轮次评审稿酬（或等价权益）、产品内测与模型试用权</td></tr>
+      <tr><td>评审流程</td><td>① 双盲配对（人 / AI 二选一）→ ② 四维独立评分（意象 / 结构 / 语言 / 情感，各 1–5 分）→ ③ 一致性检验（Kappa ≥ 0.6 视为有效评审轮）→ ④ 汇总出报告</td></tr>
+      <tr><td>避嫌规则</td><td>评审成员不得参与本项目的模型训练与标注，杜绝既当运动员又当裁判</td></tr>
+    </table>
+  </section>
+
+  <!-- ============ 5. MVP ============ -->
+  <section id="s5">
+    <h2><span class="no">05</span>最小实现范围（MVP）</h2>
+
+    <h3>5.1 阶段划分</h3>
+    <div class="grid">
+      <div class="card">
+        <div class="num">阶段 一</div>
+        <div class="label">长文本 & 超长文本生成 + <strong>风格评测体系</strong></div>
+        <p style="font-size:13px;color:var(--ink-soft);margin-top:8px">≥5,000 单次 / ≥30,000 会话累计成书；同步搭建风格指纹评测（复用 64 维特征库），作为阶段二与 G2 的验收工具。</p>
+      </div>
+      <div class="card">
+        <div class="num">阶段 二</div>
+        <div class="label">稳定风格生成与风格融合</div>
+        <p style="font-size:13px;color:var(--ink-soft);margin-top:8px">分期锚定、风格指纹达标、母题重写能力。</p>
+      </div>
+    </div>
+
+    <h3>5.2 为什么"先长度、后风格" <span class="rev">v0.2 新增论证</span></h3>
+    <p>反馈数据显示用户最痛的是"AI 味"（风格 / 文学性），但工程上仍先做长度，原因：</p>
+    <ul>
+      <li><strong>风格表达依赖长上下文一致性这一地基</strong>：意象贯穿、调性稳定（问题 2 / 3）本质上是在"长文本中保持一致"，没有长文能力就没有风格可谈；</li>
+      <li><strong>评测体系前置</strong>：阶段一同步交付风格指纹评测与盲测流程，使"风格是否达标"在阶段二一开始就可度量，避免阶段二盲目迭代；</li>
+      <li>阶段二的核心产出（稳定风格）仍然直接回应"AI 味"痛点，两阶段共同构成完整答案，只是先后有别。</li>
+    </ul>
+
+    <h3>5.3 明确不做（本期）</h3>
+    <table>
+      <tr><th>范围</th><th>状态</th><th>说明</th></tr>
+      <tr><td>多风格即时切换</td><td><span class="tag gray">不做</span></td><td>与"单一稳定风格"（阶段二）的边界：本期一个作品只锚定一种风格，不做"生成中实时换风格"</td></tr>
+      <tr><td>通用问答 / 知识助手能力</td><td><span class="tag gray">不做</span></td><td>聚焦文学创作单一主场景</td></tr>
+      <tr><td>多模态（插图 / 语音）</td><td><span class="tag gray">不做</span></td><td>纯文本创作</td></tr>
+    </table>
+
+    <blockquote>
+      关键依赖：<strong>算法能力</strong>（长上下文注意力、风格控制算法）与<strong>算力硬件</strong>（推理与微调资源，成本预算见 10.1）。两者不足时，MVP 范围不得扩张。
+    </blockquote>
+  </section>
+
+  <!-- ============ 6. 功能需求 ============ -->
+  <section id="s6">
+    <h2><span class="no">06</span>功能需求</h2>
+
+    <h3 id="s61">6.1 生成能力</h3>
+    <div class="req">
+      <span class="rid">FR-1</span><span class="rname">长文本 / 超长文本生成</span>
+      <span class="prio P0">P0 · 必须</span>
+      <div class="rbody">
+        <ul>
+          <li><strong>生成口径（v0.2 统一）</strong>：<strong>单次生成 ≥ 5,000 字</strong>；<strong>单会话累计 ≥ 30,000 字成书</strong>，由"大纲 → 分章 → 续写"链路完成，与 AC-4 一致；</li>
+          <li>长文<strong>主题、人物、核心意象贯穿始终</strong>，不因长度增加而散架；</li>
+          <li>章节 / 段落结构完整，支持"续写 / 改写 / 插入"等二次编辑；</li>
+          <li>叙事<strong>克制</strong>：少直接交代人物心理，多用动作、场景、细节暗示情绪；</li>
+          <li>环境描写<strong>少而精</strong>：数量收敛、细节加深，避免铺排与喧宾夺主；</li>
+          <li><strong>时代性 / 物象知识对齐</strong>：内置时代物象知识库（或检索增强），避免"绍兴黄酒"类错误。</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 id="s62">6.2 创作过程透明化</h3>
+    <div class="req">
+      <span class="rid">FR-2</span><span class="rname">创作过程透明化（原"展示思维链"）</span>
+      <span class="prio P1">P1 · 重要（阶段一）</span>
+      <div class="rbody">
+        <p style="margin-bottom:6px">社区反馈明确批评"思维链式考究是诗歌的反面"。v0.2 据此重新定义本需求——<strong>展示"创作笔记"，而非强制推理日志</strong>：</p>
+        <ul>
+          <li>生成过程中以<strong>"创作笔记"</strong>形式展示：风格锚定说明、意象草案、情节走向、打磨痕迹，呈现"草稿 / 直觉 / 打磨"感；</li>
+          <li>笔记<strong>可开关</strong>：用户可选择只看成品或过程全览；</li>
+          <li><strong>不进入生成主路径</strong>：展示层不强制模型"逐条推理"，避免破坏文学的直接性（回应反馈问题 11）；</li>
+          <li>笔记数据同时作为<strong>异常诊断来源</strong>（检测循环思考、重复生成），并回流埋点（见第 8 章）。</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 id="s63">6.3 风格融合</h3>
+    <div class="req">
+      <span class="rid">FR-3</span><span class="rname">稳定风格生成与风格融合</span>
+      <span class="prio P1">P1 · 重要（阶段二）</span>
+      <div class="rbody">
+        <ul>
+          <li><strong>风格分期锚定</strong>：同一作家的不同创作分期视为不同风格对象，须显式指定（如余华·先锋期 / 温情期）；</li>
+          <li><strong>核心意象贯穿</strong>：选定意象须成为驱动叙事、承载感知的核心，而非标签；</li>
+          <li><strong>风格指纹稳定</strong>：同风格多次生成，64 维特征（37 维组合）余弦相似度 ≥ 0.85（对应 AC-5）；</li>
+          <li><strong>母题重写</strong>：支持"已写过的题目 / 母题以目标风格重写"，作为文学工业化的核心场景；</li>
+          <li><strong>合规边界（v0.2 新增）</strong>：对外风格对象限于<strong>已故作家</strong>（版权进入公有领域或已获授权）；<strong>在世作家（含余华）仅用于内部评测</strong>，不对外提供风格化服务，不发布仿写作品；</li>
+          <li>风格学习语料可引入<strong>知网核心期刊研究论文</strong>等学术资料辅助理解风格内核。</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 id="s64">6.4 网页产品功能 <span class="rev">v0.2 新增</span></h3>
+    <div class="req">
+      <span class="rid">FR-4</span><span class="rname">网页版产品基础功能</span>
+      <span class="prio P0">P0 · 必须</span>
+      <div class="rbody">
+        <ul>
+          <li><strong>账号与鉴权</strong>：注册 / 登录 / 会话管理，支持匿名试用与实名账号；</li>
+          <li><strong>作品管理</strong>：作品保存、历史版本、恢复、删除、数据导出（Markdown / PDF / LaTeX）；</li>
+          <li><strong>创作交互</strong>：流式输出与生成进度可见、续写 / 改写 / 插入 / 大纲编辑；</li>
+          <li><strong>分享发布</strong>：作品可生成只读分享链接（AI 生成显著标注）；</li>
+          <li><strong>反馈入口</strong>：作品级点赞 / 点踩与评语，接入第 8 章埋点。</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 id="s65">6.5 需求优先级汇总（MoSCoW）<span class="rev">v0.2 修正</span></h3>
+    <table>
+      <tr><th>优先级</th><th>需求</th><th>阶段</th></tr>
+      <tr><td><span class="tag red">Must</span></td><td>FR-1 长文本 / 超长文本生成、FR-4 网页产品功能、NFR-1 异常记录、埋点、<strong>专家团盲测面板（v0.2 上调）</strong></td><td>阶段一</td></tr>
+      <tr><td><span class="tag green">Should</span></td><td>FR-2 创作过程透明化、FR-3 稳定风格生成、风格指纹评测</td><td>阶段一（FR-2）/ 阶段二（FR-3）</td></tr>
+      <tr><td><span class="tag gray">Could</span></td><td>风格对比工具、多人在线协作创作</td><td>阶段二（有余力）</td></tr>
+      <tr><td><span class="tag gray">Won't</span></td><td>多风格即时切换、多模态、知识问答</td><td>本期不做</td></tr>
+    </table>
+  </section>
+
+  <!-- ============ 7. 非功能需求 ============ -->
+  <section id="s7">
+    <h2><span class="no">07</span>非功能需求</h2>
+
+    <div class="req">
+      <span class="rid">NFR-1</span><span class="rname">异常记录与可观测性</span>
+      <span class="prio P0">P0 · 必须</span>
+      <div class="rbody">
+        <p style="margin-bottom:6px">对以下五类异常<strong>全量记录、可追溯、可告警</strong>：</p>
+        <table>
+          <tr><th>异常类别</th><th>定义</th><th>记录内容</th><th>处置</th></tr>
+          <tr><td>截断</td><td>达到输出上限 / 上下文窗口导致文本被切断</td><td>触发位置、长度、上下文占比</td><td>提示续写 / 自动分段重生成</td></tr>
+          <tr><td>超时 / 网络</td><td>单次生成超过时限或网络中断</td><td>耗时、重试次数、失败阶段</td><td>重试 + 进度可见</td></tr>
+          <tr><td>循环思考</td><td>推理链出现重复回路，无进展</td><td>循环起点、重复片段</td><td>熔断并回退到上一稳定输出</td></tr>
+          <tr><td>重复生成</td><td>输出出现段落级重复 / 车轱辘话</td><td>重复片段定位</td><td>自动检测 + 人工标记</td></tr>
+          <tr><td>违法违规</td><td>内容违反法律法规或平台安全规范</td><td>触发策略类别、拦截动作</td><td>内容安全过滤（生成前 / 后双闸）</td></tr>
+        </table>
+        <ul style="margin-top:8px">
+          <li>异常日志含<strong>请求 ID 全链路追踪</strong>（入参 → 生成 → 输出 → 用户反馈）；</li>
+          <li>异常指标 <strong>实时监控 + 阈值告警</strong>，并进入周报复盘；</li>
+          <li>禁止记录原始敏感个人信息，日志符合脱敏要求（详见 8.5）。</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>其他非功能要求 <span class="rev">v0.2 修正</span></h3>
+    <table>
+      <tr><th>维度</th><th>要求</th></tr>
+      <tr><td>性能</td><td>流式输出首 token 延迟 &lt; 3s；单次 5,000 字生成 ≤ 5 分钟（RTX 4060 量级，建议值待实测）；30,000 字成书会话 ≤ 60 分钟（建议值待实测）</td></tr>
+      <tr><td>可用性</td><td>内测期目标 ≥ 99%，<strong>不承诺 SLA</strong>；故障降级为"<strong>长文回退模式</strong>"——超长生成失败时自动降级为"大纲 + 分章逐段生成"，保证进度不丢失（定义补充）</td></tr>
+      <tr><td>安全</td><td>提示词注入防护、生成内容合规过滤、鉴权与限流</td></tr>
+      <tr><td>合规</td><td>AI 生成作品显著标注；在世作家风格仅内部评测（见 FR-3）；对外风格对象限于已故作家；内容双闸过滤</td></tr>
+      <tr><td>可扩展</td><td>风格配置与模型权重解耦，新增风格无需改前端</td></tr>
+    </table>
+  </section>
+
+  <!-- ============ 8. 埋点 ============ -->
+  <section id="s8">
+    <h2><span class="no">08</span>埋点与数据分析</h2>
+
+    <h3>8.0 事件定义规范 <span class="rev">v0.2 新增</span></h3>
+    <p>所有事件统一走 <code>POST /v1/track</code>，格式 <code>{event, ts, session_id, request_id, props}</code>；核心事件如下：</p>
+    <table>
+      <tr><th>事件名</th><th>触发时机</th><th>关键属性</th></tr>
+      <tr><td>generate_start</td><td>用户发起一次生成</td><td>style, target_len, mode(单次/分章)</td></tr>
+      <tr><td>generate_success</td><td>生成正常结束</td><td>chars, tokens, latency, rounds</td></tr>
+      <tr><td>generate_error</td><td>生成失败 / 异常</td><td>error_type(截断/超时/循环/重复/违规), err_detail</td></tr>
+      <tr><td>edit_action</td><td>用户二次编辑</td><td>action(续写/改写/插入/删除), chars</td></tr>
+      <tr><td>export_action</td><td>作品导出 / 分享</td><td>format(md/pdf/latex), shared(bool)</td></tr>
+      <tr><td>feedback_submit</td><td>作品级点赞 / 点踩 / 评语</td><td>sentiment, dimension</td></tr>
+    </table>
+
+    <h3>8.1 生成链路指标</h3>
+    <table>
+      <tr><th>指标</th><th>定义</th><th>目标</th></tr>
+      <tr><td>生成长度分布</td><td>输出 token / 字数直方图</td><td>长文本占比 ≥ 30%</td></tr>
+      <tr><td>生成时长</td><td>首 token 延迟、总耗时、TPS</td><td>流式可见</td></tr>
+      <tr><td>截断率 / 超时率</td><td>generate_error(截断/超时) / 总请求</td><td>&lt; 1% / &lt; 0.5%</td></tr>
+      <tr><td>循环思考 / 重复生成率</td><td>自动检测命中数 / 总请求</td><td>&lt; 0.5%</td></tr>
+    </table>
+
+    <h3>8.2 用户行为指标</h3>
+    <table>
+      <tr><th>指标</th><th>定义</th><th>用途</th></tr>
+      <tr><td>提示词特征</td><td>输入长度、风格对象、母题类型分布</td><td>指导语料与风格优先级</td></tr>
+      <tr><td>续写 / 改写 / 重试率</td><td>edit_action 占比</td><td>判断生成质量的真实主观反馈</td></tr>
+      <tr><td>放弃率</td><td>生成完成前离开的会话占比</td><td>识别体验瓶颈</td></tr>
+      <tr><td>创作笔记开关使用率</td><td>FR-2 笔记开启 / 关闭占比、停留时长</td><td>验证 FR-2 产品价值</td></tr>
+    </table>
+
+    <h3>8.3 质量评估指标</h3>
+    <table>
+      <tr><th>指标</th><th>定义</th><th>数据源</th></tr>
+      <tr><td>点赞 / 点踩</td><td>作品级轻量反馈</td><td>feedback_submit</td></tr>
+      <tr><td>专家评分</td><td>专家团按四维（意象 / 结构 / 语言 / 情感）打分</td><td>盲测面板</td></tr>
+      <tr><td>图灵测试结果</td><td>二选一盲测正确率与置信度</td><td>盲测任务（AC-1）</td></tr>
+      <tr><td>风格指纹偏差</td><td>同风格多次生成的 64 维特征距离</td><td>离线评测（AC-5）</td></tr>
+    </table>
+
+    <h3>8.4 数据闭环</h3>
+    <p>所有埋点数据汇入分析看板，定期产出 <strong>质量报告 + 异常报告</strong>，反哺语料清洗、风格锚定与模型迭代；专家评分与用户反馈进入<strong>偏好数据集</strong>用于下一轮微调（如 KTO / RLHF）。</p>
+
+    <h3>8.5 隐私与合规 <span class="rev">v0.2 新增</span></h3>
+    <ul>
+      <li><strong>只上报元数据，不上报正文</strong>：正文属用户创作内容，埋点仅采集长度 / 时长 / 行为 / 异常类型等元数据；</li>
+      <li>用户可<strong>导出并删除</strong>自己的全部创作数据（呼应 FR-4）；</li>
+      <li>日志去标识化，删除原始个人信息，符合《个人信息保护法》；</li>
+      <li>异常日志中的"违规内容"仅保留策略类别与拦截动作，不落盘原文。</li>
+    </ul>
+  </section>
+
+  <!-- ============ 9. 上线计划 ============ -->
+  <section id="s9">
+    <h2><span class="no">09</span>上线计划与商业模式</h2>
+
+    <h3>9.1 开源范围界定 <span class="rev">v0.2 新增</span></h3>
+    <table>
+      <tr><th>渠道</th><th>发布内容</th><th>范围</th></tr>
+      <tr><td><strong>Hugging Face</strong></td><td>模型权重（基座 + 风格微调权重）、Tokenizer、评测基准（Benchmark）、Hard 难样本数据集</td><td>开源</td></tr>
+      <tr><td><strong>GitHub</strong></td><td>训练 / 推理 / 数据处理脚本、评测代码（诗性评测体系、风格指纹）、文档、示例作品集</td><td>开源</td></tr>
+      <tr><td><strong>独立商业化产品源码（产品层）</strong></td><td>网页端、服务端、多 Agent 编排实现</td><td><strong>不开源</strong>（闭源商业产品）</td></tr>
+    </table>
+    <p class="muted">许可建议（待法务确认）：模型权重 Apache-2.0（含私有风格数据时改为 CC-BY-NC-4.0）；代码 MIT；数据集 CC-BY-4.0。</p>
+
+    <h3>9.2 里程碑（建议排期，自评审通过日起算）<span class="rev">v0.2 新增</span></h3>
+    <div class="timeline">
+      <div class="item"><div class="phase">M1 · 阶段一（T+0 ~ 2 月）</div><div class="desc">长文本 / 超长文本生成链路 + 异常记录 + 埋点 + 盲测面板 + FR-4 基础功能；内测</div></div>
+      <div class="item"><div class="phase">M2 · 阶段二（T+2 ~ 4 月）</div><div class="desc">风格分期锚定 + 风格指纹评测达标（AC-5）；首期已故作家风格上线</div></div>
+      <div class="item"><div class="phase">M3 · 图灵检测（T+4 ~ 5 月）</div><div class="desc">专家团双盲测试，达成 AC-1 / AC-2 验收标准</div></div>
+      <div class="item"><div class="phase">M4 · 开源发布（T+5 ~ 6 月）</div><div class="desc">HF 权重 + GitHub 代码 + 技术报告 + 示例作品集 + GOAI 大赛作品提交</div></div>
+    </div>
+
+    <h3>9.3 商业模式 <span class="rev">v0.2 新增</span></h3>
+    <table>
+      <tr><th>收入来源</th><th>说明</th></tr>
+      <tr><td>产品订阅</td><td>独立商业化写作产品等产品层按订阅制收费（免费额度 + 专业版），承接近期创作类用户</td></tr>
+      <tr><td>API 授权</td><td>风格化生成 / 长文成书能力以 API 形式对 B 端（网文平台、出版社、内容团队）授权</td></tr>
+      <tr><td>开源杠杆</td><td>开源权重与评测基准作为品牌与人才磁石，反哺产品获客与社区生态</td></tr>
+    </table>
+  </section>
+
+  <!-- ============ 10. 依赖与风险 ============ -->
+  <section id="s10">
+    <h2><span class="no">10</span>依赖与风险</h2>
+
+    <h3>10.1 关键依赖与成本预算</h3>
+    <table>
+      <tr><th>依赖</th><th>说明</th><th>成本量级</th></tr>
+      <tr><td>算法能力</td><td>长上下文注意力、风格控制、长文一致性解码</td><td>自研为主</td></tr>
+      <tr><td>算力硬件</td><td>3B 风格模型微调：RTX 4060 8GB 已验证可跑（QLoRA）；27B 训练 / 长文推理需租用 GPU</td><td>本地 0 额外成本；27B 阶段预算按需预留（评估预留项）</td></tr>
+      <tr><td>语料数据</td><td>风格语料（正典文本 + 已故作家全量作品）、学术研究语料（知网）、专家标注数据</td><td>采集与清洗人力</td></tr>
+      <tr><td>专家团</td><td>9–12 名文学专业评审持续参与（见 4.2）</td><td>评审稿酬 / 权益</td></tr>
+    </table>
+
+    <h3>10.2 风险与对策 <span class="rev">v0.2 扩充</span></h3>
+    <table>
+      <tr><th>风险</th><th>等级</th><th>对策</th></tr>
+      <tr><td><strong>图灵检测失败 / 专家团不认可（v0.2 新增）</strong></td><td><span class="tag red">高</span></td><td>兜底：KPI 切换为专家四维评分与用户留存，定位调整为"人机协作创作工具"；图灵作为研究目标而非唯一门槛，不因未达标而放弃上线</td></tr>
+      <tr><td>风格学习"只学表面"（意象拼接）</td><td><span class="tag red">高</span></td><td>学术语料辅助理解内核 + 风格指纹评测 + 专家盲测把关</td></tr>
+      <tr><td>长文本 / 超长文本连贯性不足</td><td><span class="tag red">高</span></td><td>分阶段实现（先长度后风格）、大纲 / 分章结构化生成、续写回环验证</td></tr>
+      <tr><td><strong>在世作家版权与人格权（v0.2 新增）</strong></td><td><span class="tag red">高</span></td><td>在世作家仅内部评测、不对外服务不发布；对外限已故作家（版权公有 / 已授权）；AI 生成显著标注（对应 FR-3 / NFR-1 合规）</td></tr>
+      <tr><td>算力不足导致迭代缓慢</td><td><span class="tag red">中</span></td><td>小基座起步（已验证 3B 路线）、量化推理、开源协作分摊成本</td></tr>
+      <tr><td>合规风险（内容安全）</td><td><span class="tag red">中</span></td><td>生成前后双闸过滤，违规样例进入异常库持续迭代</td></tr>
+    </table>
+  </section>
+
+  <!-- ============ 附录 ============ -->
+  <section id="s11">
+    <h2><span class="no">11</span>附录 A · 反馈要点摘录（已脱敏）</h2>
+    <p class="muted">与 3.2 互为印证：3.2 为结构化分析，此处收录原始表述；已去除全部用户名与身份信息。</p>
+
+    <h3>专家团评审（风格仿写实验）</h3>
+    <blockquote>"作家风格存在明显创作分期（先锋期 / 温情期 / 现实期），须先明确锚定模仿哪一阶段。先锋期语言冷硬、剥离抒情；温情期朴素线性、隐忍克制。"</blockquote>
+    <blockquote>"核心意象没有贯穿始终，更像一个标签；文风混杂，先锋冷感与温情叙事交替，调性割裂。叙事可更克制，少直接交代心理，多用动作场景暗示情绪。"</blockquote>
+    <blockquote>"时代性细节有误：部分器物不符合语境（如黄酒品类、每日两碗白米饭过于奢侈）。环境描写铺排多但不详细，真实感降低、喧宾夺主。"</blockquote>
+    <blockquote>"方向可以优化：把已写过的题目以另一种风格重写，可扩充人类文学；当模型有稳定风格与泛化能力后，可实现文学工业化。"</blockquote>
+
+    <h3>社区反馈（诗歌生成实验）</h3>
+    <blockquote>"除了词汇没有看到相像之处，句式过于白话、修辞极度简单，意象化、跳跃和含混的特征十分不足。"</blockquote>
+    <blockquote>"拼接高频词，句式、结构、气质与作家本人无关。诗的困境：平均化、能知道它想写什么；思维链式考究是诗歌的反面，人的诗是直接性的。"</blockquote>
+    <blockquote>"语言和风格的模仿会随模型扩张而变得像人，但做到引人共情才是关键；很难挑出一两句让人眼前一亮的句子。"</blockquote>
+    <blockquote>"建议挖掘已故文人，风格相对固定，且'学其风格写新题'的文学可见性更强。"</blockquote>
+  </section>
+
+</div>
+
+<footer>
+  <span>网页版文学大模型 · 需求文档 v0.2（评审稿）</span>
+  <span>作者 shikunpunk · 2026-08-23 · 评审通过后升版 v1.0</span>
+</footer>
+
+<script>
+  // 目录高亮
+  const links = document.querySelectorAll('.toc a');
+  const secs = [...links].map(a => document.querySelector(a.getAttribute('href')));
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY + 120;
+    let cur = secs[0];
+    secs.forEach(s => { if (s && s.offsetTop <= y) cur = s; });
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur.id));
+  });
+</script>
+</body>
+</html>

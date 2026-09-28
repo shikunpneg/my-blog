@@ -1,0 +1,522 @@
+<!DOCTYPE html><html lang="zh-CN">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>[2102.01293] 迁移学习的标度律</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="迁移学习的标度律">
+<style>
+body { background-color:#fef9f0; font-family:"Noto Serif SC","Source Han Serif SC","SimSun","Songti SC","STSong",serif; color:#2a2520; line-height:1.85; max-width:920px; margin:0 auto; padding:20px 40px; font-size:15px; }
+h1,h2,h3,h4,h5,h6 { font-family:"Noto Sans SC","Microsoft YaHei","PingFang SC","Source Han Sans SC",sans-serif; color:#5a3a1a; margin-top:1.4em; margin-bottom:0.6em; font-weight:600; }
+h1.ltx_title_document { font-size:1.95em; text-align:center; border-bottom:2px solid #c9a47a; padding-bottom:14px; }
+h2.ltx_title_section { font-size:1.5em; border-left:5px solid #c9a47a; padding-left:14px; margin-top:1.8em; }
+h2.ltx_title_appendix { font-size:1.4em; color:#6a4a2a; border-bottom:1px dotted #c9a47a; padding-bottom:6px; }
+h3.ltx_title_subsection { font-size:1.18em; color:#7a4f24; }
+.ltx_abstract { background:#fdf3e1; border-left:4px solid #c9a47a; padding:18px 24px; margin:22px 0; border-radius:4px; }
+.ltx_p { text-align:justify; margin:0.85em 0; text-indent:2em; }
+.ltx_noindent { text-indent:0; }
+ul.ltx_itemize, ol.ltx_enumerate { padding-left:30px; }
+ul.ltx_itemize li, ol.ltx_enumerate li { margin:6px 0; }
+figure.ltx_figure { text-align:center; margin:22px 0; padding:14px; background:#fffaf0; border:1px dashed #d4b888; border-radius:4px; }
+figcaption.ltx_caption { font-size:0.93em; color:#5a4a3a; margin-top:12px; text-align:left; line-height:1.7; }
+.ltx_equation { text-align:center; margin:18px 0; font-style:italic; padding:10px 14px; background:#fffaf0; border-top:1px solid #c9a47a; border-bottom:1px solid #c9a47a; font-size:1.02em; }
+sup, sub { color:#7a4f24; font-style:normal; font-size:0.85em; }
+.ltx_TOC { background:#fdf3e1; border:1px solid #e6d2a8; padding:18px 28px; border-radius:6px; margin:22px 0; }
+.ltx_TOC ol { padding-left:24px; }
+a { color:#8a5a1a; text-decoration:none; }
+a:hover { color:#c97a1a; text-decoration:underline; }
+.ltx_bibitem { margin:9px 0; font-size:0.94em; text-indent:-1.8em; padding-left:1.8em; }
+.ltx_biblist { padding-left:30px; }
+.ltx_authors { text-align:center; margin-bottom:18px; color:#4a3a2a; font-size:1.05em; }
+.ltx_text.ltx_font_bold { font-weight:700; color:#5a3a1a; }
+em { color:#3a2a1a; font-style:italic; }
+cite { font-style:normal; }
+.fig_placeholder { padding:36px 50px; background:#fdf3e1; color:#8a7050; font-style:italic; border:1px dashed #d4b888; border-radius:4px; margin:10px 0; text-align:center; }
+.ltx_role_footnote { font-size:0.85em; vertical-align:super; }
+.footnote_ref { color:#b06030; }
+.app-divider { border-top:2px solid #d4b888; margin:36px 0 14px; }
+.math-formula { display:inline-block; font-family:"Cambria Math","STIX Two Math",serif; }
+hr.ltx_section_sep { border:none; border-top:1px dashed #c9a47a; margin:30px 0; }
+</style>
+</head>
+<body>
+<article class="ltx_document">
+
+<h1 class="ltx_title ltx_title_document">迁移学习的标度律（Scaling Laws for Transfer）</h1>
+
+<div class="ltx_authors">Danny Hernandez<sup>1</sup>　·　Jared Kaplan<sup>2,3</sup>　·　Tom Henighan<sup>2</sup>　·　Sam McCandlish<sup>2</sup>　·　OpenAI</div>
+<div style="text-align:center;font-size:0.92em;color:#6a5a4a;margin-bottom:18px;">
+通讯：<a href="mailto:dannyhernandez@gmail.com">dannyhernandez@gmail.com</a><br>
+<sup>†</sup> 工作完成于 OpenAI　　<sup>‡</sup> 约翰·霍普金斯大学（Johns Hopkins University）
+</div>
+
+<div class="ltx_abstract">
+<h6 style="margin-top:0;">摘要（Abstract）</h6>
+<p class="ltx_p ltx_noindent">我们在一种无监督的微调（fine-tuning）设置中研究分布之间迁移学习（transfer learning）的经验标度律（scaling laws）。当我们在固定大小的数据集上从头训练越来越大的神经网络时，它们最终会受限于数据而停止在性能（交叉熵损失）上的提升。当我们对在大型语言数据集上预训练（pre-trained）的模型做同样的事情时，性能增益的斜率只是减小而不会变为零。我们通过确定相同大小的 Transformer 在从头训练时需要多少数据才能达到同样的损失来计算从预训练中"迁移"的有效数据量。换句话说，我们关注数据单位，同时固定其他一切。我们发现，在低数据范围内，迁移的有效数据可以通过参数数量和微调数据集大小的幂律（power-law）得到很好的描述。我们相信这些幂律中的指数对应于模型的一般性（generality），以及分布之间（有向而非对称意义上的）接近度的度量。我们发现预训练实际上有效地倍增了微调数据集的大小。迁移和整体性能一样，在参数、数据和算力方面都是可预测地标度的。</p>
+</div>
+
+<nav class="ltx_TOC">
+<h6 style="margin-top:0;">目录</h6>
+<ol>
+<li><a href="#S1"><b>1 引言（Introduction）</b></a>
+<ol>
+<li><a href="#S1.SS1">1.1 主要结果（Key Results）</a></li>
+<li><a href="#S1.SS2">1.2 符号说明（Notation）</a></li>
+</ol></li>
+<li><a href="#S2"><b>2 实验设置（Experimental Setup）</b></a></li>
+<li><a href="#S3"><b>3 实验结果（Results）</b></a>
+<ol>
+<li><a href="#S3.SS1">3.1 僵化——预训练是否会损害性能？</a></li>
+<li><a href="#S3.SS2">3.2 微调通常在算力上更高效（不计预训练算力）</a></li>
+</ol></li>
+<li><a href="#S4"><b>4 神经标度律（Neural Scaling Laws）</b></a></li>
+<li><a href="#S5"><b>5 相关工作（Related Work）</b></a></li>
+<li><a href="#S6"><b>6 局限性（Limitations）</b></a></li>
+<li><a href="#S7"><b>7 结论（Conclusion）</b></a></li>
+<li><a href="#A1">附录 A 数据范围（Data Regime）</a></li>
+<li><a href="#A2">附录 B 补充方程（Supplementary equations）</a></li>
+<li><a href="#A3">附录 C 为方程 1.2 生成拟合（Generating fit for Equation 1.2）</a></li>
+<li><a href="#A4">附录 D 图 3，包括中等数据范围（Figure 3, including medium data regime）</a></li>
+<li><a href="#A5">附录 E 尝试为从头开始的 Python 运行生成全局拟合</a></li>
+<li><a href="#A6">附录 F 应对文本数据集中存在少量 Python 的潜在担忧</a></li>
+<li><a href="#A7">附录 G 最佳 epoch 的分析</a></li>
+<li><a href="#bib">参考文献（References）</a></li>
+</ol>
+</nav>
+
+<section id="S1" class="ltx_section">
+<h2 class="ltx_title_section"><span>1 </span>引言（Introduction）</h2>
+
+<p class="ltx_p ltx_noindent">推动人工智能进步的有三大要素：算法创新 <cite>[HB20]</cite>、算力（compute） <cite>[AH18]</cite> 和数据。OpenAI Five 进行了超过一万年的 Dota 游戏，AlphaZero 进行了 1.4 亿局围棋，而 GPT-3 阅读了相当大一部分互联网内容 <cite>[OBB+19, SSS+17, BMR+20]</cite>。这些机器学习系统都是从零开始训练的（trained from-scratch），而人类则会"迁移"（transfer）过往的理解和经验，这也是我们能够以少得多的直接任务经验取得出色表现的部分原因。神经网络通常需要的直接经验量超过一个人一生所能经历的，这表明迁移所带来的样本效率（sample efficiency）提升或许是从数据角度进行刻画的重要途径。</p>
+
+<p class="ltx_p">最近在无监督和微调语言模型方面的进展使它们成为一个特别有趣的研究领域。无监督预训练在 <cite>[DL15]</cite> 中提升了下游任务的性能，并在 <cite>[PNI+18, HR18]</cite> 中带来了数据效率的提升。GPT-1 <cite>[RNSS18]</cite> 这一 Transformer 模型 <cite>[VSP+17]</cite> 的性能因预训练而得到提升。后续在小数据集上进行微调的工作不断刷新最先进的结果 <cite>[PNI+18, DCLT18, RSR+20]</cite>。这一系列成功表明，语言模型微调可以提供一个简单而有趣的设置来研究数据分布之间的迁移。</p>
+
+<p class="ltx_p">我们认为在低数据范围内刻画微调尤其重要，因为许多感兴趣的任务不会有足够大的、现成的数据集来从头训练大型模型（无论是数十亿数据点 <cite>[HNA+17, KMH+20, HKK+20]</cite>，还是围棋那样的完美模拟器 <cite>[SHM+16]</cite>）。在代码生成任务上微调语言模型对我们来说尤其有趣，因为文本和代码虽然有一些重叠，但是相当不同的分布。</p>
+
+<p class="ltx_p">我们的分析聚焦于在固定性能和模型大小时的数据单位。这种新颖的视角使我们能够用简单的方程 <a href="#S1.E1">(1.1)</a> 生成异常干净的拟合。在我们的低数据实验中，我们使用了从 40 万到 4 亿参数不等的模型规模，以及从约 10<sup>5</sup> 到 5×10<sup>9</sup> 字符（character）的微调数据集大小。</p>
+
+<figure id="S1.F1" class="ltx_figure">
+<div class="fig_placeholder">【图 1：40M 参数 Transformer 在 Python 上的性能对比——从头训练 vs 预训练+微调，展示有效数据 D<sub>T</sub> 的概念示意图】</div>
+<figcaption class="ltx_caption"><b>图 1：</b> 我们展示了 4000 万参数（40M）的 Transformer 模型在 Python 上的性能，分别包括从零开始在 Python 上训练，以及先在文本上预训练再在 Python 上微调。<em>D<sub>T</sub></em> 是相同大小的从零开始训练的模型要达到与微调模型相同的 Python 损失所需的额外 Python 字符数。在所示的例子中，对于一个在 3×10<sup>5</sup> 字符上微调的 4000 万参数 Transformer，<em>D<sub>T</sub></em> 约为 <em>D<sub>F</sub></em> 的 1000 倍。可用的微调数据越少，预训练带来的帮助就越大。从图中可以看出，在达到相同损失时，微调模型所需的微调数据比从头训练所需的全部数据要少得多；预训练"补充"了缺失的数据。</figcaption>
+</figure>
+
+<section id="S1.SS1" class="ltx_subsection">
+<h3><span>1.1 </span>主要结果（Key Results）</h3>
+
+<p class="ltx_p ltx_noindent">我们训练了一系列不同规模的 Transformer 语言模型，使用 3 种不同的数据集训练方式：</p>
+<ul>
+<li><b>从零开始在 Python 代码上训练；</b></li>
+<li><b>先在自然语言上预训练，再在 Python 代码上微调；</b></li>
+<li><b>先在自然语言和非 Python 代码的等比例混合上预训练，再在 Python 上微调。</b></li>
+</ul>
+<p class="ltx_p">我们变化网络规模和微调数据集的大小，并在留出的 Python 代码测试集上衡量性能。我们观察到以下关键结果：</p>
+
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">有效迁移数据在低数据范围内很好地由幂律描述</span><sup class="ltx_role_footnote">1</sup>：我们使用 <em>D<sub>T</sub></em> 表示有效迁移数据（effective data transferred），即相同大小的、仅在 Python 上训练的模型，要达到在语言上预训练模型在 Python 上相同损失所需要的额外 Python 数据量。我们的符号在图 <a href="#S1.F1">1</a> 中以可视方式标示。方程 <a href="#S1.E1">(1.1)</a> 中的迁移标度律是本研究中许多关键见解和预测的核心。我们认为这个结果的简洁性非常耐人寻味：</p>
+
+<div id="S1.E1" class="ltx_equation"><em>D<sub>T</sub></em> = 有效迁移数据 = <em>k</em>·(<em>D<sub>F</sub></em>)<sup>α</sup>·(<em>N</em>)<sup>β</sup>　　(1.1)</div>
+
+<p class="ltx_p">其中 <em>N</em> 是非嵌入（non-embedding）模型参数的数量，<em>D<sub>F</sub></em> 是微调数据分布的大小。<em>k</em> 是一个常数，<em>α</em> 和 <em>β</em> 是幂律指数。通过固定性能来测量预训练带来的"额外数据量"，我们剥离了损失函数的具体形式，得到一个关于迁移的清晰、可解释的标度关系。</p>
+
+<p class="ltx_p">在本研究中，对于文本预训练后微调到 Python 的情形，我们拟合得到的指数约为 α ≈ 0.5、β ≈ 0.5 左右（具体数值取决于拟合方式，详见原文附录）。这意味着参数数量每翻一倍，迁移的有效数据就会按一个简单幂律增长；而微调数据每增加十倍，迁移的有效数据则按 α 比例放大。</p>
+
+<figure id="S1.F2" class="ltx_figure">
+<div class="fig_placeholder">【图 2：跨越 4 个数量级模型规模和 3 个数量级微调数据集大小的迁移标度律拟合散点图——横轴为模型参数 N，纵轴为有效迁移数据 D<sub>T</sub>，不同颜色的点代表不同的微调数据集大小 D<sub>F</sub>】</div>
+<figcaption class="ltx_caption"><b>图 2：</b> 在低数据范围内，我们观察到一个跨越 4 个数量级的模型规模和 3 个数量级的微调数据集大小的良好拟合。拟合方程如上以 <em>D<sub>T</sub></em> 的形式给出。直线代表不同 <em>D<sub>F</sub></em> 下的对数线性拟合，可见在对数-对数坐标下点几乎完美地落在直线上，且平行性非常好——这正是幂律形式所预期的表现。</figcaption>
+</figure>
+
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">当数据成为限制因素时，预训练模型具有更好的标度律，因为斜率小于零：</span>　图 <a href="#S1.F3">3</a> 显示，当我们以固定的 Python 数据量 <em>D<sub>F</sub></em> 进行微调而增大模型规模时，从头训练的模型会遭遇瓶颈，而已经在语言上预训练的模型则继续改进。方程 <a href="#S1.E1">(1.1)</a> 和 <a href="#S1.E2">(1.2)</a> 将这一现象量化。这一观察对实际部署有重要意义：在一个迁移目标数据集规模受限的场景下，模型规模的扩展在预训练存在时比没有预训练时更有价值。</p>
+
+<figure id="S1.F3" class="ltx_figure">
+<div class="fig_placeholder">【图 3：在不同模型规模和数据量下的损失曲线对比——展示从头训练（紫/蓝）vs 微调（绿）的标度律差异；横轴为参数数量 N，纵轴为损失 L】</div>
+<figcaption class="ltx_caption"><b>图 3：</b> 我们可以观察到从零开始训练的模型（紫色和蓝色曲线）出现大范围的平坦区域，完全受数据约束，增大参数不会带来任何收益——这是典型的数据受限行为；而微调的标度律（绿色曲线）在受数据限制时只表现出斜率的变化，而非完全的停滞。第 <a href="#S3.SS1">3.1</a> 节给出了以数据集大小为 x 轴的这些图的变体。拟合按数据集大小进行，函数形式为幂律加常数。对此数据尝试进行全局幂律拟合可在附录 <a href="#A3">C</a> 中找到。零样本（zero-shot）性能由黑色线给出。值得注意的是，零样本性能与最大微调模型的性能相当，这凸显了预训练带来的内在迁移价值。</figcaption>
+</figure>
+
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">忽略预训练成本，在低数据范围内微调模型在算力上更高效</span>（图 <a href="#S1.F4">4</a>）。在利用已有的预训练模型（如 BERT 或 GPT-3 <cite>[DCLT18, BMR+20]</cite>）时，忽略预训练成本是合理的。这是因为预训练模型可以重复用于多个下游任务，从而摊销预训练成本。</p>
+
+<figure id="S1.F4" class="ltx_figure">
+<div class="fig_placeholder">【图 4：算力高效前沿曲线对比——低数据范围内微调 vs 从头训练；横轴为训练算力 C，纵轴为损失 L】</div>
+<figcaption class="ltx_caption"><b>图 4：</b> 在低数据范围内，对于给定的训练算力，微调比从头训练获得更好的性能，并且更容易落在算力高效前沿（compute-efficient frontier）上。在固定 Python 数据量的情况下，随着模型规模增大，性能差距会显著扩大——这表明了预训练带来的"红利"随着模型规模的提升而增加。（3×10<sup>8</sup> 字符的 Python 数据曲线）值得注意的是，从头训练的曲线在大多数训练算力区间都位于算力高效前沿之下，而微调曲线则与之接近或重合，这说明微调让训练算力的利用更加高效。</figcaption>
+</figure>
+
+</section>
+
+<section id="S1.SS2" class="ltx_subsection">
+<h3><span>1.2 </span>符号说明（Notation）</h3>
+
+<p class="ltx_p ltx_noindent">为方便阅读，我们列出本文使用的主要符号及其含义：</p>
+
+<ul class="ltx_itemize">
+<li><em>D<sub>E</sub></em> — 总有效数据（total effective data），即相同大小的、从头在 Python 上训练的模型，要达到预训练模型在 Python 上相同损失所需的 Python 字符数。它是迁移数据与微调数据的总和，即 <em>D<sub>E</sub></em> = <em>D<sub>T</sub></em> + <em>D<sub>F</sub></em>。</li>
+<li><em>D<sub>F</sub></em> — 微调数据集大小（fine-tuning dataset size），以字符数为单位。这是直接用于微调目标分布的数据量。</li>
+<li><em>D<sub>T</sub></em> — 有效迁移数据（effective data transferred），即相同大小的、从头在 Python 上训练的模型，要达到预训练模型在 Python 上相同损失所需的<em>额外</em> Python 字符数。它是预训练"贡献"的有效数据量。</li>
+<li><em>N</em> — 模型参数的数量，不包括词表（vocabulary）和位置嵌入（positional embeddings）。这些嵌入参数通常很大但与模型表达能力的核心规律相关性较弱。</li>
+<li><em>α</em>, <em>β</em> — 有效迁移数据标度的幂律指数，分别对应 <em>D<sub>F</sub></em> 和 <em>N</em> 的依赖性。</li>
+<li><em>k</em> — 有效迁移数据标度的常数，整体反映了预训练分布相对于目标分布的"接近度"或"信息含量"。</li>
+<li><em>L</em> — 上下文内每个 token 的交叉熵损失（cross-entropy loss），以 nat（自然对数底 e 为底的信息量单位）为单位，在 token 上平均。这是衡量语言模型性能的标准指标。</li>
+<li><em>C</em> — 整篇论文中的算力（compute）单位是浮点运算数（FLOP）。算力是衡量训练成本的关键指标。</li>
+<li><em>D(N)</em> — 给定模型大小，要达到无限 Python 数据所能达到的性能的 99% 所需的数据量。这是刻画"无限数据范围"的关键阈值。</li>
+<li><em>α<sub>N</sub></em>, <em>α<sub>D</sub></em> — 来自 <cite>[KMH+20]</cite> 的损失 <em>L</em> 的幂律指数，分别对应参数和数据依赖。</li>
+<li><em>D<sub>C</sub></em>, <em>N<sub>C</sub></em> — 来自 <cite>[KMH+20]</cite> 的损失方程中的常数项。</li>
+</ul>
+
+</section>
+</section>
+
+<section id="S2" class="ltx_section">
+<h2 class="ltx_title_section"><span>2 </span>实验设置（Experimental Setup）</h2>
+
+<p class="ltx_p ltx_noindent">在语言上预训练、在代码上微调、以及从零开始在代码上训练的模型，都训练至收敛到最优的早停止（early stopping）点，学习率（learning rate）和优化（optimization）参数与 <cite>[KMH+20]</cite> 中的类似。模型规模和数据集大小各跨越 4 个数量级。我们使用了 Adam 优化器 <cite>[KB14]</cite>，批大小（batch size）为 256，序列长度为 2048 个 token，3000 步学习率预热（warmup），词表大小（vocabulary size）为 50257。所有模型均从头训练，不加载预训练权重——预训练和微调之间的区别仅在于训练数据的来源与组合方式。</p>
+
+<p class="ltx_p">预训练的文本模型在来自 <cite>[KMH+20]</cite> 的 WebText2、Common Crawl<sup class="ltx_role_footnote">4</sup> <cite>[RSR+20]</cite>、英文维基百科以及公开可用的 Internet Books 的混合数据上训练。文本使用 <cite>[RWC+19]</cite> 中描述的可逆分词器（reversible tokenizer）编码，总共 240 亿（2.4×10<sup>10</sup>）个字符。这一规模的数据量保证了预训练模型能够学习到丰富的语言统计规律。在 Python 上训练或微调的模型利用了来自公开 GitHub<sup class="ltx_role_footnote">5</sup> 仓库的 220 亿（2.2×10<sup>10</sup>）字符数据集（31GB），其中 3% 的数据集被留出用于评估（held out for evaluation）。</p>
+
+<p class="ltx_p">模型架构方面，我们使用了标准的 Transformer decoder（即仅解码器、自回归）架构。模型规模通过变化层数、维度以及注意力头数进行缩放，从 40 万（400K）参数到 4 亿（400M）参数不等。所有训练运行使用相同的词表分词器，保证不同模型之间的一致性。</p>
+
+</section>
+
+<section id="S3" class="ltx_section">
+<h2 class="ltx_title_section"><span>3 </span>实验结果（Results）</h2>
+
+<p class="ltx_p ltx_noindent">在本节中，我们详细分析两类主要实验现象：模型规模标度（model size scaling）、数据标度（data scaling）和迁移（transfer）。这些是支撑我们标度律的核心数据。</p>
+
+<section id="S3.SS1" class="ltx_subsection">
+<h3><span>3.1 </span>僵化——预训练是否会损害性能？</h3>
+
+<p class="ltx_p ltx_noindent">预训练是否会损害微调模型的性能？我们将这种现象称为"僵化"（ossification），意指预训练可能会使模型权重僵化，以致在高数据范围内不能很好地适应微调分布。我们考察这个问题的原因是直觉上，当拥有大量下游数据时，从零训练可能反而比微调更优——因为微调模型可能受限于预训练学到的先验，无法完全适应下游分布。</p>
+
+<p class="ltx_p">下图展示了图 <a href="#S1.F3">3</a> 的一个变体，将数据集大小放在 x 轴上而不是作为线条颜色。为了建立直觉，从多个角度观察主要结果会很有帮助。在这幅图上更容易观察到，最小的从零开始训练的模型在大数据集上比微调模型在大数据集上的性能更好（紫色曲线）。这一现象表明，在高数据范围内僵化效应确实存在。</p>
+
+<figure id="S3.F5" class="ltx_figure">
+<div class="fig_placeholder">【图 5：以数据集大小为 x 轴的标度律——展示高数据范围内预训练可能减小有效数据集；不同颜色代表不同模型大小】</div>
+<figcaption class="ltx_caption"><b>图 5：</b> 在高数据范围内（紫色曲线），预训练实际上可能减少训练集大小。换句话说，在更大的数据集（&gt;10<sup>8</sup>）上从头训练 1M 参数模型（紫色）反而能获得更好的性能。这与低数据范围内的行为形成鲜明对比：在低数据范围内（&lt;0.1 × <em>D(N)</em>），预训练带来巨大帮助；而在高数据范围内，预训练可能成为限制因素。</figcaption>
+</figure>
+
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">我们将 <em>D(N)</em> 定义为对于给定模型大小，达到无限数据所能产生性能的 99% 所需的数据量</span><sup class="ltx_role_footnote">6</sup>。也就是说，0.99 × <em>L</em>(<em>D</em>(<em>N</em>)) = <em>L</em>(<em>D</em> → ∞)，其中 <em>L</em> 是损失函数。然后我们使用 <em>D(N)</em> 的比例来参数化数据范围。我们将 <em>D/D(N)&lt;0.10</em> 定义为低数据范围（low-data regime）。</p>
+
+<p class="ltx_p">在整项工作中，我们聚焦于数据受限范围，因为这是预训练最有实际用途的时候。当 <em>D/D(N)</em> 趋近 1.0 时，我们观察到预训练会减少我们的有效数据，而我们的小型微调模型即使在 10 倍或 100 倍 <em>D(N)</em> 的数据上训练，也无法达到从头训练模型的性能。这意味着对于小型模型，预训练权重中的某些特征可能阻碍它们对目标分布进行充分的"重新学习"。</p>
+
+<figure id="S3.F6" class="ltx_figure">
+<div class="fig_placeholder">【图 6：僵化现象展示图，左侧和右侧两种参数化版本——紫色曲线与橙色 D(N) 基线的平行性；横轴为有效数据 D<sub>E</sub>，纵轴为损失 L】</div>
+<figcaption class="ltx_caption"><b>图 6：</b> 在高数据范围内，预训练减少了小型模型的有效数据。右侧的图是左侧图的一种重新参数化。注：紫色曲线与橙色从头训练 <em>D(N)</em> 基线的平行性依赖于 <em>D(N)</em>，而我们对此的拟合存在噪声，如附录 <a href="#A1">A</a> 所示。即便存在这些噪声，曲线之间近似平行的关系表明，僵化效应的强度与预训练数据量的对数大致呈线性关系。</figcaption>
+</figure>
+
+<p class="ltx_p">我们将这种现象称为僵化，因为可以认为预训练是一种特别糟糕的初始化（initialization），模型难以从中恢复。可能通过充分的调整/调参可以摆脱这种糟糕的初始化，但我们没有深入研究这个问题。完全有可能大型模型在此范围内会表现出不同的行为——具体来说，我们推测大型模型可能更擅长在保留预训练知识的同时吸收新数据，因此僵化效应可能会减弱或消失。</p>
+
+</section>
+
+<section id="S3.SS2" class="ltx_subsection">
+<h3><span>3.2 </span>微调通常在算力上更高效（不计预训练算力）</h3>
+
+<p class="ltx_p ltx_noindent">当我们拥有的数据大约是图 <a href="#S1.F4">4</a> 中数据的 30 倍时，微调的算力高效前沿（compute-efficient frontier）与从头训练模型类似。然而，在微调时更容易落在算力高效前沿上。如图 <a href="#S3.F7">7</a> 所示，微调的训练曲线在训练的大部分时间内都与前沿相切，而从头训练的曲线只在一个相对狭窄的窗口内与前沿相切。这意味着微调对算力的利用在更广泛的训练阶段内都是高效的。</p>
+
+<figure id="S3.F7" class="ltx_figure">
+<div class="fig_placeholder">【图 7：100 亿字符 Python 数据集上的训练曲线（按算力量参数化）——展示微调曲线更贴合算力前沿；横轴为训练算力 C，纵轴为损失 L】</div>
+<figcaption class="ltx_caption"><b>图 7：</b> 我们展示了在 100 亿（10<sup>10</sup>）字符的 Python 数据集上训练的训练曲线，按训练所用的算力量进行参数化。绿色（微调）曲线在训练过程中更贴近算力高效前沿，这意味着在实际训练中，我们不太可能因算力投入过度而浪费计算资源。</figcaption>
+</figure>
+
+<p class="ltx_p">然而，如第 <a href="#S3.SS1">3.1</a> 节中最小模型所示，一旦我们拥有的数据达到或超过从头训练所需的数据量，微调的收敛性能就会显著变差，因此在算力上也更低效。这一观察强调了一个重要观点：在决定是否使用微调时，必须考虑数据范围的判断。</p>
+
+<p class="ltx_p">许多模型训练至收敛（持续使用算力直到性能增益停止），而不是按算力高效前沿（性能和算力的 Pareto 前沿）训练 <cite>[KMH+20]</cite>。在图 <a href="#S3.F8">8</a> 中，我们用单点（收敛算力）总结每条曲线，从而能够同时查看我们在不同大小数据集上训练的所有模型。这种"快照"视图让我们能够直接比较不同实验条件下的总成本。</p>
+
+<figure id="S3.F8" class="ltx_figure">
+<div class="fig_placeholder">【图 8：所有模型的收敛算力散点图——同色点表示相同大小模型在不同数据集上的结果；横轴为数据集大小 D，纵轴为收敛算力 C】</div>
+<figcaption class="ltx_caption"><b>图 8：</b> 同一颜色下的不同点都表示在不同大小数据集上训练至收敛的给定大小的模型。圆圈表示微调模型，方块表示从头训练模型；二者之间的位置对比直接揭示了在给定模型大小下，微调达到收敛所需的算力相对从头训练的比例关系。关于"最佳 epoch"的分析提供了另一种关于收敛算力成本的视角，见附录 <a href="#A7">G</a>。</figcaption>
+</figure>
+
+<p class="ltx_p">训练至收敛时：</p>
+<ol class="ltx_enumerate">
+<li>在小数据集下，预训练模型比从头训练模型在算力上更高效。这意味着微调可以让小模型在保持甚至超过从头训练性能的同时，使用显著更少的算力。</li>
+<li>对于任何给定的数据集大小，与从头训练相比，微调时更容易落在算力高效前沿上。这一特性使得微调在实际工程中更具吸引力，因为它减少了对算力精确调度（schedule）的依赖。</li>
+</ol>
+
+</section>
+</section>
+
+<section id="S4" class="ltx_section">
+<h2 class="ltx_title_section"><span>4 </span>神经标度律（Neural Scaling Laws）</h2>
+
+<p class="ltx_p ltx_noindent">幂律可能源于多种多样的来源 <cite>[THK18]</cite>——复杂系统中广泛存在的尺度不变性、临界现象、以及数据流形的内在维度等，都可能产生幂律依赖。神经网络中可预测的标度趋势最早在 <cite>[HNA+17]</cite> 中得到研究，他们发现语言识别、机器翻译等任务上的损失与模型大小、数据量呈可预测的幂律关系。最接近我们方法的工作是 <cite>[RRBS19, KMH+20, HKK+20]</cite>。我们的关注点是迁移如何随算力、数据和参数标度，而不是从头训练时性能如何基于这些因素标度。</p>
+
+<p class="ltx_p">从历史脉络看，神经标度律的研究始于对训练损失与训练数据量之间关系的经验观察。当我们将模型大小、数据量和算力视为三个独立变量时，损失可以分解为两部分：一部分仅依赖于模型与数据的"信息瓶颈"，另一部分则反映计算量的限制。<cite>[KMH+20]</cite> 给出了一个简洁的参数化形式，他们发现幂律指数在多个数量级范围内都成立。这一发现引发了后续大量的研究，将标度律推广到不同的模态（视觉、音频等）和不同的任务设置中。</p>
+
+<p class="ltx_p">我们的工作扩展了这一框架，首次系统地研究预训练带来的迁移如何参与标度律。核心发现是，迁移本身是可测量的（以有效数据 <em>D<sub>T</sub></em> 为单位），且其大小以简单幂律依赖于模型规模和微调数据集。这一结果不仅在理论上统一了迁移与标度律的视角，也在实践上提供了一种原则性的方法来预测微调模型的表现。</p>
+
+</section>
+
+<section id="S5" class="ltx_section">
+<h2 class="ltx_title_section"><span>5 </span>相关工作（Related Work）</h2>
+
+<p class="ltx_p ltx_noindent">幂律可能源于多种多样的来源 <cite>[THK18]</cite>。神经网络中可预测的标度趋势最早在 <cite>[HNA+17]</cite> 中得到研究。最接近我们方法的工作是 <cite>[RRBS19, KMH+20, HKK+20]</cite>。我们的关注点是迁移如何随算力、数据和参数标度，而不是从头训练时性能如何基于这些因素标度。</p>
+
+<p class="ltx_p">迁移学习和元学习（meta-learning）在研究界众多模态下都得到了大量关注。我们将回顾一些启发我们的工作，但不会做全面的文献综述。以下是该领域的两篇最新文献综述：<cite>[TSK+18, Wen18]</cite>。迁移学习的发展可以分为三个主要阶段：第一阶段以特征迁移为代表（如预训练的视觉特征），第二阶段以参数迁移为代表（如微调预训练网络），第三阶段则关注分布之间的可量化关系——这正是本研究所在的位置。</p>
+
+<p class="ltx_p">我们在引言中讨论了语言模型的预训练。在图像数据集（如 Instagram 和 ImageNet）上的预训练同样在整体性能和数据效率上取得了提升 <cite>[MGR+18, HGD19]</cite>。CLIP 通过从带字幕图像的迁移展示了令人印象深刻的能力，在 ImageNet 等数据集上的零样本准确率可与 ResNet-50 相比 <cite>[RKH+21, DDS+09, HBB+21]</cite>。这些工作表明，跨模态和跨任务的迁移在现代深度学习中扮演着核心角色。</p>
+
+<p class="ltx_p">过去在小样本学习（few-shot learning）方面的工作是我们研究迁移的部分动机。<cite>[LST15]</cite> 通过概率程序归纳展示了生成手写字符的小样本学习，与人类在该任务上的小样本学习能力相当——这一对比说明人类在迁移方面相对于早期机器学习系统有压倒性优势。<cite>[FAL17]</cite> 表明设计易于微调的模型（MAML）可以提升小样本性能。<cite>[BMR+20]</cite> 利用现有基准表明，大型模型可以在 SuperGLUE <cite>[WPN+19]</cite> 等任务上产生有意义的迁移/小样本学习。</p>
+
+<p class="ltx_p">另一项激发我们研究迁移的重要工作是用于机械手解魔方的仿真到真实（sim-to-real）迁移训练 <cite>[OAA+19]</cite>，在这种设置中微调数据远贵于预训练数据——这与自然语言处理中的情形类似，但在机器人领域更极端，因为真实机器人数据非常昂贵。我们感兴趣的另一种衡量泛化的方法是不断提出越来越困难的语言基准 <cite>[HBB+21]</cite>，这有助于追踪模型泛化能力的边界。</p>
+
+</section>
+
+<section id="S6" class="ltx_section">
+<h2 class="ltx_title_section"><span>6 </span>局限性（Limitations）</h2>
+
+<p class="ltx_p ltx_noindent">尽管我们的结果在多个数量级上表现出惊人的可预测性，本研究仍有以下重要局限性：</p>
+
+<ol class="ltx_enumerate">
+<li><b>模型未针对微调或代码进行调参。</b>我们使用了为在自然语言上从头训练而调好的超参数 <cite>[KMH+20]</cite>。我们对较大模型在小数据集上微调进行了少量学习率扫描，没有看到使用其他学习率带来的改善。但我们的扫描并不全面。更系统的微调超参数搜索可能进一步改善微调性能，从而影响迁移系数的具体数值。</li>
+<li><b>模型未针对小数据集进行调参。</b>对于小数据集，训练在预热（warmup）阶段结束之前就停止了，因此学习率调度可能会干扰结果。这意味着我们报告的小数据集迁移效果可能是学习率调度不匹配造成的下界。</li>
+<li><b>我们只在 Python 上微调时测量了迁移。</b>尚不清楚对于广泛的分布对是否能观察到类似的幂律拟合。我们的方法是否对其他下游任务（如问答、摘要、翻译）同样有效，是未来工作的关键问题。</li>
+<li><b>我们只在无监督设置中测量了分布之间的迁移。</b>这些发现在多大程度上能推广到监督或强化学习设置尚不清楚。监督学习中的标签信息可能改变迁移的本质；强化学习中的奖励信号则可能引入不同的迁移模式。</li>
+<li><b>我们没有像 <cite>[KMH+20]</cite> 中那样为从头训练的结果找到一个好的封闭形式模型。</b>尽管我们相信更仔细的调参可以产生与他们的结果一致的此类模型。如果我们有这样的结果，我们预期可以为微调模型的整体性能生成一个封闭形式方程，而不是依赖我们定义中的相对性能。</li>
+<li><b>我们只在 Transformer 上测量了性能。</b>这些标度律是否同样适用于其他架构（如 LSTM、状态空间模型、卷积网络）是一个悬而未决的问题。架构变化可能影响幂律指数的具体数值。</li>
+<li><b>方程 3.1 和 3.2 不能处理零样本情况。</b>除非我们对零样本情况使用近似（即在 1 个字符上微调）。这一近似在数学上略显粗糙，但在实践中与零样本性能相当接近。</li>
+<li><b>我们没有探索以更廉价的方式进行测量的可能性。</b>无论是通过上下文（in-context）学习还是通过 KL 散度（KL divergence）等代理度量，我们都未尝试。这些替代方法可能让标度律的测量变得更加廉价和易于推广到更多场景。</li>
+</ol>
+
+</section>
+
+<section id="S7" class="ltx_section">
+<h2 class="ltx_title_section"><span>7 </span>结论（Conclusion）</h2>
+
+<p class="ltx_p ltx_noindent">我们已经证明迁移可以在广泛规模范围内的语言模型内被度量，并且它是可预测地标度的。我们用来度量迁移的单位——数据——是直观的，给定预训练模型，我们的方法可以在低数据范围内廉价地进行这样的测量。我们相信我们的方法是一种新颖且有用的方式来理解作为机器学习要素之一的数据以及 AI 系统的通用性。我们已经为微调生成了标度律，这最近成为一个广泛关注的课题。这些结果有助于预测规模化微调模型的性能、算力和数据需求。</p>
+
+<p class="ltx_p">更广泛地说，我们的工作展示了"以数据为单位思考"是一种有价值的分析视角。它将原本模糊的"迁移"概念转化为可测量的标度关系，使得我们可以像处理数据本身一样处理迁移。这为未来研究开辟了几个方向：</p>
+<ul>
+<li>将类似的标度律推广到监督学习、强化学习、多模态设置；</li>
+<li>利用这些标度律来设计更高效的预训练数据组合方案；</li>
+<li>研究模型架构变化对迁移系数的影响；</li>
+<li>探索大模型少样本学习能力与迁移标度律之间的理论联系。</li>
+</ul>
+
+<p class="ltx_p">我们相信，理解数据（包括迁移带来的"虚拟数据"）如何与模型规模和算力共同作用，是构建更强大 AI 系统的关键一步。</p>
+
+</section>
+
+<div class="app-divider"></div>
+
+<section id="A1" class="ltx_section ltx_appendix">
+<h2 class="ltx_title_appendix">附录 A 数据范围（Data Regime）</h2>
+
+<p class="ltx_p ltx_noindent">为清晰定义实验中的"低数据范围"，我们需要估计 <em>D(N)</em>，即达到无限 Python 数据所能产生的性能 99% 所需的数据量。<em>D(N)</em> 大致定义了"无限数据范围"作为模型大小的函数。我们将 <em>D<sub>F</sub></em> ≤ 10% 的 <em>D(N)</em> 视为低数据范围。</p>
+
+<figure id="A1.F9" class="ltx_figure">
+<div class="fig_placeholder">【图 9：Python 数据需求估计——横轴为模型参数 N，纵轴为达到 99% 性能所需的数据量 D(N)】</div>
+<figcaption class="ltx_caption"><b>图 9：</b> 估计 Python 数据需求曲线。<em>D(N)</em> 随模型规模增长，符合幂律 <em>D(N)</em> ∝ <em>N</em><sup>α</sup> 的预期，但带有明显噪声。</figcaption>
+</figure>
+
+<p class="ltx_p"><em>D(N)</em> 是通过确定图 <a href="#S1.F3">3</a> 中具有数据集特定比例的曲线与完整数据集曲线相交的位置来计算的。相交定义为从头训练达到 99% 性能，微调达到 95% 性能。差异是基于最终拟合和微调相交看起来相对更嘈杂的主观判断做出的。这一阈值的设定反映了对微调模型性能上限的更保守估计。</p>
+
+</section>
+
+<section id="A2" class="ltx_section ltx_appendix">
+<h2 class="ltx_title_appendix">附录 B 补充方程（Supplementary equations）</h2>
+
+<p class="ltx_p ltx_noindent">总有效数据 <em>D<sub>E</sub></em>、迁移有效数据 <em>D<sub>T</sub></em> 和微调数据集 <em>D<sub>F</sub></em> 之间的关系在图 <a href="#S1.F1">1</a> 中可视化展示。为清晰起见，下面也以方程形式给出：</p>
+
+<div class="ltx_equation"><b>总有效数据</b> = <em>D<sub>E</sub></em> = <em>D<sub>T</sub></em> + <em>D<sub>F</sub></em>　　(B.1)</div>
+
+<p class="ltx_p">在图 <a href="#S1.F2">2</a> 中，纵轴是迁移有效数据的占比（fraction）。基于方程 <a href="#S1.E1">(1.1)</a> 和 <a href="#S1.E1">(B.1)</a>，我们给出其显式方程：</p>
+
+<div class="ltx_equation">
+<b>迁移有效数据占比</b> = <em>D<sub>T</sub></em> / (<em>D<sub>F</sub></em> + <em>D<sub>T</sub></em>) = <em>k</em>(<em>D<sub>F</sub></em>)<sup>α−1</sup>(<em>N</em>)<sup>β</sup> / [1 + <em>k</em>(<em>D<sub>F</sub></em>)<sup>α−1</sup>(<em>N</em>)<sup>β</sup>]　　(B.2)
+</div>
+
+<p class="ltx_p">这一方程在形式上是一个 logistic 函数：当 <em>N</em> 较大时（分子远大于 1），占比趋近 1；当 <em>N</em> 较小时（分子远小于 1），占比趋近 0。中间过渡区由常数 <em>k</em> 和指数 <em>α</em>、<em>β</em> 共同决定。</p>
+
+</section>
+
+<section id="A3" class="ltx_section ltx_appendix">
+<h2 class="ltx_title_appendix">附录 C 为方程 1.2 生成拟合（Generating fit for Equation 1.2）</h2>
+
+<p class="ltx_p ltx_noindent">我们按 <em>D<sub>F</sub></em> 分组的数据的良好拟合显示在图 <a href="#A3.F10">10</a> 的左侧。</p>
+
+<figure id="A3.F10" class="ltx_figure">
+<div class="fig_placeholder">【图 10：当我们注意到左侧单独拟合的直线非常好时……】</div>
+<figcaption class="ltx_caption"><b>图 10：</b> 当我们注意到左侧单独拟合的直线在对数-对数坐标下非常直时，我们尝试构造一个全局拟合。</figcaption>
+</figure>
+
+<p class="ltx_p">我们寻求为我们的实验找到一个全局拟合，目标是产生更多见解并增强预测能力。最终起作用的方法是对拟合进行再拟合。我们注意到图 <a href="#A3.F10">10</a> 右侧的 logit 拟合都具有大致相同的指数。因此我们尝试将以下方程拟合到这些拟合上：</p>
+
+<div class="ltx_equation">
+<b>迁移有效数据占比</b> = <em>D<sub>T</sub></em> / (<em>D<sub>F</sub></em> + <em>D<sub>T</sub></em>) = 1 / [1 + (<em>N*</em>/<em>N</em>)<sup>0.38</sup>]　　(C.1)
+</div>
+
+<p class="ltx_p">对 <em>N*</em> 的拟合随后被用来生成图 <a href="#S1.F2">2</a> 左侧所示的全局拟合，对应方程 <a href="#S1.E1">(1.1)</a>。此拟合对每个我们微调过的数据集大小 <em>D<sub>F</sub></em> 给予相同权重。类似的方法用于生成方程右侧的拟合。</p>
+
+<p class="ltx_p">在迁移有效数据占比的对数逻辑轴上发现这些漂亮的直线之前，我们尝试在数据中寻找其他规律性。我们单独绘制了有效数据。</p>
+
+<figure id="A3.F11" class="ltx_figure">
+<div class="fig_placeholder">【图 11：初步绘制有效数据——在对数空间中得到略有噪声但有规律的直线】</div>
+<figcaption class="ltx_caption"><b>图 11：</b> 初步绘制有效数据是有希望的，因为它似乎在对数空间中得到了一些带有噪声但有规律的直线。</figcaption>
+</figure>
+
+<p class="ltx_p">我们还在 <em>D<sub>T</sub></em>/<em>D<sub>F</sub></em> 中寻找模式。当我们用 <em>D(N)</em> 对 <em>D<sub>T</sub></em>/<em>D<sub>F</sub></em> 进行归一化（如图 <a href="#S3.F6">6</a> 所示）时，结果相对有希望。然而，一旦我们看到 <em>D<sub>T</sub></em>/<em>D<sub>E</sub></em> 在 logit 轴上绘制时的漂亮直线，我们便完全专注于这条分析线。</p>
+
+<figure id="A3.F12" class="ltx_figure">
+<div class="fig_placeholder">【图 12：上述模型在 5.5×10<sup>9</sup> Python 字符上微调；横轴为训练步数，纵轴为损失】</div>
+<figcaption class="ltx_caption"><b>图 12：</b> 上述模型在 5.5×10<sup>9</sup> Python 字符上微调。曲线展示了从头训练与微调在学习动态上的差异。</figcaption>
+</figure>
+
+</section>
+
+<section id="A4" class="ltx_section ltx_appendix">
+<h2 class="ltx_title_appendix">附录 D 图 3，包括中等数据范围（Figure 3, including medium data regime）</h2>
+
+<p class="ltx_p ltx_noindent">从下面的图 <a href="#A4.F13">13</a> 可以看出，方程 3.2 给出的拟合在这些分布的迁移中，在中等数据范围 <em>D(N)</em> &gt; 0.10 时表现不佳。</p>
+
+<figure id="A4.F13" class="ltx_figure">
+<div class="fig_placeholder">【图 13：一旦离开低数据范围，模型拟合就不再好；横轴为参数 N，纵轴为损失】</div>
+<figcaption class="ltx_caption"><b>图 13：</b> 一旦离开低数据范围，我们对这些模型就不再获得良好的拟合。对于仅在文本上预训练的模型，拟合的崩溃程度没有那么大。我们仍然只显示 <em>D<sub>T</sub></em> &gt; 0 的点。</figcaption>
+</figure>
+
+<p class="ltx_p">我们推测在高数据范围内行为不那么规则（不再能拟合为直线），原因有两个：</p>
+<ol>
+<li>通过插值估计有效数据在高数据范围内是病态的（poorly conditioned）。图 <a href="#S1.F3">3</a> 中高数据范围内的曲线几乎彼此重叠，因此模型性能的微小变化可能会产生很大的影响。</li>
+<li>正如我们在第 <a href="#S6.SS4">6.4</a> 节中讨论的那样，我们认为在高数据范围内调参（tuning）更为重要，而我们所做的调参相对较少。</li>
+</ol>
+
+</section>
+
+<section id="A5" class="ltx_section ltx_appendix">
+<h2 class="ltx_title_appendix">附录 E 尝试为从头开始的 Python 运行生成全局拟合</h2>
+
+<p class="ltx_p ltx_noindent">我们尝试为从头开始的 Python 运行拟合全局幂律，正如 <cite>[KMH+20]</cite> 对语言模型所做的那样，以及 <cite>[HKK+20]</cite> 对更多模态所做的。具体来说，我们尝试将 <cite>[KMH+20]</cite> 的方程 1.5 拟合到图 <a href="#S1.F3">3</a> 左侧所示的运行中：</p>
+
+<div class="ltx_equation">
+<em>L</em> ≈ [ (<em>N<sub>C</sub></em>/<em>N</em>)<sup><em>α<sub>N</sub></em>/<em>α<sub>D</sub></em></sup> + <em>D<sub>C</sub></em>/<em>D</em> ]<sup><em>α<sub>D</sub></em></sup>　　(E.1)
+</div>
+
+<figure id="A5.F14" class="ltx_figure">
+<div class="fig_placeholder">【图 14：对从头开始的 Python 模型拟合未能足够好到作为微调额外拟合的基础】</div>
+<figcaption class="ltx_caption"><b>图 14：</b> 上述对在 Python 上从头训练的模型的拟合不够好，无法用作微调的统一标度律的基础。</figcaption>
+</figure>
+
+<p class="ltx_p">在我们看来，更仔细地调参这些实验似乎可能在此处生成良好拟合，但拟合质量太差，无法作为统一标度律的基础。也可能是 <a href="#A5.E1">(E.1)</a> 的修改版本（<cite>[RRBS19]</cite> 中提出的那种）会更合适。我们所说的"统一标度律"是指对在 Python 上微调的函数 <em>L</em>(<em>N</em>, <em>D<sub>F</sub></em>)，其系数与 <em>L</em>(<em>N</em>, <em>D</em>) 拟合相同——如图 <a href="#A5.E1">(E.1)</a> 所示针对从零开始训练的 Python 模型。</p>
+
+</section>
+
+<section id="A6" class="ltx_section ltx_appendix">
+<h2 class="ltx_title_appendix">附录 F 应对文本数据集中存在少量 Python 的潜在担忧</h2>
+
+<p class="ltx_p ltx_noindent">我们进行了额外的实验，以表明第 <a href="#S6.SS2">6.2</a> 节中讨论的大部分零样本迁移是来自从文本到 Python 的"迁移"的结果。我们较大模型的零样本性能与我们预期的大致相当——大约相当于在大小约为我们文本数据集 0.3% 的 Python 量上从头训练的性能。我们没有试图测量测试数据集中的 Python 量，而是在预训练中加入了一个已知的 Python 量 0.3%。如果我们仅仅测量自然语言数据集中的 Python 量，我们会预期有效的 Python 数据量增加 2 倍。然而，将 0.3% 混合进去实际上将有效 Python 数据量增加了 4.5 倍。通过这个实验，我们得出结论：在前面图表中测量到的大部分确实是"迁移"——从文本分布到 Python 分布——而不是预训练分布中未受控的 Python 量。</p>
+
+<p class="ltx_p">这个实验设计的关键在于对比"将 Python 混入预训练"与"在 Python 上预训练"的效果差异。如果预训练性能提升主要是由于偶然接触了 Python，那么引入 0.3% 的 Python 应当导致有效数据量大致翻倍（因为 Python 量从原本的 ~0.15% 增加到 0.45%）。但实际上我们观察到 4.5 倍的提升，远超简单的线性外推。这一结果表明，迁移机制比简单的"预训练数据中的目标分布含量"要微妙得多——它涉及模型对分布之间共享结构的某种抽象。</p>
+
+</section>
+
+<section id="A7" class="ltx_section ltx_appendix">
+<h2 class="ltx_title_appendix">附录 G 最佳 epoch 的分析</h2>
+
+<p class="ltx_p ltx_noindent">对于微调来说，一个重要的实践问题是需要训练多长时间网络性能才会饱和。简短的回答是：如果数据集相当大，那么所需时间与从头训练大致相同——代码任务 1-10 个 epoch，其中 epoch 数通常随模型大小和数据增加而减少。</p>
+
+<figure id="A7.F15" class="ltx_figure">
+<div class="fig_placeholder">【图 15：在大量数据上微调所需的 epoch 数与从头训练大致相同，而在少量数据上微调则需要 2-5 倍更少的 epoch】</div>
+<figcaption class="ltx_caption"><b>图 15：</b> 在大量数据上微调所需的 epoch 数与从头训练大致相同，而在少量数据上微调则需要 2-5 倍更少的 epoch。用 <em>D(N)</em> 进行参数化使模式显得更清晰。</figcaption>
+</figure>
+
+<p class="ltx_p">如果微调数据集很小，只需训练它并在明显过拟合（overfit）时进行早停止即可。对于我们最小的数据集（100,000 个 token），它比从头训练少需要 2-5 倍的 epoch。Z 形曲线有点令人惊讶，其形状与 <cite>[NKB+19]</cite> 中观察到的有些相似。另一个限制是，对于少量数据，大部分学习发生在预热（warmup）期间，因此学习率调度会干扰最佳 epoch 数。这意味着在小数据实验中，最佳 epoch 的测量具有较大的不确定性。</p>
+
+<p class="ltx_p">值得注意的是，在低数据范围内，最佳 epoch 数随数据集大小的减少而增加，这反映了在小数据集上过拟合风险增大、需要更仔细的早停止的事实。在高数据范围内，最佳 epoch 数趋于一个由模型架构决定的下界值——这是收敛的自然表现。</p>
+
+</section>
+
+<div class="app-divider"></div>
+
+<section id="Sx1" class="ltx_section">
+<h2 class="ltx_title_section">致谢（Acknowledgments）</h2>
+
+<p class="ltx_p ltx_noindent">我们感谢 Dario Amodei、Jacob Steinhardt、Wojciech Zaremba、Alec Radford、Tom Brown、Alex Ray、Paul Christiano、Amanda Askell、Yura Burda、Ilya Sutskever、Jacob Hilton、Matthias Plappert 和 Jakub Pachocki 对本工作的反馈以及诸多有益的讨论。他们在不同阶段的讨论和批评极大地改善了我们的实验设计和表述。</p>
+
+</section>
+
+<section id="Sx2" class="ltx_section">
+<h2 class="ltx_title_section">作者贡献（Contributions）</h2>
+
+<p class="ltx_p ltx_noindent"><span class="ltx_text ltx_font_bold">Danny Hernandez</span> 领导了该项目。他完成了大部分实验、分析和写作工作。他负责设计实验方案、运行所有微调实验、进行数据分析并撰写论文初稿。</p>
+
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">Jared Kaplan</span> 直接为分析做出了贡献，并从项目构思阶段就担任顾问。他在标度律的数学形式化、实验设计的严格性、以及结果解读方面提供了关键的智力指导。</p>
+
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">Tom Henighan</span> 维护了底层代码库，并合作解决了出现的工程难题。他的工作包括训练基础设施的搭建、bug 修复，以及与 Danny 一起调试训练过程中出现的各种数值稳定性问题。</p>
+
+<p class="ltx_p"><span class="ltx_text ltx_font_bold">Sam McCandlish</span> 监督了这项工作。除了帮助规划项目并就方向提供建议外，他还生成了数据集，合作解决了出现的工程难题，并直接为分析做出了贡献。他在论文的科学方向和实用性之间取得了关键的平衡。</p>
+
+</section>
+
+<section id="bib" class="ltx_section">
+<h2 class="ltx_title_section">参考文献（References）</h2>
+
+<ul class="ltx_biblist">
+<li class="ltx_bibitem"><span><b>[AH18]</b></span> Dario Amodei, Danny Hernandez. <em>AI and Compute</em>, OpenAI Blog, 2018 年 5 月。URL: <a href="https://blog.openai.com/ai-and-compute/">https://blog.openai.com/ai-and-compute/</a>。</li>
+
+<li class="ltx_bibitem"><span><b>[BMR+20]</b></span> Tom B. Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, Sandhini Agarwal, Ariel Herbert-Voss, Gretchen Krueger, Tom Henighan, Rewon Child, Aditya Ramesh, Daniel M. Ziegler, Jeffrey Wu, Clemens Winter, Christopher Hesse, Mark Chen, Eric Sigler, Mateusz Litwin, Scott Gray, Benjamin Chess, Jack Clark, Christopher Berner, Sam McCandlish, Alec Radford, Ilya Sutskever, Dario Amodei. <em>Language Models are Few-Shot Learners</em>, NeurIPS 2020, arXiv:2005.14165。</li>
+
+<li class="ltx_bibitem"><span><b>[DCLT18]</b></span> Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova. <em>BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</em>, NAACL 2019, arXiv:1810.04805。</li>
+
+<li class="ltx_bibitem"><span><b>[DDS+09]</b></span> J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, L. Fei-Fei. <em>ImageNet: A Large-Scale Hierarchical Image Database</em>. CVPR09, 2009。</li>
+
+<li class="ltx_bibitem"><span><b>[DL15]</b></span> Andrew M. Dai, Quoc V. Le. <em>Semi-supervised Sequence Learning</em>, 2015, arXiv:1511.01432。</li>
+
+<li class="ltx_bibitem"><span><b>[FAL17]</b></span> Chelsea Finn, Pieter Abbeel, Sergey Levine. <em>Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks</em> (MAML), ICML 2017, arXiv:1703.03400。</li>
+
+<li class="ltx_bibitem"><span><b>[HB20]</b></span> Danny Hernandez, Tom B. Brown. <em>AI and Efficiency</em>, OpenAI Blog, 2020。</li>
+
+<li class="ltx_bibitem"><span><b>[HBB+21]</b></span> Dan Hendrycks, Collin Burns, Steven Basart, Andy Zou, Mantas Mazeika, Dawn Song, Jacob Steinhardt. <em>Measuring Massive Multitask Language Understanding</em> (MMLU), ICLR 2021, arXiv:2009.03300。</li>
+
+<li class="ltx_bibitem"><span><b>[HGD19]</b></span> Kaiming He, Ross Girshick, Piotr Dollár. <em>Rethinking ImageNet Pre-training</em>. Proceedings of the IEEE/CVF International Conference on Computer Vision, pages 4918-4927, 2019。</li>
+
+<li class="ltx_bibitem"><span><b>[HKK+20]</b></span> Tom Henighan, Jared Kaplan, Mor Katz, Mark Chen, Christopher Hesse, Jacob Jackson, Heewoo Jun, Tom B. Brown, Prafulla Dhariwal, Scott Gray, Chris Hallacy, Benjamin Mann, Alec Radford, Aditya Ramesh, Nick Ryder, Daniel M. Ziegler, John Schulman, Dario Amodei, Sam McCandlish. <em>Scaling Laws for Autoregressive Generative Modeling</em>, 2020, arXiv:2010.14701。</li>
+
+<li class="ltx_bibitem"><span><b>[HR18]</b></span> Jeremy Howard, Sebastian Ruder. <em>Universal Language Model Fine-tuning for Text Classification</em> (ULMFiT), ACL 2018, arXiv:1801.06146。</li>
+
+<li class="ltx_bibitem"><span><b>[HNA+17]</b></span> Joel Hestness, Sharan Narang, Newsha Ardalani, Gregory Diamos, Heewoo Jun, Hassan Kianinejad, Md. Mostofa Ali Patwary, Yang Yang, Yanqi Zhou. <em>Deep Learning Scaling is Predictable, Empirically</em>, 2017, arXiv:1712.00409。</li>
+
+<li class="ltx_bibitem"><span><b>[KB14]</b></span> Diederik P. Kingma, Jimmy Ba. <em>Adam: A Method for Stochastic Optimization</em>, ICLR 2015, arXiv:1412.6980。</li>
+
+<li class="ltx_bibitem"><span><b>[KMH+20]</b></span> Jared Kaplan, Sam McCandlish, Tom Henighan, Tom B. Brown, Benjamin Chess, Rewon Child, Scott Gray, Alec Radford, Jeffrey Wu, Dario Amodei. <em>Scaling Laws for Neural Language Models</em>, 2020, arXiv:2001.08361。</li>
+
+<li class="ltx_bibitem"><span><b>[LST15]</b></span> Brenden M. Lake, Ruslan Salakhutdinov, Joshua B. Tenenbaum. <em>Human-level Concept Learning through Probabilistic Program Induction</em>. Science, 350(6266):1332-1338, 2015。doi:10.1126/science.aab3050。</li>
+
+<li class="ltx_bibitem"><span><b>[MGR+18]</b></span> Dhruv Mahajan, Ross Girshick, Vignesh Ramanathan, Kaiming He, Manohar Paluri, Yixuan Li, Ashwin Bharambe, Laurens van der Maaten. <em>Exploring the Limits of Weakly Supervised Pretraining</em>, ECCV 2018, arXiv:1805.00932。</li>
+
+<li class="ltx_bibitem"><span><b>[NKB+19]</b></span> Preetum Nakkiran, Gal Kaplun, Yamini Bansal, Tristan Yang, Boaz Barak, Ilya Sutskever. <em>Deep Double Descent: Where Bigger Models and More Data Hurt</em>, 2019, arXiv:1912.02292。</li>
+
+<li class="ltx_bibitem"><span><b>[OAA+19]</b></span> OpenAI, Ilge Akkaya, Marcin Andrychowicz, Maciek Chociej, Mateusz Litwin, Bob McGrew, Arthur Petron, Alex Paino, Matthias Plappert, Glenn Powell, Raphael Ribas, Jonas Schneider, Nikolas Tezak, Jerry Tworek, Peter Welinder, Lilian Weng, Qi Yuan, Wojciech Zaremba, Lei Zhang. <em>Solving Rubik's Cube with a Robot Hand</em>, 2019, arXiv:1910.07113。</li>
+
+<li class="ltx_bibitem"><span><b>[OBB+19]</b></span> OpenAI, Christopher Berner, Greg Brockman, Brooke Chan, Vicki Cheung, Przemysław Dębiak, Christy Dennison, David Farhi, Quirin Fischer, Shariq Hashme, Chris Hesse, Rafal Józefowicz, Scott Gray, Catherine Olsson, Jakub Pachocki, Michael Petrov, Henrique Pondé de Oliveira Pinto, Jonathan Raiman, Tim Salimans, Jeremy Schlatter, Jonas Schneider, Szymon Sidor, Ilya Sutskever, Jie Tang, Filip Wolski, Susan Zhang. <em>Dota 2 with Large Scale Deep Reinforcement Learning</em>, 2019, arXiv:1912.06680。URL: <a href="https://arxiv.org/abs/1912.06680">https://arxiv.org/abs/1912.06680</a>。</li>
+
+<li class="ltx_bibitem"><span><b>[PNI+18]</b></span> Matthew E. Peters, Mark Neumann, Mohit Iyyer, Matt Gardner, Christopher Clark, Kenton Lee, Luke Zettlemoyer. <em>Deep Contextualized Word Representations</em> (ELMo), NAACL 2018, arXiv:1802.05365。</li>
+
+<li class="ltx_bibitem"><span><b>[RKH+21]</b></span> Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen Krueger, Ilya Sutskever. <em>Learning Transferable Visual Models From Natural Language Supervision</em> (CLIP), 2021。</li>
+
+<li class="ltx_bibitem"><span><b>[RNSS18]</b></span> Alec Radford, Karthik Narasimhan, Tim Salimans, Ilya Sutskever. <em>Improving Language Understanding by Generative Pre-Training</em> (GPT-1), OpenAI Technical Report, 2018。</li>
+
+<li class="ltx_bibitem"><span><b>[RRBS19]</b></span> Jonathan S. Rosenfeld, Amir Rosenfeld, Yonatan Belinkov, Nir Shavit. <em>A Constructive Prediction of the Generalization Error Across Scales</em>, 2019, arXiv:1909.12673。</li>
+
+<li class="ltx_bibitem"><span><b>[RSR+20]</b></span> Colin Raffel, Noam Shazeer, Adam Roberts, Katherine Lee, Sharan Narang, Michael Matena, Yanqi Zhou, Wei Li, Peter J. Liu. <em>Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer</em> (T5), JMLR 2020, arXiv:1910.10683。</li>
+
+<li class="ltx_bibitem"><span><b>[RWC+19]</b></span> Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya Sutskever. <em>Language Models are Unsupervised Multitask Learners</em> (GPT-2), OpenAI Technical Report, 2019。</li>
+
+<li class="ltx_bibitem"><span><b>[SHM+16]</b></span> David Silver, Aja Huang, Chris J. Maddison, Arthur Guez, Laurent Sifre, George van den Driessche, Julian Schrittwieser, Ioannis Antonoglou, Veda Panneershelvam, Marc Lanctot, Sander Dieleman, Dominik Grewe, John Nham, Nal Kalchbrenner, Ilya Sutskever, Timothy Lillicrap, Madeleine Leach, Koray Kavukcuoglu, Thore Graepel, Demis Hassabis. <em>Mastering the Game of Go with Deep Neural Networks and Tree Search</em> (AlphaGo), Nature 529(7587):484-489, 2016。</li>
+
+<li class="ltx_bibitem"><span><b>[SK20]</b></span> Utkarsh Sharma, Jared Kaplan. <em>A Neural Scaling Law from the Dimension of the Data Manifold</em>, 2020, arXiv:2004.10802。</li>
+
+<li class="ltx_bibitem"><span><b>[SOW+20]</b></span> Nisan Stiennon, Long Ouyang, Jeff Wu, Daniel M. Ziegler, Ryan Lowe, Chelsea Voss, Alec Radford, Dario Amodei, Paul F. Christiano. <em>Learning to Summarize from Human Feedback</em>, NeurIPS 2020, arXiv:2009.01325。</li>
+
+<li class="ltx_bibitem"><span><b>[SSS+17]</b></span> David Silver, Julian Schrittwieser, Karen Simonyan, Ioannis Antonoglou, Aja Huang, Arthur Guez, Thomas Hubert, Lucas Baker, Matthew Lai, Adrian Bolton, Yutian Chen, Timothy Lillicrap, Fan Hui, Laurent Sifre, George van den Driessche, Thore Graepel, Demis Hassabis. <em>Mastering the Game of Go without Human Knowledge</em> (AlphaGo Zero), Nature 550(7676):354-359, 2017。doi:10.1038/nature24270。</li>
+
+<li class="ltx_bibitem"><span><b>[THK18]</b></span> Stefan Thurner, Rudolf Hanel, Peter Klimek. <em>Introduction to the Theory of Complex Systems</em>. Oxford University Press, 2018。</li>
+
+<li class="ltx_bibitem"><span><b>[TSK+18]</b></span> Chuanqi Tan, Fuchun Sun, Tao Kong, Wenchang Zhang, Chao Yang, Chunfang Liu. <em>A Survey on Deep Transfer Learning</em>. International Conference on Artificial Neural Networks, pages 270-279. Springer, 2018。</li>
+
+<li class="ltx_bibitem"><span><b>[VSP+17]</b></span> Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin. <em>Attention is All You Need</em>. Advances in Neural Information Processing Systems 30, pages 5998-6008. Curran Associates, Inc., 2017。URL: <a href="http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf">http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf</a>。</li>
+
+<li class="ltx_bibitem"><span><b>[Wen18]</b></span> Lilian Weng. <em>Meta-learning: Learning to Learn Fast</em>. lilianweng.github.io/lil-log, 2018。URL: <a href="http://lilianweng.github.io/lil-log/2018/11/29/meta-learning.html">http://lilianweng.github.io/lil-log/2018/11/29/meta-learning.html</a>。</li>
+
+<li class="ltx_bibitem"><span><b>[WPN+19]</b></span> Alex Wang, Yada Pruksachatkun, Nikita Nangia, Amanpreet Singh, Julian Michael, Felix Hill, Omer Levy, Samuel R. Bowman. <em>SuperGLUE: A Stickier Benchmark for General-Purpose Language Understanding Systems</em>, NeurIPS 2019, arXiv:1905.00537。</li>
+</ul>
+
+</section>
+
+</article>
+</body>
+</html>

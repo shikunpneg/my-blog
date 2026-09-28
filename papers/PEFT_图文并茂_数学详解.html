@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>PEFT 参数高效微调 · 图文并茂详解</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Serif SC','SimSun',serif;background:#f0ece4;color:#2a2520;line-height:1.9;max-width:960px;margin:0 auto;padding:30px}
+h1{font-size:1.9em;color:#5a3a1a;border-bottom:3px solid #c9a47a;padding-bottom:14px}
+h2{font-size:1.3em;color:#5a3a1a;border-left:5px solid #c9873a;padding-left:13px;margin:28px 0 16px}
+h3{font-size:1.1em;color:#7a4f24;margin:20px 0 10px}
+p{margin-bottom:12px;text-align:justify}
+.diagram{background:#fffaf0;border:1px solid #e6d2a8;border-radius:10px;padding:18px 22px;margin:18px 0;font-family:'Courier New',monospace;font-size:0.85em;overflow-x:auto;white-space:pre;line-height:1.7;color:#3a2a1a}
+.formula-dk{background:#1a1a2e;color:#e8e8e8;padding:14px 20px;border-radius:8px;margin:14px 0;font-family:'Courier New',monospace;font-size:0.9em;overflow-x:auto;white-space:pre}
+.finding{background:linear-gradient(135deg,#f7f0e2,#f3e8d2);border-left:4px solid #e9b464;padding:16px 22px;margin:18px 0;border-radius:0 12px 12px 0}
+</style>
+</head>
+<body>
+<h1>PEFT 参数高效微调 · 图文并茂详解</h1>
+
+<h2>全景架构：三种数学策略</h2>
+<div class="diagram">冻结基座 W₀（预训练，不更新）
+        │
+        ▼
+可训练适配模块 Θ
+├── 低秩分解：ΔW ≈ BA（r ≪ d）
+│     ├── LoRA          ├── Compacter（二阶低秩）
+│     └── rsLoRA（α/√r 缩放）
+├── 稀疏参数：仅 bias / scaling
+│     ├── BitFit（仅偏置向量）
+│     └── IA³（激活缩放向量）
+└── 输入扩展：soft prompt
+      ├── Prompt Tuning（仅输入层）
+      └── Prefix Tuning（每层 K/V 前）
+
+推理时：可合并 → 零额外延迟（LoRA 系）
+       或：旁路保留（Adapter/Prefix）</div>
+
+<h2>LoRA 架构与梯度流</h2>
+<div class="diagram">【架构】
+输入 x ──→ [W₀ 冻结] ──→ 输出 y
+              │
+              └──→ + (α/r)·BA ──→ 合并
+                    │
+         ┌──────────┴──────────┐
+         │  低秩适配器 BA       │
+         │  B ∈ R^(d×r) ← 训练 │
+         │  A ∈ R^(r×k) ← 训练 │
+         │  r ≪ min(d,k)       │
+         └─────────────────────┘
+
+【梯度流】
+损失 L
+  │
+  ▼ ∂L/∂y
+  ├──→ ∂L/∂W₀ = 0（冻结）
+  └──→ ∂L/∂(BA) = ∂L/∂y · xᵀ
+        ├──→ ∂L/∂B = (α/r) · ∂L/∂y · xᵀ · Aᵀ
+        │         └── 秩 ≤ r！
+        └──→ ∂L/∂A = (α/r) · Bᵀ · ∂L/∂y · xᵀ
+                  └── 秩 ≤ r！
+
+关键：梯度秩被 r 限制 → 即使 d=12288，梯度只在 r 维子空间更新</div>
+
+<h2>rsLoRA：梯度坍缩 vs 秩稳定化</h2>
+<div class="diagram">【标准 LoRA：γ_r = α/r】
+  r=4:   0.250α → 正常
+  r=16:  0.063α → 降至 25%
+  r=64:  0.016α → 降至 6%
+  r=256: 0.004α → 降至 1.6% ← 梯度坍缩！
+
+【rsLoRA：γ_r = α/√r】
+  r=4:   0.500α → 正常
+  r=16:  0.250α → 50%
+  r=64:  0.125α → 25%
+  r=256: 0.063α → 12.5%（标准 LoRA 的 16 倍）
+
+为什么 √r？
+BA 每元素 = r 个独立随机变量之和
+→ 方差 r·σ²，标准差 √r·σ
+→ 谱范数 E[‖BA‖₂] ∝ √r
+→ γ_r ∝ 1/√r 补偿，使 γ_r·‖BA‖₂ = 常数</div>
+
+<h2>QLoRA NF4 量化</h2>
+<div class="diagram">【均匀量化 int4】
+-4σ───-3σ───-2σ───-σ───0───+σ───+2σ───+3σ───+4σ
+ │    │    │    │   │   │    │    │    │    │
+ ▼    ▼    ▼    ▼   ▼   ▼    ▼    ▼    ▼    ▼
+q₁   q₂   q₃   q₄  q₅  q₆   q₇   q₈   q₉   q₁₀
+
+问题：零附近级别太稀 → 精度不足；尾部级别太密 → 浪费
+
+【NF4 分位数量化】
+← 密集区（高精度）→  ← 尾部（低精度）→
+q₁ q₂ q₃ q₄ q₅ q₆ q₇ q₈  q₉ q₁₀ q₁₁ q₁₂ q₁₃ q₁₄ q₁₅ q₁₆
+
+每级别概率质量相等（各 1/16），与正态分布匹配
+公式：qᵢ = Φ⁻¹((2i-1)/32)；q₈ ≈ -0.13（密集），q₁₆ ≈ +1.82
+
+【双重量化】65B：FP16 ~148GB → NF4+双重量化 ~3.3GB</div>
+
+<h2>Adapter 瓶颈结构</h2>
+<div class="diagram">Transformer 层（冻结）
+  │
+  ▼
+  h（d=768）
+  ├── Attention(h) → h_attn
+  └── FFN(h) → h_ffn
+         │
+         ▼
+    ┌─────────────────┐
+    │ Adapter（可训练） │
+    │ h → W_up(d×r) → σ → W_down(r×d) → Δh │
+    │          ↑              ↑        │
+    │      r=8~64（瓶颈） r=8~64（瓶颈）  │
+    └─────────────────┘
+         │
+         ▼
+    h' = h + Δh（残差连接）→ LayerNorm → 下一层
+
+参数量：|Θ| ≈ 2rd；r=8: ~12K/层（默认），r=768: ~1.2M/层</div>
+
+<h2>Prompt vs Prefix Tuning</h2>
+<div class="diagram">【Prompt Tuning（仅输入层）】
+  [P; X] ─→ 冻结的 LLM ─→ 输出
+  P ∈ R^(k×d) ← 可训练（k=10~100）
+  参数量 = k·d；推理延迟 = 0
+
+【Prefix Tuning（每层）】
+  输入 X → [P_k; K] → Attention → 输出
+           [P_v; V] → Attention → 输出
+  参数量 = 2·p·d·L；推理延迟 = 有
+
+区别：Prompt = Prefix 简化（只在输入层），但依赖大模型（>10B）</div>
+
+<h2>信息论视角 & 统一框架</h2>
+<div class="formula-dk">信息效率 = I(task; Θ) / |Θ|
+低秩分解（LoRA）：|Θ| = O(rdL)   效率高
+稀疏参数（BitFit）：|Θ| = O(dL)   效率中
+输入扩展（Prompt）：|Θ| = O(kd)   效率高（大模型下）</div>
+<div class="finding">θ* = argmin_θ L(f(x; W₀, Θ(θ)))
+W₀ 冻结，Θ(θ) 是低秩（BA）/ 稀疏（bias）/ 输入扩展（soft prompt）的参数化。
+设计选择决定了参数效率、表达能力和推理开销的权衡。</div>
+
+</body>
+</html>

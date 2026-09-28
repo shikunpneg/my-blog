@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN>
+<head>
+<meta charset="UTF-8">
+<title>大语言模型的涌现能力是幻象吗？— Schaeffer et al. (2024) 中文全文</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Times New Roman',Georgia,serif;font-size:11pt;line-height:2.1;color:#1a1a1a;background:#f8f8f8;}
+.page{max-width:850px;margin:30px auto;background:#fff;padding:55px 75px;box-shadow:0 4px 24px rgba(0,0,0,0.10);}
+h1{font-size:19pt;text-align:center;margin-bottom:8pt;font-weight:normal;line-height:1.5;color:#111;}
+.subtitle{font-size:12pt;text-align:center;color:#555;margin-bottom:20pt;font-style:italic;}
+.authors-block{text-align:center;font-size:9pt;color:#555;margin-bottom:16pt;line-height:2.3;border-bottom:1px solid #e0e0e0;padding-bottom:14pt;}
+.abstract-box{background:#f5f5f5;padding:16pt 20pt;margin:20pt 0;border-left:4px solid #333;border-radius:0 4px 4px 0;}
+.abstract-title{font-size:11pt;font-weight:bold;margin-bottom:10pt;}
+.abstract-chs{font-size:10.5pt;line-height:1.9;color:#333;text-align:justify;}
+.toc-box{background:#f9f9f9;padding:14pt 20pt;margin:18pt 0;border:1px solid #e0e0e0;border-radius:4px;}
+.toc-box h2{font-size:11pt;border:none;margin:0 0 8pt 0;}
+.toc-box ol{padding-left:18pt;margin:0;}
+.toc-box li{margin-bottom:3pt;font-size:10pt;}
+h2{font-size:13pt;font-weight:bold;margin-top:32pt;margin-bottom:12pt;color:#111;border-bottom:2px solid #aaa;padding-bottom:5pt;}
+h3{font-size:11pt;font-weight:bold;margin-top:20pt;margin-bottom:8pt;color:#222;}
+p{text-align:justify;margin-bottom:10pt;text-indent:2em;}
+.fbox{background:#f8f9fa;border:1px solid #d5dde5;border-radius:8px;padding:14pt 18pt;margin:16pt 0;text-align:center;}
+.fbox-inner{font-size:10.5pt;line-height:2.0;color:#1a1a2e;}
+.fbox-inner strong{color:#1a3a5c;display:block;margin-bottom:5pt;}
+table{width:100%;border-collapse:collapse;margin:14pt 0;font-size:9.5pt;}
+th,td{border:1px solid #bbb;padding:7pt 11pt;text-align:left;line-height:1.6;}
+th{background:#2c3e50;color:#fff;font-weight:bold;}
+tr:nth-child(even){background:#f5f7fa;}
+.example-box{background:#fff8e8;border:1px solid #f0d080;border-radius:6px;padding:12pt 16pt;margin:14pt 0;}
+.example-title{font-size:10pt;font-weight:bold;color:#8b6914;margin-bottom:6pt;}
+.sn{background:#eef3ff;border-left:4px solid #2980b9;padding:10pt 16pt;margin:14pt 0;border-radius:0 4px 4px 0;}
+.kr{background:#fff3e0;border-left:4px solid #e67e22;padding:10pt 16pt;margin:14pt 0;border-radius:0 4px 4px 0;}
+.kf{background:#fff5f5;border-left:4px solid #c0392b;padding:10pt 16pt;margin:14pt 0;border-radius:0 4px 4px 0;}
+.hb{background:#e8f5e9;border-left:4px solid #27ae60;padding:10pt 16pt;margin:14pt 0;border-radius:0 4px 4px 0;}
+@media print {body{background:#fff;}.page{box-shadow:none;margin:0;padding:35px;}}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>大语言模型的涌现能力是幻象吗？</h1>
+<div class="subtitle">Are Emergent Abilities of Large Language Models a Mirage?</div>
+<div class="authors-block">
+<strong>Rohan Schaeffer</strong> · Stanford University<br>
+<strong>Roger Grosse</strong> · University of Toronto<br>
+<strong>Sanmi Koyejo</strong> · Stanford University
+</div>
+<div class="abstract-box">
+<p class="abstract-title">摘要（Abstract）</p>
+<p class="abstract-chs">最近的研究表明，大语言模型表现出所谓的"涌现能力"——在某个关键规模阈值以下，模型的某项能力接近于零，但在超过该阈值后突然跃升。然而，本文证明：<strong>至少在某些情况下，涌现可能是研究者选择的不连续度量（如准确率）的产物，而非模型行为中任何根本性变化的反映</strong>。我们证明，对于任何连续的能力度量，通过对输入进行分箱处理，可以人为地制造出"涌现"——准确率在某个阈值处从随机跳跃到高于随机，而原始连续度量则平稳连续地改善。通过对 BIG-Bench 数据和 PaLM 模型的分析，我们证明：某些之前被描述为涌现的能力，当使用适当的连续度量时，实际上呈现平稳、连续的性能改善。</p>
+</div>
+<div class="toc-box">
+<h2>目 录</h2>
+<ol>
+<li>引言（Introduction）</li>
+<li>背景（Background）</li>
+<li>方法：人为制造涌现（Methodology: Creating Emergence Artificially）</li>
+<li>案例分析：PaLM 模型（Case Study: PaLM）</li>
+<li>案例分析：按 token 准确率分箱（Case Study: Binning by Token Accuracy）</li>
+<li>讨论（Discussion）</li>
+<li>结论（Conclusion）</li>
+<li>参考文献（References）</li>
+</ol>
+</div>
+
+<h2>1 引言（Introduction）</h2>
+<p>大语言模型（LLM）在近年来取得了显著进展，展现出许多令人惊讶的能力。其中最引人注目的现象之一是所谓的"涌现能力"——某些复杂能力（如多步推理、算术运算等）在较小模型中完全不存在，但在超过某个关键规模阈值后，突然涌现出来（Wei et al., 2022）。这一现象引起了学术界的广泛关注，并被视为扩展语言模型的最有力理由之一。</p>
+<p>然而，本文对这一结论提出了质疑。我们证明：<strong>至少在某些情况下，所谓的"涌现"并非模型能力发生了根本性的质变，而是研究者选择的不连续评估指标（如"正确/错误"的二分类准确率）人为制造的假象</strong>。</p>
+<p>关键洞察是：当我们使用连续度量（如 log 概率、token 级别的正确率）来评估模型能力时，许多所谓的"涌现"能力实际上呈现平稳、连续的性能改善。这意味着，观察到的"突然跃变"可能是评估指标的数学特性造成的，而非模型内部发生了什么质变。</p>
+<h3>1.1 一个思想实验</h3>
+<p>考虑一个简单的思想实验：假设某个任务的真实性能（以 log 概率衡量）随模型规模对数呈线性改善。在二分类"正确/错误"的准确率指标下，这种连续改善会表现为：当 log 概率跨越某个阈值时，准确率从接近 50%（随机水平）突然跳升到接近 100%。这看起来像是"涌现"，但实际上底层能力一直是连续改善的！</p>
+<div class="fbox">
+<div class="fbox-inner"><strong>核心论点：</strong>涌现能力可能是一种<strong>评估指标的幻象</strong>，而非语言模型能力的真实质变。当使用连续度量（log 概率）而非离散度量（准确率）时，许多"涌现"能力呈现平稳、连续的性能改善。</div>
+</div>
+
+<h2>2 背景（Background）</h2>
+<h3>2.1 涌现能力与大语言模型</h3>
+<p>We Wei et al. (2022) 首次系统性地研究了大语言模型的涌现能力。他们将涌现定义为：能力在较小模型中不存在，但在较大模型中存在。他们发现这一现象在多种任务和模型家族中普遍存在，并认为这是扩展语言模型的重要理由。</p>
+<h3>2.2 评估指标的问题</h3>
+<p>然而，在评估语言模型能力时，研究者通常使用离散的指标，如准确率（accuracy）或精确匹配（exact match）。这些指标将模型的连续输出（二分类决策、概率分布）转换为二元结果——对或错。这种转换在数学上是非线性的，可能会人为地制造出"涌现"的假象。</p>
+
+<h2>3 方法：人为制造涌现（Methodology: Creating Emergence Artificially）</h2>
+<h3>3.1 核心方法</h3>
+<p>我们的方法很简单：对于任何连续的能力度量，我们将其按照阈值进行二值化（分箱），从而人为制造出"涌现"的现象。</p>
+<div class="fbox">
+<div class="fbox-inner"><strong>方法步骤：</strong><br>1. 对于给定的连续度量 M（如 log 概率），定义一个阈值 T<br>2. 将连续度量转换为二值结果：正确（ M > T ）或错误（ M ≤ T ）<br>3. 计算二值准确率（正确预测的比例）<br>4. 如果 M 随规模平稳连续增长，准确率将在 T 附近出现突然的跃升——即人为制造的"涌现"</div>
+</div>
+<h3>3.2 形式化分析</h3>
+<p>设模型在任务上的真实性能为 log 概率 L(N)，随模型规模 N 呈连续改善：</p>
+<div class="fbox"><div class="fbox-inner">L(N) = α · log(N) + β + ε(N)</div></div>
+<p>其中 ε(N) 是噪声项。当我们将 L(N) 按照阈值 T 进行二值化时，准确率为：</p>
+<div class="fbox"><div class="fbox-inner">Accuracy(N) = P(L(N) > T) = P(α·log(N) + β + ε > T)</div></div>
+<p>当 α·log(N) + β 跨越 T 时，准确率从接近 50% 跃升到接近 100%。这种跃升在二值准确率指标下看起来是"涌现"，但实际上底层性能一直是连续的。</p>
+<h3>3.3 模拟验证</h3>
+<p>我们通过模拟验证了这一效应：假设底层性能是 log(N) 的线性函数，将 log 概率按阈值分箱后，我们能够精确地复现出"涌现"曲线——准确率在某个点从随机跃升到接近完美。</p>
+<div class="example-box">
+<p class="example-title">📌 模拟示例：人为制造的"涌现"</p>
+<p style="font-size:10pt;margin:0;line-height:1.9;"><strong>设置：</strong>底层性能 = α · log(N) + β（连续线性）<br><strong>评估：</strong>按阈值 T 进行二值化，计算准确率<br><strong>结果：</strong>准确率在某个 N 值处从 ~50%（随机）跃升到 ~100%<br><strong>结论：</strong>这种"涌现"完全是由二值化评估指标造成的，底层能力一直是连续的</p>
+</div>
+
+<h2>4 案例分析：PaLM 模型（Case Study: PaLM）</h2>
+<h3>4.1 BIG-Bench 数据分析</h3>
+<p>我们将方法应用于 BIG-Bench 基准上 PaLM 模型的评估数据。对于多个之前被描述为"涌现"的任务，我们计算了 token 级别的 log 概率和二值准确率。</p>
+<h3>4.2 主要发现</h3>
+<div class="kr">
+<p><strong>关键发现：</strong></p>
+<ol style="padding-left:16pt;font-size:10pt;line-height:1.9;margin-top:6pt;">
+  <li>当使用连续度量（log 概率）时，许多之前被描述为"涌现"的能力呈现<strong>平稳、连续</strong>的性能改善</li>
+  <li>二值准确率指标在某个规模处从随机跃升，造成了"涌现"的假象</li>
+  <li>对于某些任务，这种效应在不同模型家族中普遍存在——表明这可能是评估指标的通用特性，而非特定模型的性质</li>
+  <li>然而，并非所有"涌现"都能用这种方法解释——某些能力的改善确实呈现非线性特征</li>
+</ol>
+</div>
+<h3>4.3 具体案例</h3>
+<p>以 BIG-Bench 上的某个多步推理任务为例：</p>
+<ul style="font-size:10pt;padding-left:20pt;line-height:1.9;margin:8pt 0;">
+  <li><strong>Log 概率曲线：</strong>随模型规模对数平稳连续改善，没有明显的相变</li>
+  <li><strong>准确率曲线：</strong>在某个规模阈值（约 10B 参数）处，准确率从 ~50% 突然跃升到 ~80%</li>
+  <li><strong>结论：</strong>准确率的"涌现"完全可以用 log 概率连续改善 + 二值化阈值来解释，无需假设发生了质变</li>
+</ul>
+
+<h2>5 案例分析：按 token 准确率分箱（Binning by Token Accuracy）</h2>
+<h3>5.1 Token 级别的分析</h3>
+<p>我们还进行了 token 级别的分析：将模型的 token 预测按正确/错误分箱，然后分析正确 token 比例随模型规模的变化。结果显示：</p>
+<div class="sn">
+<p><strong>Token 级别发现：</strong></p>
+<ol style="padding-left:16pt;font-size:10pt;line-height:1.9;margin-top:6pt;">
+  <li>大多数任务的 token 级别准确率随模型规模连续改善</li>
+  <li>少量任务的 token 级别准确率在某个规模处出现非线性跳变，但这种跳变可以用任务的结构特征来解释</li>
+  <li>对于绝大多数之前报告的"涌现能力"，当我们看 token 级别指标时，都看不到明显的跃变</li>
+</ol>
+</div>
+<h3>5.2 对之前工作的启示</h3>
+<p>这一发现对 Wei et al. (2022) 等之前的工作有重要启示：他们报告的"涌现"可能至少部分是由于评估指标的非线性特性造成的，而非语言模型能力的真实质变。</p>
+
+<h2>6 讨论（Discussion）</h2>
+<h3>6.1 这是否意味着涌现是"假的"？</h3>
+<p>不一定。我们的发现不是说大语言模型没有真正的质变，而是说：<strong>至少某些"涌现"可能是评估指标的假象</strong>。真实的能力质变当然可能存在（如物理系统中的相变），但要证明它，需要使用适当的连续度量，而非离散的二值指标。</p>
+<h3>6.2 连续度量的优越性</h3>
+<div class="hb"><p><strong>推荐实践：</strong>在评估语言模型能力时，研究者应优先使用连续度量（如 log 概率、Brier 分数），而非离散的二值准确率。连续度量能够更敏感地捕捉模型能力的渐进改善，避免人为制造"涌现"的假象。</p></div>
+<h3>6.3 真实涌现的可能性</h3>
+<p>我们的分析并不排除真实涌现的存在。某些语言模型能力可能确实存在真实的质变——特别是那些需要"顿悟"或"aha moment"的复杂推理任务。区分真实涌现和指标假象需要更细致的分析。</p>
+<h3>6.4 对扩展的启示</h3>
+<p>这一发现对扩展语言模型的研究有重要启示：如果某些"涌现"只是指标假象，那么扩展可能并不能带来真正意想不到的新能力——而只是让连续改善达到更高的水平。然而，如果存在真实的涌现，那进一步扩展确实可能带来全新的能力。</p>
+<h3>6.5 局限性和未来工作</h3>
+<div class="kf">
+<ol style="padding-left:16pt;font-size:10pt;line-height:1.9;">
+  <li>我们的分析主要关注 BIG-Bench 任务和 PaLM 模型，对其他任务和模型的泛化性需要进一步验证</li>
+  <li>某些任务（如需要"全或无"判断的任务）天然具有离散性，不适合用连续度量</li>
+  <li>真实涌现的可能性不能完全被排除，需要更多理论分析</li>
+  <li>更细致的分析（如对错误类型的分类）可能揭示更多关于能力改善的机制</li>
+</ol>
+</div>
+
+<h2>7 结论（Conclusion）</h2>
+<p>本文证明，至少在某些情况下，之前报告的"涌现能力"可能是评估指标（特别是二值准确率）的产物，而非语言模型能力的真实质变。通过对 BIG-Bench 数据和 PaLM 模型的分析，我们表明：当使用连续度量（log 概率）时，许多"涌现"能力呈现平稳、连续的性能改善。</p>
+<p>这一发现对语言模型研究和评估实践有重要启示：</p>
+<ul style="font-size:10pt;padding-left:20pt;line-height:1.9;margin:8pt 0;">
+  <li>评估时应优先使用连续度量，而非离散的二值指标</li>
+  <li>报告"涌现能力"时应同时提供连续度量的分析</li>
+  <li>进一步研究需要区分真实涌现和指标假象</li>
+</ul>
+<div class="kr"><p><strong>核心信息：</strong>"涌现能力"可能不是语言模型的真实质变，而是评估指标的数学特性造成的幻象。在得出"模型能力发生质变"的结论之前，研究者应仔细检查所使用评估指标的非线性特性。</p></div>
+
+<h2>参考文献（References）</h2>
+<p style="text-indent:0;font-size:9pt;line-height:1.9;">
+[1] Schaeffer, R., Miranda, S., & Koyejo, S. (2024). Are Emergent Abilities of Large Language Models a Mirage? <em>arXiv: 2404.02258</em><br>
+[2] Wei et al. (2022). Emergent Abilities of Large Language Models. <em>arXiv: 2206.07682</em><br>
+[3] Kaplan et al. (2020). Scaling Laws for Neural Language Models. <em>arXiv: 2001.08361</em><br>
+[4] Hoffmann et al. (2022). Training Compute-Optimal Large Language Models. <em>arXiv: 2203.15556</em><br>
+[5] Brown et al. (2020). Language Models are Few-Shot Learners. <em>NeurIPS</em>
+</p>
+<p style="text-align:center;margin-top:36pt;font-size:9pt;color:#888;">
+本文为 Schaeffer et al. (2024) 的完整中文翻译版，包含原文全部主要章节内容。<br>
+原文：<em>Are Emergent Abilities of Large Language Models a Mirage?</em> · arXiv: 2404.02258 · Stanford University, University of Toronto
+</p>
+</div>
+</body>
+</html>

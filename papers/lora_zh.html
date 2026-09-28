@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoRA：大语言模型的低秩自适应（中文翻译）</title>
+<style>
+body{font-family:'Noto Serif SC','SimSun','Songti SC',serif;background:#fef9f0;color:#2a2520;line-height:1.9;max-width:900px;margin:0 auto;padding:24px 42px;}
+h1{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;font-size:1.8em;color:#5a3a1a;text-align:center;border-bottom:2px solid #c9a47a;padding-bottom:14px;}
+h2{font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;font-size:1.35em;color:#5a3a1a;border-left:4px solid #c9873a;padding-left:12px;margin-top:1.6em;}
+h3{font-size:1.1em;color:#7a4f24;margin-top:1.3em;}
+.abstract{background:#fdf3e1;border-left:4px solid #c9a47a;padding:18px 24px;margin:20px 0;border-radius:4px;}
+.en-ref{background:#f5f0e6;border:1px dashed #c9a47a;padding:14px 20px;margin:14px 0;border-radius:6px;color:#5a4a3a;font-size:0.92em;}
+.formula{background:#eef4fb;border-left:4px solid #4a7ab8;padding:16px 22px;margin:16px 0;border-radius:0 8px 8px 0;font-family:'Cambria Math',serif;font-size:1.05em;overflow-x:auto;}
+.finding{background:linear-gradient(135deg,#f7f0e2,#f3e8d2);border-left:4px solid #e9b464;padding:16px 22px;margin:18px 0;border-radius:0 12px 12px 0;}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.92em;}
+th,td{border:1px solid #d8c8a8;padding:9px 13px;text-align:center;}
+th{background:#5a3a1a;color:#fff;}
+p{margin-bottom:13px;text-align:justify;}
+</style>
+</head>
+<body>
+<h1>LoRA：大语言模型的低秩自适应</h1>
+<p style="text-align:center;color:#4a3a2a;"><em>LoRA: Low-Rank Adaptation of Large Language Models</em></p>
+<p style="text-align:center;color:#888;">Edward Hu · Yelong Shen · Phillip Wallis · Zeyuan Allen-Zhu · Yuanzhi Li · Shean Wang · Lu Wang · Weizhu Chen（Microsoft）· arXiv: 2106.09685 · 2021</p>
+
+<h2>摘要（中文）</h2>
+<div class="abstract">
+<p>自然语言处理的一个重要范式是：在通用领域数据上进行大规模预训练，再适配到特定任务或领域。随着我们预训练的模型越来越大，<strong>全量微调</strong>（重训所有模型参数）变得不再可行。以 GPT-3 175B 为例——为每个独立实例部署一份 175B 参数的微调模型，成本高得令人望而却步。</p>
+<p>我们提出 <strong>LoRA（Low-Rank Adaptation，低秩自适应）</strong>：冻结预训练模型权重，并在 Transformer 架构的每一层注入<strong>可训练的低秩分解矩阵</strong>，从而大幅减少下游任务的可训练参数。与使用 Adam 微调 GPT-3 175B 相比，LoRA 可将可训练参数<strong>减少 10000 倍</strong>、GPU 内存需求<strong>降低 3 倍</strong>。尽管参数更少、训练吞吐更高、且不像 adapter 那样引入额外推理延迟，LoRA 在 RoBERTa、DeBERTa、GPT-2 和 GPT-3 上的模型质量仍与微调持平甚至更好。我们还对语言模型适配中的秩缺陷进行了实证研究，揭示了 LoRA 的有效性。</p>
+</div>
+<div class="en-ref"><strong>English Abstract:</strong> We propose Low-Rank Adaptation (LoRA), which freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer... Compared to GPT-3 175B fine-tuned with Adam, LoRA can reduce the number of trainable parameters by 10,000 times and the GPU memory requirement by 3 times.</div>
+
+<h2>1. 背景问题：全量微调的成本</h2>
+<p>许多 NLP 应用依赖将一个大型预训练语言模型适配到多个下游任务。这种适配通常通过<strong>微调</strong>完成——更新预训练模型的所有参数。微调的主要缺点是：新模型包含与原模型一样多的参数。随着模型快速增大，这在 GPT-2/RoBERTa 时只是"不便"，到 GPT-3（1750 亿参数）时已变成关键部署挑战。</p>
+<p>已有的缓解做法（只适配部分参数、学习外部模块等）虽然减少了存储，但常引入推理延迟（通过加深网络）或缩短可用序列长度（如 Prefix Tuning、Prompt Tuning），且往往无法匹配全量微调的效果，形成效率与质量之间的权衡。</p>
+
+<h2>2. 核心思想：低内在秩</h2>
+<p>受 Li et al. 2018a 和 Aghajanyan et al. 2020 启发（他们证明学习到的过参数化模型其实存在于<strong>低内在维度</strong>），我们假设模型适配过程中的权重变化也具有低"内在秩"。因此提出 LoRA：<strong>冻结预训练权重，只优化秩分解矩阵</strong>。</p>
+<div class="formula"><strong>W<sub>new</sub> = W<sub>0</sub> + ΔW = W<sub>0</sub> + BA</strong></div>
+<p>其中 <strong>W<sub>0</sub></strong> 为冻结的预训练权重（R<sup>d×k</sup>），<strong>B∈R<sup>d×r</sup></strong> 与 <strong>A∈R<sup>r×k</sup></strong> 为低秩矩阵，<strong>r ≪ min(d,k)</strong> 为秩。A 用高斯随机初始化，B 初始化为零（保证训练开始时 BA=0，使训练起点与预训练模型一致）。</p>
+<div class="finding"><strong>📌 LoRA 的四大优势：</strong><br><br>
+<strong>1.</strong> 预训练模型可共享，为不同任务构建许多小的 LoRA 模块，切换任务只需替换 A、B，大幅降低存储与切换开销。<br><br>
+<strong>2.</strong> 训练更高效、硬件门槛最高降低 3 倍（无需为大多数参数计算梯度或维护优化器状态）。<br><br>
+<strong>3.</strong> 简单线性设计使可训练矩阵可在部署时<strong>合并</strong>进冻结权重，结构上不引入任何推理延迟。<br><br>
+<strong>4.</strong> 与许多已有方法（如 prefix-tuning）正交，可组合使用。</div>
+<p>以 GPT-3 175B 为例，即使全秩 d 高达 12288，极低的秩（r = 1 或 2）就足够，使 LoRA 既省存储又省算力。</p>
+
+<h2>3. 问题设定（数学形式化）</h2>
+<p>给定预训练自回归语言模型 P<sub>Φ</sub>(y|x)（参数为 Φ），适配到下游任务。全量微调目标为最大化条件语言建模目标：</p>
+<div class="formula">max<sub>Φ</sub> Σ<sub>(x,y)∈𝒵</sub> Σ<sub>t=1..|y|</sub> log(P<sub>Φ</sub>(y<sub>t</sub>|x, y<sub>&lt;t</sub>))</div>
+<p>全量微调的缺点是每个下游任务学习不同的 ΔΦ，维度 |ΔΦ| 等于 |Φ<sub>0</sub>|。LoRA 采用参数高效方式，将增量编码为更小参数集 Θ（|Θ| ≪ |Φ<sub>0</sub>|），变为对 Θ 的优化：</p>
+<div class="formula">max<sub>Θ</sub> Σ log(P<sub>Φ<sub>0</sub>+ΔΦ(Θ)</sub>(y<sub>t</sub>|x, y<sub>&lt;t</sub>))</div>
+<p>当预训练模型是 GPT-3 175B 时，可训练参数 |Θ| 可低至 |Φ<sub>0</sub>| 的 0.01%。</p>
+
+<h2>4. 为什么现有方法不够好</h2>
+<h3>4.1 Adapter 层引入推理延迟</h3>
+<p>Adapter 有多种变体，其共同思路是在 Transformer 中插入小型的可训练前馈层。这增加了网络深度，即使经过精心优化，在融合后仍有额外的计算开销——尤其在批量小、延迟敏感的生产场景中不可接受。</p>
+<h3>4.2 直接优化提示（Prompt）很难</h3>
+<p>Prefix Tuning / Prompt Tuning 类方法在输入前拼接可训练嵌入，这<strong>占用了输入上下文长度</strong>，缩短了模型可处理的有效序列长度，且往往无法匹配全量微调基线。</p>
+<p>LoRA 通过注入低秩矩阵（不加深网络、不占序列长度、可合并部署）克服了这些局限。</p>
+
+<h2>5. 实验结论</h2>
+<p>在 RoBERTa、DeBERTa、GPT-2、GPT-3 上，LoRA 以更少的可训练参数、更高的训练吞吐、无额外推理延迟，达到与全量微调持平甚至更好的模型质量。实证调查还发现模型适配存在<strong>秩缺陷</strong>——所需的内在秩远低于表面维度，这正是 LoRA 高效的原因。不同于探索时"极低秩（4,8,16）即可"的初步发现（受缩放因子 α/r 导致的梯度坍缩影响），后续 rsLoRA 工作证明采用 α/√r 后，更大秩能真正带来性能提升。</p>
+
+<p style="text-align:center;color:#999;margin-top:40px;border-top:1px solid #e6d2a8;padding-top:20px;">📚 本文由 ar5iv 原文翻译为中文，数学公式采用 HTML 上下标 + Unicode 渲染</p>
+</body>
+</html>
